@@ -225,6 +225,49 @@ header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);posit
 .lvStamp{position:absolute;left:50%;top:62%;transform:translate(-50%,-50%);font-family:var(--display);font-size:clamp(26px,5.5vh,48px);color:var(--yellow);pointer-events:none;z-index:4;white-space:nowrap;
   text-shadow:3px 0 0 var(--ink),-3px 0 0 var(--ink),0 3px 0 var(--ink),0 -3px 0 var(--ink),6px 6px 0 var(--green);animation:bigStampA 1.2s ease-out forwards}
 
+/* ---------- plan ---------- */
+#planBtn{position:relative;flex-shrink:0;display:flex;align-items:center;gap:6px;padding:2px 8px 4px 4px;border:var(--bd);border-radius:5px;background:var(--yellow);box-shadow:3px 3px 0 var(--ink);overflow:hidden;height:34px}
+#planBtn .pt{display:flex;flex-direction:column;line-height:1.05;text-align:left}
+#planBtn .pt b{font-family:var(--display);font-weight:400;font-size:13px}
+#planBtn .pt small{font-size:10px;font-weight:800}
+#planBtn.need{animation:needPulse .8s ease-in-out infinite}
+@keyframes needPulse{50%{transform:scale(1.06);background:#fff3a8}}
+#planBtn:active{transform:translate(3px,3px);box-shadow:none}
+#planTime{position:absolute;left:0;bottom:0;height:3px;background:var(--ink)}
+#planGrade{min-width:26px;height:26px;border-radius:4px;display:grid;place-items:center;font-family:var(--display);font-size:13px;color:#fff;background:var(--ink);padding:0 3px}
+[data-g="B"]{--gc:#2f6fdb}[data-g="A"]{--gc:#2a9d5c}[data-g="S"]{--gc:#d99a00}[data-g="SS"]{--gc:#e23b2e}[data-g="SSS"]{--gc:#ff5cf0}
+#planGrade[data-g]:not([data-g=""]){background:var(--gc,#9aa3ad)}
+.pmodal{width:min(560px,100%);text-align:left}
+.pmodal h2{text-align:center}
+.prow{margin-bottom:8px}
+.plab{font-size:12px;font-weight:900;color:var(--dim);display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.rd{font-size:11px;font-weight:800;border:1.5px solid var(--ink);border-radius:3px;padding:1px 7px;background:var(--card)}
+.rd:disabled{opacity:.4}
+.pcards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.pcard{position:relative;text-align:left;border:2px solid var(--ink);border-radius:6px;background:var(--card);padding:6px 7px 6px;box-shadow:2px 2px 0 var(--ink);min-height:68px;display:flex;flex-direction:column;gap:3px;transition:transform .08s}
+.pcard b{font-size:12.5px;line-height:1.25;padding-right:18px}
+.pcard .pv{position:absolute;right:4px;top:4px;width:18px;height:18px;border-radius:50%;background:var(--ink);color:#fff;font-family:var(--display);font-size:11px;display:grid;place-items:center}
+.pcard .tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:auto}
+.pcard .tags i{font-style:normal;font-size:9.5px;font-weight:900;color:#fff;padding:0 4px;border-radius:2px}
+.pcard .tags i.gn{background:var(--paper2);color:var(--ink)}
+.pcard.on{background:var(--yellow);transform:translateY(-3px) rotate(-1.5deg);box-shadow:3px 5px 0 var(--ink)}
+.ppreview{display:flex;align-items:center;gap:12px;border:2px dashed var(--ink);border-radius:6px;padding:8px 10px;margin-top:4px}
+#planGradeLive{min-width:64px;height:56px;border-radius:6px;display:grid;place-items:center;font-family:var(--display);font-size:28px;color:#fff;background:var(--gc,#9aa3ad);border:2.5px solid var(--ink);transition:background .2s}
+#planGradeLive[data-g="SSS"]{background:linear-gradient(90deg,#e23b2e,#ffd23f,#2a9d5c,#2f6fdb,#7b4bc4);background-size:300% 100%;animation:rbg 1.2s linear infinite}
+@keyframes rbg{to{background-position:300% 0}}
+.pinfo{flex:1;min-width:0;font-size:12px;color:var(--dim);line-height:1.5}
+.pinfo b{display:block;font-size:15px;color:var(--ink)}
+#planReveal{text-align:center;padding:8px 0}
+.rvKick{display:inline-block;background:var(--ink);color:#fff;font-size:12px;font-weight:900;padding:1px 10px;transform:rotate(-2deg)}
+#rvTitle{font-family:var(--display);font-size:clamp(18px,4.4vw,26px);line-height:1.35;margin:12px 0 6px;min-height:2.7em}
+.rvGrade{display:inline-grid;place-items:center;min-width:120px;height:110px;padding:0 14px;font-family:var(--display);font-size:72px;color:#fff;background:var(--gc,#9aa3ad);border:4px solid var(--ink);border-radius:10px;box-shadow:6px 6px 0 var(--ink);opacity:0;transform:scale(2.5) rotate(-12deg)}
+.rvGrade.in{animation:gradeIn .45s cubic-bezier(.2,1.5,.4,1) forwards}
+.rvGrade[data-g="SSS"]{background:linear-gradient(90deg,#e23b2e,#ffd23f,#2a9d5c,#2f6fdb,#7b4bc4);background-size:300% 100%;animation:gradeIn .45s cubic-bezier(.2,1.5,.4,1) forwards, rbg 1.2s linear infinite}
+@keyframes gradeIn{to{opacity:1;transform:scale(1) rotate(-6deg)}}
+#rvRecipe{margin-top:12px;font-weight:900;font-size:15px;animation:slideUp .4s both}
+#rvRecipe b{color:var(--red);font-family:var(--display);font-weight:400;font-size:18px}
+#rvInfo{margin-top:8px;font-size:13px;font-weight:800;color:var(--green);animation:slideUp .4s both}
+
 /* ---------- selectors ---------- */
 .selRow{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;touch-action:pan-x;flex-shrink:0;padding:0 4px 3px 0;align-items:center}
 .selRow::-webkit-scrollbar{display:none}
@@ -453,6 +496,10 @@ header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);posit
   .act{padding:4px 3px}
 }
 @media (max-width:420px){
+  #lvBox{width:60px;padding:2px 5px 4px}
+  #gaugeL{display:none}
+  #planBtn .pt small{display:none}
+  #gaugeRow{gap:6px}
   .act .big{font-size:13px;white-space:nowrap}
   #actionRow{gap:5px}
   #badgeName{font-size:12px}
@@ -510,11 +557,11 @@ header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);posit
       </div>
 
       <div id="gaugeRow">
+        <button id="planBtn"><span id="planGrade">-</span><span class="pt"><b>企画会議</b><small id="planSub">ネタ切れ</small></span><i id="planTime"></i></button>
         <div id="gauge"><div id="gaugeFill"></div><div id="gaugeText"><span id="gaugeL">編集ゲージ</span><span id="gaugeR">0%</span></div></div>
         <div id="lvBox"><b>Lv<span id="clv">1</span></b><div id="xpBar"><i id="xpFill"></i></div></div>
       </div>
 
-      <div class="selRow" id="genreRow"></div>
       <div class="selRow" id="styleRow"></div>
 
       <div id="actionRow">
@@ -530,6 +577,7 @@ header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);posit
         <button class="tab on" data-tab="equip">機材</button>
         <button class="tab" data-tab="skill">スキル</button>
         <button class="tab" data-tab="staff">スタッフ</button>
+        <button class="tab" data-tab="recipe">企画図鑑</button>
         <button class="tab" data-tab="collab">コラボ図鑑</button>
         <button class="tab" data-tab="mission">ミッション</button>
         <button class="tab" data-tab="ach">実績</button>
@@ -588,6 +636,27 @@ header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);posit
   </div>
 </div>
 
+<div id="planModal" class="overlay hidden">
+  <div class="modal pmodal">
+    <div id="planBody">
+      <h2>企画会議</h2>
+      <div class="prow"><div class="plab">ネタ<button class="rd" id="rd-neta">引き直す</button></div><div class="pcards" id="row-neta"></div></div>
+      <div class="prow"><div class="plab">やり方<button class="rd" id="rd-twist">引き直す</button></div><div class="pcards" id="row-twist"></div></div>
+      <div class="prow"><div class="plab">サムネ<button class="rd" id="rd-thumb">引き直す</button></div><div class="pcards" id="row-thumb"></div></div>
+      <div class="ppreview"><div id="planGradeLive" data-g="C">C</div><div class="pinfo"><b id="planScore">0点</b><div id="planNotes"></div></div></div>
+      <div class="row"><button class="btn" id="planCancel">あとで</button><button class="btn primary" id="planGo" disabled>カードを3枚選ぶ</button></div>
+    </div>
+    <div id="planReveal" class="hidden">
+      <div class="rvKick">企画書</div>
+      <div id="rvTitle"></div>
+      <div id="rvGrade" class="rvGrade">S</div>
+      <div id="rvRecipe" class="hidden"></div>
+      <div id="rvInfo" class="hidden"></div>
+      <div class="row"><button class="btn primary hidden" id="planClose">撮影開始</button></div>
+    </div>
+  </div>
+</div>
+
 <div id="chestModal" class="overlay hidden">
   <div class="modal">
     <h2 id="chestName">宝箱</h2>
@@ -622,7 +691,7 @@ header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);posit
     <h2>遊び方</h2>
     <div class="howto">
       <b>撮る</b><br>画面を連打すると編集ゲージが溜まって、満タンで動画が公開される。速く連打するとコンボがつながって、100コンボでゾーンに入る。<br>
-      <b>ネタ選び</b><br>急上昇のジャンルに合わせると再生数が伸びる。投稿スタイルで再生数・登録率・リスクが変わる。<br>
+      <b>企画会議</b><br>ネタ・やり方・サムネのカードを1枚ずつ選んで企画を作る。タグをそろえる、急上昇ジャンルのネタを選ぶ、隠しレシピを見つけると評価が上がって、C〜SSSの評価に応じてしばらく動画が伸びる。<br>
       <b>ほっといても伸びる</b><br>出した動画は放置中も回り続けて、登録者とお金が増えていく。<br>
       <b>強化</b><br>機材・スキル・スタッフを買うと、部屋に物や人が増えていく。<br>
       <b>会心とコンボ</b><br>たまに「会心」が出て再生が10倍。50・100・200…コンボごとにボーナス。<br>
@@ -696,7 +765,7 @@ const RANKS = [
 const HUMANITY = 8e9, POST_GOAL = 1e15;
 const RANK_COLORS = ['#8a8478','#7b4bc4','#2f6fdb','#2a9d5c','#d99a00','#e23b2e','#1d6e62','#5e2a8f'];
 
-const BAL = { conv:2, unit:10, stockRate:0.01, tapView:0.03, tapConv:0.02, passConv:0.015, subsDivK:3.5, subsDivP:14,
+const BAL = { conv:2, unit:10, stockRate:0.01, tapView:0.03, tapConv:0.02, passConv:0.015, subsDivK:3.5, subsDivP:15,
   achBonus:0.015, legendBonus:0.02, trend:2, comboCap:100, comboWin:0.5, crit:0.05, chestSec:[15, 30, 60, 120], comboDiv:400, zone:1.2, costMul:3, missionSec:60, gEq:0.25, gSk:0.8, gachaBase:1000, gachaG:4 };
 
 const GENRES = [
@@ -835,10 +904,10 @@ const C_ZONE  = ['手が見えない','連打の鬼','指どうなってんの',
    ========================================================= */
 function defaults(){
   return {
-    v:3, subs:0, views:0, money:0, stock:0, gauge:0, rank:0, xp:0, clv:1, chests:[], perm:0,
+    v:3, subs:0, views:0, money:0, stock:0, gauge:0, rank:0, xp:0, clv:1, chests:[], perm:0, plan:null, recipes:{},
     lv:{}, ach:{}, seen:{},
     st:{ taps:0, videos:0, buzz:0, cleared:0, trendHits:0, deals:0, lives:0, maxSubs:0, maxSubsRun:0, golden:0, events:0, gacha:0,
-         retires:0, missions:0, maxCombo:0, zones:0, sc:0, bestBurst:0, totalViews:0, buys:0, crits:0, chests:0, rainbow:0, superFever:0, genres:{}, styles:{}, ssr:0, buzzInFever:0, noFlameRun:1 },
+         retires:0, missions:0, maxCombo:0, zones:0, sc:0, bestBurst:0, totalViews:0, buys:0, crits:0, chests:0, rainbow:0, superFever:0, plans:0, sss:0, genres:{}, styles:{}, ssr:0, buzzInFever:0, noFlameRun:1 },
     style:'ikioi', genre:'game', tab:'equip', buyN:1,
     trend:'food', trendLeft:40,
     feverLeft:0, feverMult:1, debuffLeft:0, buffs:{},
@@ -862,6 +931,7 @@ function load(){
     if (!d.v || d.v < 3) S.rank = [0,2,4,8,12,20][d.rank || 0] || 0;
     S.v = 3;
     S.chests = Array.isArray(d.chests) ? d.chests : [];
+    S.recipes = Object.assign({}, d.recipes || {});
     if (S.rank >= RANKS.length) S.rank = RANKS.length - 1;
     S.lv = Object.assign({}, d.lv||{});
     S.ach = old ? {} : Object.assign({}, d.ach||{});
@@ -1048,6 +1118,9 @@ function A(id, name, d, c){ ACHS.push({ id, name, d, c }); }
 [[1,'会心の一撃'],[100,'会心マニア'],[1000,'会心しかない']].forEach(([n,nm],i)=>A('k'+i, nm, `会心タップ${fmt(n)}回`, ()=>S.st.crits>=n));
 [[1,'初めての宝箱'],[30,'宝箱ハンター'],[200,'宝の山']].forEach(([n,nm],i)=>A('z'+i, nm, `宝箱を${n}個開ける`, ()=>S.st.chests>=n));
 [[10,'チャンネルLv10'],[30,'チャンネルLv30'],[60,'チャンネルLv60']].forEach(([n,nm],i)=>A('y'+i, nm, `チャンネルLv${n}`, ()=>S.clv>=n));
+[[1,'初めての企画'],[50,'企画屋'],[300,'企画の鬼']].forEach(([n,nm],i)=>A('pl'+i, nm, `企画会議を${n}回`, ()=>S.st.plans>=n));
+[[1,'レシピ発見'],[10,'レシピ収集家'],[30,'全レシピ制覇']].forEach(([n,nm],i)=>A('rc'+i, nm, `企画レシピを${n}個見つける`, ()=>Object.keys(S.recipes).length>=n));
+A('ss0','SSS企画','SSS評価の企画を出す', ()=>S.st.sss>=1);
 A('x8','虹が出た','虹の宝箱を開ける', ()=>S.st.rainbow>=1);
 A('x9','超神回','超神回を出す', ()=>S.st.superFever>=1);
 A('xa','動画の神','全27称号を制覇', ()=>S.rank>=RANKS.length-1);
@@ -1084,6 +1157,7 @@ const MT = [
   { id:'buyStaff',t:n=>`スタッフを${n}回雇う`,               r:0, n:[2,3,4,5,6,8] },
   { id:'subsGain',t:n=>`登録者を${fmt(n)}人増やす`,           r:0, n:null },
   { id:'zone',    t:n=>`ゾーンに${n}回入る`,                 r:0, n:[1,1,2,2,3,3] },
+  { id:'plans',   t:n=>`企画会議を${n}回する`,               r:0, n:[2,3,3,4,5,6] },
 ];
 const gName = id => (GENRES.find(g=>g.id===id)||GENRES[0]).name;
 function newMission(exclude){
@@ -1182,13 +1256,14 @@ function checkPublish(auto){
 
 function publish(count, auto){
   const st = curStyle();
-  const genre = (auto && lv('meeting') > 0) ? S.trend : S.genre;
+  const genre = planGenre();
   const match = genre === S.trend;
   const gm = match ? trendMult() : 1;
-  const per = st.view * unit() * gm * burstMult();
+  const pm = planMult();
+  const per = st.view * unit() * gm * burstMult() * pm;
   const burst = per * count;
   gain(burst, st.conv, st.money || 1);
-  S.stock += st.view * count;
+  S.stock += st.view * count * Math.sqrt(pm);
   S.st.videos += count;
   S.st.genres[genre] = (S.st.genres[genre]||0) + count;
   S.st.styles[st.id] = (S.st.styles[st.id]||0) + count;
@@ -1354,7 +1429,7 @@ function retire(){
   const pts = retirePts(); if (pts <= 0) return;
   S.legend.pts += pts; S.legend.total += pts;
   S.st.retires++;
-  const keep = { ach:S.ach, seen:S.seen, st:S.st, collabs:S.collabs, tickets:S.tickets, legend:S.legend, settings:S.settings, tutStep:S.tutStep, playTime:S.playTime };
+  const keep = { recipes:S.recipes, ach:S.ach, seen:S.seen, st:S.st, collabs:S.collabs, tickets:S.tickets, legend:S.legend, settings:S.settings, tutStep:S.tutStep, playTime:S.playTime };
   S = Object.assign(defaults(), keep);
   S.st.maxSubsRun = 0; S.st.noFlameRun = 1;
   S.money = perk('dash') ? 100 * Math.pow(10, perk('dash')) : 0;
@@ -1555,6 +1630,14 @@ function step(dt){
     if (S.goldenCd <= 0 && !golden){ UI.spawnGolden(); S.goldenCd = (70 + Math.random()*60) / goldFreq(); }
     S.eventCd -= dt;
     if (S.eventCd <= 0){ S.eventCd = 80 + Math.random()*70; maybeEvent(); }
+  }
+  if (S.plan){
+    S.plan.left -= dt;
+    if (S.plan.left <= 0){
+      S.plan = null;
+      if (lv('meeting') > 0){ const p = autoPlan(); toast(`企画会議チームが新企画を出した（${S.plan.g}）`); UI.planStart(); }
+      else { toast('ネタ切れ。企画会議で次の企画を作ろう'); Sound.alert(); }
+    }
   }
   if (pendingEvent){ pendingEvent.left -= dt; if (pendingEvent.left <= 0){ pendingEvent = null; UI.hideEventBubble(); } }
 }
@@ -1773,6 +1856,136 @@ function avatarSVG(id){
 }
 
 /* =========================================================
+   企画会議 (plan building)
+   ========================================================= */
+const TAG_COLOR = { 食:'#c9471b', 過激:'#e23b2e', 癒し:'#2a9d5c', 金:'#d99a00', 感動:'#b0174f', 謎:'#5e2a8f', 勝負:'#2f6fdb', 家族:'#a06a1c', 学び:'#1d6e62', 音:'#3d5a80' };
+const NETA = {
+  game:  [['クソゲー全クリ',1,'勝負','謎'],['深夜のホラゲー',2,'過激','謎'],['縛りプレイ',2,'勝負'],['1000連勝',3,'勝負'],['親とゲーム対決',2,'家族','勝負'],['世界記録RTA',3,'勝負','学び']],
+  food:  [['ラーメン10杯',2,'食'],['激辛焼きそば',2,'食','過激'],['唐揚げ100個',3,'食'],['コンビニ全商品',3,'食','金'],['ばあちゃん飯',2,'食','家族','癒し'],['回らない寿司',3,'食','金']],
+  prank: [['寝起きドッキリ',2,'過激','家族'],['親に退学報告',3,'家族','過激'],['落とし穴',2,'過激'],['偽ファン作戦',1,'謎'],['逆ドッキリ',3,'謎','勝負'],['サプライズ誕生日',2,'感動','家族']],
+  song:  [['全力熱唱',1,'音'],['音痴克服',2,'音','感動'],['カラオケ100点',3,'音','勝負'],['路上ライブ',2,'音','過激'],['親とデュエット',2,'音','家族'],['作詞作曲',3,'音','学び']],
+  test:  [['メントスコーラ',2,'学び','過激'],['1週間0円生活',2,'金','勝負'],['10階から卵',1,'学び'],['ガチャ100連',3,'金','謎'],['巨大シャボン玉',2,'学び','癒し'],['都市伝説を確かめる',2,'謎']],
+  pet:   [['猫とキュウリ',2,'癒し','謎'],['子犬の1日',1,'癒し'],['ハムスター迷路',2,'癒し','学び'],['保護猫との出会い',3,'感動','癒し'],['柴犬の変顔',2,'癒し'],['ペットと旅行',3,'癒し','感動']],
+  cook:  [['3分ごはん',1,'食','学び'],['巨大オムライス',2,'食'],['給食の再現',2,'食','家族'],['100均フルコース',2,'食','金'],['料理下手が本気',3,'食','感動'],['激辛カレー',2,'食','過激']],
+  asmr:  [['せんべい咀嚼音',2,'食','音'],['雨の音',1,'癒し','音'],['耳かき',2,'癒し','音'],['炭酸の泡',1,'音'],['無言タイピング',2,'音','学び'],['焚き火',3,'癒し','音']],
+  vlog:  [['底辺の1日密着',1,'家族'],['ひとり旅',2,'感動'],['引っ越し',2,'家族','金'],['モーニングルーティン',1,'癒し'],['給料日の爆買い',3,'金'],['実家に帰る',3,'家族','感動']],
+  trivia:[['9割が知らない話',1,'学び'],['常識のウソ',2,'学び','謎'],['コンビニの裏側',2,'学び','金'],['信号はなぜ青',2,'学び','謎'],['世界の不思議',3,'謎'],['明日話せる3選',1,'学び']],
+};
+const TWISTS = [
+  ['24時間耐久',2,0,'勝負','過激'],['親を巻き込む',1,0,'家族'],['目隠しで',2,0,'謎','過激'],['1発撮り',1,0,'勝負'],['深夜にこっそり',1,0,'謎','過激'],['ガチで泣く',2,0,'感動'],
+  ['人の企画をパクる',2,1,'過激'],['ずっと実況',1,1,'音'],['100人集める',3,1,'勝負'],
+  ['10万円かける',3,2,'金'],['外国の人と',2,2,'学び','感動'],['AIに台本を書かせる',2,2,'学び','謎'],
+  ['有名人とコラボ',3,3,'勝負','金'],['視聴者参加型',2,3,'家族','勝負'],
+  ['100万円かける',4,4,'金'],['テレビ番組風',2,4,'学び'],
+  ['世界中で同時に',4,5,'勝負','感動'],['宇宙から',4,6,'謎','学び'],
+].map(([n,v,r,...t]) => ({ n, v, r, t }));
+const THUMBS = [
+  ['赤い矢印',1,0,'謎'],['驚き顔',1,0,'過激'],['デカ文字',1,0],['涙目アップ',2,0,'感動'],['家族写真',1,0,'家族'],
+  ['謎のモザイク',2,1,'謎','過激'],['札束',2,1,'金'],['閲覧注意の文字',2,1,'過激'],
+  ['ビフォーアフター',2,2,'学び'],['かわいい動物',2,2,'癒し'],['湯気もくもく',2,2,'食'],
+  ['ネオン文字',2,3,'音'],['顔だけ巨大',2,3,'勝負'],
+  ['プロのカメラマン',3,4],['地球を背景に',4,5,'感動','謎'],
+].map(([n,v,r,...t]) => ({ n, v, r, t }));
+const RECIPES = [
+  { name:'地獄の激辛耐久',     c:['激辛焼きそば','24時間耐久','涙目アップ'], b:7 },
+  { name:'深夜のホラー実況',   c:['深夜のホラゲー','深夜にこっそり'], b:4 },
+  { name:'ばあちゃん泣かせ',   c:['ばあちゃん飯','ガチで泣く'], b:4 },
+  { name:'札束ガチャ地獄',     c:['ガチャ100連','札束'], b:4 },
+  { name:'目隠しメントス',     c:['メントスコーラ','目隠しで'], b:4 },
+  { name:'親子カラオケ対決',   c:['カラオケ100点','親を巻き込む'], b:4 },
+  { name:'回らない寿司で破産', c:['回らない寿司','10万円かける','札束'], b:7 },
+  { name:'感動の再会',         c:['保護猫との出会い','ガチで泣く','涙目アップ'], b:8 },
+  { name:'寝起き100人',        c:['寝起きドッキリ','100人集める'], b:5 },
+  { name:'退学ドッキリの真相', c:['親に退学報告','ガチで泣く'], b:5 },
+  { name:'路上ライブ耐久',     c:['路上ライブ','24時間耐久'], b:5 },
+  { name:'ASMR焚き火の夜',     c:['焚き火','深夜にこっそり','かわいい動物'], b:6 },
+  { name:'給料全部ぶっ込み',   c:['給料日の爆買い','札束'], b:4 },
+  { name:'コンビニ買い占め',   c:['コンビニ全商品','100万円かける'], b:6 },
+  { name:'都市伝説を暴く',     c:['都市伝説を確かめる','謎のモザイク'], b:4 },
+  { name:'世界記録への挑戦',   c:['世界記録RTA','1発撮り'], b:5 },
+  { name:'猫と一緒に旅に出る', c:['ペットと旅行','かわいい動物'], b:4 },
+  { name:'料理下手の大逆転',   c:['料理下手が本気','ビフォーアフター'], b:5 },
+  { name:'作曲AIと勝負',       c:['作詞作曲','AIに台本を書かせる'], b:5 },
+  { name:'実家で親と対決',     c:['親とゲーム対決','家族写真'], b:4 },
+  { name:'0円生活24時間',      c:['1週間0円生活','24時間耐久'], b:5 },
+  { name:'信号の謎を全世界で', c:['信号はなぜ青','外国の人と'], b:5 },
+  { name:'巨大オムライス100人前', c:['巨大オムライス','100人集める','湯気もくもく'], b:7 },
+  { name:'有名人とガチ対決',   c:['1000連勝','有名人とコラボ'], b:6 },
+  { name:'テレビより面白い雑学', c:['常識のウソ','テレビ番組風'], b:5 },
+  { name:'宇宙から生配信',     c:['世界の不思議','宇宙から','地球を背景に'], b:10 },
+  { name:'全世界同時ドッキリ', c:['逆ドッキリ','世界中で同時に'], b:8 },
+  { name:'柴犬100匹',          c:['柴犬の変顔','100人集める'], b:5 },
+  { name:'雨音で寝落ち',       c:['雨の音','深夜にこっそり'], b:4 },
+  { name:'ひとり旅で号泣',     c:['ひとり旅','ガチで泣く','涙目アップ'], b:7 },
+];
+const GRADES = [
+  { g:'C', min:0,  m:1 },
+  { g:'B', min:5,  m:1.2 },
+  { g:'A', min:7,  m:1.5 },
+  { g:'S', min:9,  m:2 },
+  { g:'SS', min:12, m:3 },
+  { g:'SSS', min:16, m:5 },
+];
+const NETA_ALL = [];
+for (const g in NETA) for (const [n, v, ...t] of NETA[g]) NETA_ALL.push({ n, v, t, genre:g });
+
+function planDuration(){ return 60 + 10 * Math.min(T(), 7); }
+function planMult(){ return S.plan ? S.plan.m : 1; }
+function planGenre(){ return S.plan ? S.plan.genre : S.genre; }
+
+function drawHand(){
+  const pick3 = (pool, n) => { const a = pool.slice(), out = []; while (out.length < n && a.length) out.push(a.splice(Math.floor(Math.random()*a.length), 1)[0]); return out; };
+  const trendPool = NETA_ALL.filter(c => c.genre === S.trend);
+  const neta = [pick3(trendPool, 1)[0], ...pick3(NETA_ALL.filter(c => c.genre !== S.trend), 2)].sort(() => Math.random() - .5);
+  const twist = pick3(TWISTS.filter(c => c.r <= T()), 3);
+  const thumb = pick3(THUMBS.filter(c => c.r <= T()), 3);
+  return { neta, twist, thumb };
+}
+function scorePlan(neta, twist, thumb){
+  const cards = [neta, twist, thumb].filter(Boolean);
+  let score = cards.reduce((a, c) => a + c.v, 0);
+  const notes = [];
+  const tagN = {};
+  for (const c of cards) for (const t of c.t) tagN[t] = (tagN[t] || 0) + 1;
+  for (const t in tagN){ if (tagN[t] === 2){ score += 2; notes.push(`「${t}」がそろった +2`); } if (tagN[t] >= 3){ score += 5; notes.push(`「${t}」が3つ +5`); } }
+  if (neta && neta.genre === S.trend){ score += 2; notes.push('急上昇ジャンル +2'); }
+  const names = cards.map(c => c.n);
+  const rec = RECIPES.filter(r => r.c.every(x => names.includes(x))).sort((a, b) => b.b - a.b)[0] || null;
+  if (rec){ score += rec.b; notes.push(`レシピ「${rec.name}」 +${rec.b}`); }
+  let grade = GRADES[0];
+  for (const g of GRADES) if (score >= g.min) grade = g;
+  return { score, grade, notes, rec };
+}
+function makeTitle(neta, twist, thumb){
+  const pre = { '24時間耐久':'【24時間】', '目隠しで':'【目隠し】', '1発撮り':'【1発撮り】', '深夜にこっそり':'【深夜】', 'ガチで泣く':'【号泣】',
+    '人の企画をパクる':'【パクリ】', '100人集める':'【100人】', '10万円かける':'【10万円】', '100万円かける':'【100万円】', '有名人とコラボ':'【豪華コラボ】',
+    '世界中で同時に':'【全世界】', '宇宙から':'【宇宙】', 'テレビ番組風':'【特番】' }[twist.n] || '';
+  const tail = { '涙目アップ':'…涙が止まらない', '驚き顔':'→ まさかの結果', '札束':'でお金が消えた', '謎のモザイク':'【閲覧注意】', '閲覧注意の文字':'【閲覧注意】',
+    'ビフォーアフター':'のビフォーアフター', 'かわいい動物':'がかわいすぎた', '家族写真':'（家族も出演）' }[thumb.n] || '';
+  const mid = { '親を巻き込む':'を親と', '外国の人と':'を外国の人と', 'ずっと実況':'を全部実況', 'AIに台本を書かせる':'をAIの台本で', '視聴者参加型':'を視聴者と' }[twist.n] || '';
+  return `${pre}${neta.n}${mid}${mid ? 'やってみた' : 'してみた'}${tail}`;
+}
+function commitPlan(neta, twist, thumb){
+  const r = scorePlan(neta, twist, thumb);
+  const isNew = r.rec && !S.recipes[r.rec.name];
+  if (r.rec) S.recipes[r.rec.name] = (S.recipes[r.rec.name] || 0) + 1;
+  if (isNew) S.chests.push(2);
+  S.plan = { genre: neta.genre, cards:[neta.n, twist.n, thumb.n], title: makeTitle(neta, twist, thumb), g: r.grade.g, m: r.grade.m, left: planDuration(), max: planDuration(), rec: r.rec ? r.rec.name : null };
+  S.genre = neta.genre;
+  S.st.plans++;
+  if (r.grade.g === 'SSS') S.st.sss++;
+  track('plans', 1);
+  if (S.tutStep === 2) setTut(3);
+  return { r, isNew };
+}
+function autoPlan(){
+  const h = drawHand();
+  let best = null;
+  for (const a of h.neta) for (const b of h.twist) for (const c of h.thumb){ const s = scorePlan(a, b, c).score; if (!best || s > best.s) best = { s, a, b, c }; }
+  return commitPlan(best.a, best.b, best.c);
+}
+
+/* =========================================================
    SOUND + BGM (Web Audio)
    ========================================================= */
 const MEL = [76,0,79,0,81,79,76,0, 76,0,74,72,74,0,69,0, 72,0,74,0,77,76,74,0, 74,0,79,0,74,0,71,0,
@@ -1945,13 +2158,15 @@ const UI = {
   publishFx(genre, st, burst, match){
     if (window.__noFx) return;
     const G = GENRES.find(g=>g.id===genre) || GENRES[0];
-    const [word, title] = pick(G.titles);
+    let [word, title] = pick(G.titles);
+    if (S.plan){ word = S.plan.cards[0]; title = S.plan.title; }
     const card = $('#thumbCard');
     card.style.setProperty('--tbg', G.bg);
-    $('#thumbTag').textContent = st.tag;
+    $('#thumbTag').textContent = S.plan ? S.plan.g : st.tag;
     $('#thumbWord').textContent = word;
+    $('#thumbWord').style.fontSize = word.length > 6 ? 'clamp(12px,2.8vh,24px)' : '';
     $('#thumbWord').style.transform = `rotate(${(Math.random()*6-5).toFixed(1)}deg)`;
-    $('#thumbViews').textContent = (st.id === 'short' ? title + ' #shorts' : `【${st.tag}】${title}`) + `　${fmt(burst)}回再生`;
+    $('#thumbViews').textContent = (S.plan ? title : st.id === 'short' ? title + ' #shorts' : `【${st.tag}】${title}`) + `　${fmt(burst)}回再生`;
     pulseClass(card, 'pop', 900);
     const r = card.getBoundingClientRect();
     this.floatText(r.left + r.width/2, r.top + r.height*0.7, '+' + fmt(burst) + '再生', match ? 'huge' : 'big');
@@ -2217,7 +2432,7 @@ function renderHUD(dt){
 
 /* ----- selectors ----- */
 function renderSelectors(){
-  const gr = $('#genreRow');
+  const gr = document.createElement('div');
   gr.innerHTML = '<span class="rowLab">ジャンル</span>';
   for (const g of GENRES){
     const b = document.createElement('button');
@@ -2281,6 +2496,8 @@ function buildShop(){
       d.innerHTML = `<div class="stamp">済</div><div class="info"><div class="nm">${S.ach[a.id]?a.name:'？？？'}</div><div class="ds">${a.d}</div></div>`;
       list.appendChild(d);
     }
+  } else if (S.tab === 'recipe'){
+    recipeTab(list, head);
   } else if (S.tab === 'collab'){
     head(`集めたコラボ相手 <b>${collabCount()}</b> / ${COLLABS.length}　全部の伸び <b>×${collabMult().toFixed(2)}</b><br>同じ相手と何度もコラボすると仲良し度が上がる（最大5）`);
     const can = T() >= 1;
@@ -2433,9 +2650,9 @@ function renderTut(dt){
     target = document.querySelector('#list .item .buy'); msg = 'お金がたまった。<br>機材を買うと動画が伸びる<small>ボタンを押して買ってみよう</small>';
   } else if (S.tutStep === 2){
     tutT += dt;
-    if (tutT > 12 || S.genre === S.trend) setTut(3);
-    target = document.querySelector('#genreRow .sel .hot'); target = target && target.parentElement;
-    msg = '赤い「急上昇」のジャンルで撮ると<br>再生数が2倍以上になる';
+    if (tutT > 25) setTut(3);
+    target = $('#planBtn');
+    msg = '企画会議でカードを選んで企画を作ろう<br><small>評価が高いほど動画が伸びる</small>';
   }
   if (!target || anyOverlay()){ tut.classList.add('hidden'); return; }
   tut.classList.remove('hidden');
@@ -2540,6 +2757,139 @@ $('#resetBtn').addEventListener('click', () => { hideOverlay('#menu'); confirmBo
 }); });
 $('#cfNo').addEventListener('click', () => hideOverlay('#confirm'));
 
+
+/* =========================================================
+   企画会議 UI
+   ========================================================= */
+let hand = null, pickSel = { neta:null, twist:null, thumb:null }, redrawn = {};
+const GRADE_COLOR = { C:'#9aa3ad', B:'#2f6fdb', A:'#2a9d5c', S:'#d99a00', SS:'#e23b2e', SSS:'rainbow' };
+function cardHTML(c, on){
+  return `<span class="pv">${c.v}</span><b>${c.n}</b><span class="tags">${c.t.map(t => `<i style="background:${TAG_COLOR[t]}">${t}</i>`).join('')}${c.genre ? `<i class="gn">${gName(c.genre)}${c.genre === S.trend ? '・急上昇' : ''}</i>` : ''}</span>`;
+}
+function openPlan(){
+  Sound.init();
+  hand = drawHand(); pickSel = { neta:null, twist:null, thumb:null }; redrawn = {};
+  $('#planReveal').classList.add('hidden');
+  $('#planBody').classList.remove('hidden');
+  renderPlan();
+  showOverlay('#planModal');
+}
+function renderPlan(){
+  for (const row of ['neta','twist','thumb']){
+    const box = document.getElementById('row-' + row); box.innerHTML = '';
+    hand[row].forEach((c, i) => {
+      const b = document.createElement('button');
+      b.className = 'pcard' + (pickSel[row] === i ? ' on' : '');
+      b.innerHTML = cardHTML(c);
+      b.onclick = () => { pickSel[row] = i; Sound.tap(10); renderPlan(); };
+      box.appendChild(b);
+    });
+    const rd = document.getElementById('rd-' + row);
+    rd.disabled = !!redrawn[row];
+    rd.textContent = redrawn[row] ? '引き直し済み' : '引き直す';
+  }
+  const n = pickSel.neta != null ? hand.neta[pickSel.neta] : null;
+  const w = pickSel.twist != null ? hand.twist[pickSel.twist] : null;
+  const t = pickSel.thumb != null ? hand.thumb[pickSel.thumb] : null;
+  const r = scorePlan(n, w, t);
+  const gp = $('#planGradeLive');
+  gp.textContent = r.grade.g; gp.dataset.g = r.grade.g;
+  $('#planScore').textContent = `${r.score}点　×${r.grade.m}`;
+  $('#planNotes').innerHTML = r.notes.length ? r.notes.map(x => `<div>${x}</div>`).join('') : '<div>タグをそろえる・急上昇に合わせる・隠しレシピを探すと点が上がる</div>';
+  const ok = n && w && t;
+  $('#planGo').disabled = !ok;
+  $('#planGo').textContent = ok ? 'この企画で撮る' : 'カードを3枚選ぶ';
+}
+function redraw(row){
+  if (redrawn[row]) return;
+  redrawn[row] = true;
+  const fresh = drawHand();
+  hand[row] = fresh[row]; pickSel[row] = null;
+  Sound.chestShake(); renderPlan();
+}
+function goPlan(){
+  const n = hand.neta[pickSel.neta], w = hand.twist[pickSel.twist], t = hand.thumb[pickSel.thumb];
+  const { r, isNew } = commitPlan(n, w, t);
+  $('#planBody').classList.add('hidden');
+  const rv = $('#planReveal'); rv.classList.remove('hidden');
+  $('#rvTitle').textContent = '';
+  const gEl = $('#rvGrade'); gEl.className = 'rvGrade'; gEl.textContent = r.grade.g; gEl.dataset.g = r.grade.g;
+  $('#rvRecipe').innerHTML = r.rec ? `${isNew ? '<b>新レシピ発見！</b>' : 'レシピ'}「${r.rec.name}」${isNew ? '<br>金の宝箱をもらった' : ''}` : '';
+  $('#rvRecipe').classList.add('hidden');
+  $('#rvInfo').textContent = `${planDuration()}秒間、動画の伸びが ×${r.grade.m}`;
+  $('#rvInfo').classList.add('hidden');
+  $('#planClose').classList.add('hidden');
+  // typewriter
+  const title = S.plan.title; let i = 0;
+  Sound.drum();
+  const tw = setInterval(() => {
+    i++; $('#rvTitle').textContent = title.slice(0, i);
+    if (i % 2 === 0) Sound.tap(i * 3);
+    if (i >= title.length){
+      clearInterval(tw);
+      setTimeout(() => {
+        gEl.classList.add('in');
+        const gi = GRADES.findIndex(g => g.g === r.grade.g);
+        Sound.reveal(gi >= 5 ? 'SSS' === r.grade.g ? 'SSR' : 'SR' : gi >= 3 ? 'SR' : 'R');
+        if (gi >= 4) confetti(gi >= 5 ? 90 : 45);
+        if (gi >= 5){ UI.bigText('SSS', '#ff5cf0'); }
+        setTimeout(() => {
+          if (r.rec){ $('#rvRecipe').classList.remove('hidden'); if (isNew){ Sound.goldGet(); confetti(40); } }
+          $('#rvInfo').classList.remove('hidden');
+          $('#planClose').classList.remove('hidden');
+        }, 450);
+      }, 250);
+    }
+  }, Math.max(25, 700 / title.length));
+}
+$('#planBtn').addEventListener('click', openPlan);
+$('#planGo').addEventListener('click', goPlan);
+['neta','twist','thumb'].forEach(r => document.getElementById('rd-' + r).addEventListener('click', () => redraw(r)));
+$('#planClose').addEventListener('click', () => { hideOverlay('#planModal'); UI.planStart(); });
+$('#planCancel').addEventListener('click', () => hideOverlay('#planModal'));
+
+UI.planStart = function(){
+  if (window.__noFx || !S.plan) return;
+  const G = GENRES.find(g => g.id === S.plan.genre) || GENRES[0];
+  const card = $('#thumbCard');
+  card.style.setProperty('--tbg', G.bg);
+  $('#thumbTag').textContent = S.plan.g;
+  const word = S.plan.cards[0];
+  $('#thumbWord').textContent = word;
+  $('#thumbWord').style.fontSize = word.length > 6 ? 'clamp(12px,2.8vh,24px)' : '';
+  $('#thumbViews').textContent = S.plan.title;
+  pulseClass(card, 'pop', 900);
+  UI.bigText(S.plan.g, S.plan.g === 'SSS' ? '#ff5cf0' : GRADE_COLOR[S.plan.g]);
+};
+
+function renderPlanBtn(){
+  const b = $('#planBtn'), sub = $('#planSub'), g = $('#planGrade'), bar = $('#planTime');
+  if (S.plan){
+    setText(sub, `あと${Math.ceil(S.plan.left)}秒`);
+    setText(g, S.plan.g); g.dataset.g = S.plan.g;
+    bar.style.width = (S.plan.left / S.plan.max * 100).toFixed(1) + '%';
+    b.classList.toggle('need', S.plan.left < 10);
+  } else {
+    setText(sub, 'ネタ切れ');
+    setText(g, '-'); g.dataset.g = '';
+    bar.style.width = '0';
+    b.classList.add('need');
+  }
+}
+
+function recipeTab(list, head){
+  const found = Object.keys(S.recipes).length;
+  head(`見つけた企画レシピ <b>${found}</b> / ${RECIPES.length}　カードの組み合わせで隠しボーナスが出る。見つけると金の宝箱。`);
+  for (const r of RECIPES){
+    const got = !!S.recipes[r.name];
+    const d = document.createElement('div');
+    d.className = 'item ach' + (got ? ' got' : '');
+    d.innerHTML = `<div class="stamp">${got ? '済' : '?'}</div><div class="info"><div class="nm">${got ? r.name : '？？？'}　<span style="color:var(--green);font-size:12px">+${r.b}点</span></div>
+      <div class="ds">${got ? r.c.join(' ＋ ') : r.c.map((x, i) => i === 0 ? x : '？？？').join(' ＋ ')}</div></div>`;
+    list.appendChild(d);
+  }
+}
+
 /* =========================================================
    OFFLINE
    ========================================================= */
@@ -2602,6 +2952,7 @@ function frame(now){
   updateRates(dt);
   renderHUD(dt);
   renderTut(dt);
+  renderPlanBtn();
   shopT += dt; if (shopT > 0.25){ shopT = 0; if (['equip','skill','staff'].includes(S.tab)) updateShop(); else tabBadges(); }
   achT += dt; if (achT > 1){ achT = 0; checkAch(); }
   cmtT += dt;
@@ -2617,7 +2968,7 @@ window.addEventListener('pagehide', save);
 window.__game = { BAL, RANKS, STYLES, ALL_ITEMS, ITEMS, get S(){ return S; }, step, tap, buy, costFor, vps, unit, checkAch, sumFx,
   endIncident:(ok)=>{ if (inc) endIncident(ok); }, get inc(){ return inc; }, closeCutin, collectGolden, get golden(){ return golden; },
   dbg:()=>({eq:1+sumFx('eq'), coll:collabMult(), ach:achMult(), all:allMult(), vpsM:vpsMult(), stock:S.stock, auto:autoGauge(), tapG:tapGauge(), conv:convMult(), div:subsDiv(), burst:burstMult(), ev:eventMult(), unit:unit(), vps:vps(), combo:comboMult()}),
-  openChestReward, pullGacha, gachaCost, retire, retirePts, claimMission, openEvent, get pendingEvent(){ return pendingEvent; }, buyPerk, PERKS, dirtyFx };
+  autoPlan, openChestReward, pullGacha, gachaCost, retire, retirePts, claimMission, openEvent, get pendingEvent(){ return pendingEvent; }, buyPerk, PERKS, dirtyFx };
 })();
 </script>
 </body>
