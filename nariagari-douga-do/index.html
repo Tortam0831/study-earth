@@ -4,259 +4,277 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0b0b12">
+<meta name="theme-color" content="#f3ede1">
 <title>成り上がり動画道</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0b0b12;
-  --bg2:#15151f;
-  --panel:#1b1b28;
-  --panel2:#232334;
-  --line:rgba(255,255,255,.10);
-  --text:#f3f3f8;
-  --dim:#9a9ab4;
-  --accent:#a3a3a3;
-  --accent2:#6b6b6b;
-  --red:#ff3b4e;
-  --gold:#ffcc33;
-  --green:#3ddc97;
+  --paper:#f3ede1;
+  --paper2:#e6dcc8;
+  --card:#fffdf7;
+  --ink:#1d1a16;
+  --dim:#7a7164;
+  --red:#e23b2e;
+  --yellow:#ffd23f;
+  --blue:#2f6fdb;
+  --green:#2a9d5c;
+  --accent:#8a8478;
+  --display:"Dela Gothic One","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",sans-serif;
   --font:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Yu Gothic","Meiryo",system-ui,sans-serif;
+  --bd:2.5px solid var(--ink);
 }
-body[data-rank="1"]{--accent:#b57bff;--accent2:#6a3fb0}
-body[data-rank="2"]{--accent:#4aa8ff;--accent2:#1f5fa8}
-body[data-rank="3"]{--accent:#3ddc97;--accent2:#1c8a5c}
-body[data-rank="4"]{--accent:#ffc93c;--accent2:#b5841a}
-body[data-rank="5"]{--accent:#ff5cf0;--accent2:#7a2cff}
+body[data-rank="1"]{--accent:#7b4bc4}
+body[data-rank="2"]{--accent:#2f6fdb}
+body[data-rank="3"]{--accent:#2a9d5c}
+body[data-rank="4"]{--accent:#d99a00}
+body[data-rank="5"]{--accent:#e23b2e}
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font);
+html,body{width:100%;height:100%;overflow:hidden;color:var(--ink);font-family:var(--font);
   -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:none;overscroll-behavior:none;-webkit-text-size-adjust:100%}
-body{background:radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--accent2) 30%, var(--bg)) 0%, var(--bg) 60%)}
-body[data-rank="5"]{background:radial-gradient(120% 80% at 50% 0%, #2a0e4a 0%, #0b0716 55%, #05030a 100%)}
+body{background-color:var(--paper);
+  background-image:radial-gradient(rgba(29,26,22,.07) 1px,transparent 1.2px);background-size:16px 16px}
 button{font-family:inherit;color:inherit;border:none;background:none;cursor:pointer;touch-action:manipulation}
-button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button:focus-visible{outline:3px dashed var(--blue);outline-offset:2px}
 .hidden{display:none !important}
 .num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.disp{font-family:var(--display);font-weight:400}
 
 /* ===== layout ===== */
 #app{position:fixed;inset:0;display:flex;flex-direction:column;
   padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #body{flex:1;min-height:0;display:flex;flex-direction:column}
-#stage{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;padding:8px 12px}
-#shop{height:38%;min-height:200px;display:flex;flex-direction:column;background:var(--bg2);border-top:1px solid var(--line)}
+#stage{flex:1;min-height:0;display:flex;flex-direction:column;gap:9px;padding:10px 12px}
+#shop{height:38%;min-height:200px;display:flex;flex-direction:column;background:var(--paper2);border-top:var(--bd)}
 @media (orientation:landscape) and (min-width:760px){
   #body{flex-direction:row}
-  #shop{height:auto;width:min(420px,40%);border-top:none;border-left:1px solid var(--line)}
+  #shop{height:auto;width:min(420px,40%);border-top:none;border-left:var(--bd)}
 }
 
 /* ===== header ===== */
-header{padding:8px 12px 6px;background:rgba(0,0,0,.35);border-bottom:1px solid var(--line)}
+header{padding:8px 12px 8px;background:var(--card);border-bottom:var(--bd)}
 .hrow{display:flex;align-items:center;gap:10px}
-#badge{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 6px;border-radius:999px;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0b0b12;font-weight:900;flex-shrink:0;
-  box-shadow:0 0 14px color-mix(in srgb,var(--accent) 50%,transparent)}
-#badgeIcon{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.85);display:grid;place-items:center;font-size:18px}
-#badgeText{display:flex;flex-direction:column;line-height:1.05}
-#badgeText small{font-size:10px;font-weight:700;opacity:.75}
-#badgeName{font-size:15px;white-space:nowrap}
-body[data-rank="5"] #badge{background:linear-gradient(90deg,#ff5cf0,#ffcc33,#3ddc97,#4aa8ff,#ff5cf0);background-size:300% 100%;animation:rainbow 4s linear infinite}
-@keyframes rainbow{to{background-position:300% 0}}
+#badge{display:flex;align-items:stretch;border:var(--bd);border-radius:6px;overflow:hidden;flex-shrink:0;box-shadow:3px 3px 0 var(--ink);background:var(--card)}
+#badgeNum{background:var(--ink);color:var(--paper);font-family:var(--display);font-size:20px;width:34px;display:grid;place-items:center}
+#badgeText{display:flex;flex-direction:column;justify-content:center;line-height:1.1;padding:3px 10px 4px;background:var(--accent);color:#fff}
+#badgeText small{font-size:10px;font-weight:700;opacity:.85}
+#badgeName{font-family:var(--display);font-size:15px;white-space:nowrap}
 #prog{flex:1;min-width:0}
 #progText{font-size:11px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
-#progText b{color:var(--text)}
-.bar{height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
-#progFill{height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:999px;transition:width .3s}
-.iconBtn{width:38px;height:38px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-size:18px;flex-shrink:0;display:grid;place-items:center}
-#stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:7px}
-.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:5px 8px;min-width:0}
-.stat .lab{font-size:10px;color:var(--dim);white-space:nowrap}
-.stat .val{font-size:clamp(15px,2.6vw,22px);font-weight:900;line-height:1.15}
-.stat .rate{font-size:10px;color:var(--green);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#stMoney .val{color:var(--gold)}
+#progText b{color:var(--ink)}
+.bar{height:12px;border:2px solid var(--ink);border-radius:3px;background:var(--card);overflow:hidden}
+#progFill{height:100%;width:0;background:repeating-linear-gradient(-45deg,var(--accent) 0 6px,color-mix(in srgb,var(--accent) 75%,#fff) 6px 12px);transition:width .3s}
+.txtBtn{height:36px;padding:0 10px;border:2px solid var(--ink);border-radius:5px;background:var(--card);font-size:12px;font-weight:800;flex-shrink:0;box-shadow:2px 2px 0 var(--ink)}
+.txtBtn:active{transform:translate(2px,2px);box-shadow:none}
+#stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.stat{background:var(--card);border:2px solid var(--ink);border-radius:5px;padding:4px 8px 5px;min-width:0}
+.stat .lab{font-size:10px;color:var(--dim);font-weight:700;white-space:nowrap}
+.stat .val{font-family:var(--display);font-size:clamp(16px,2.6vw,23px);line-height:1.15}
+.stat .rate{font-size:10px;color:var(--green);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#stMoney .val{color:#b07800}
 
 /* ===== status chips ===== */
 #statusRow{display:flex;gap:6px;flex-wrap:wrap;min-height:26px}
-.chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:800;background:var(--panel);border:1px solid var(--line);white-space:nowrap}
-#trendChip{background:linear-gradient(90deg,#ff3b4e,#ff8a3b);border:none}
-#feverChip{background:linear-gradient(90deg,#ff5cf0,#ffcc33,#3ddc97,#4aa8ff);background-size:300% 100%;animation:rainbow 2s linear infinite;color:#111;border:none}
-#debuffChip{background:#3a1a1f;border-color:#ff3b4e;color:#ff8a95}
-#liveChip{background:#ff0033;border:none;animation:pulse 1s infinite}
-@keyframes pulse{50%{opacity:.6}}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border:2px solid var(--ink);border-radius:4px;font-size:12px;font-weight:800;background:var(--card);white-space:nowrap}
+.chip b{font-family:var(--display);font-weight:400}
+#trendChip{background:var(--red);color:#fff}
+#trendChip .lab{background:#fff;color:var(--red);padding:0 4px;border-radius:2px;font-size:10px}
+#feverChip{background:var(--yellow);animation:blink .5s steps(2) infinite}
+#debuffChip{background:var(--ink);color:#ffb3a8}
+#liveChip{background:var(--red);color:#fff}
+@keyframes blink{50%{background:#fff}}
 
-/* ===== video screen ===== */
+/* ===== video screen (thumbnail) ===== */
 #screenWrap{flex:1;min-height:90px;display:flex;align-items:center;justify-content:center}
-#screen{position:relative;height:100%;max-width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;
-  background:#000;border:3px solid var(--accent2);box-shadow:0 6px 30px rgba(0,0,0,.5)}
+#screen{position:relative;height:100%;max-width:100%;aspect-ratio:16/9;border-radius:8px;overflow:hidden;
+  background:#222;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink)}
 @supports not (aspect-ratio:16/9){#screen{width:100%}}
-#thumb{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;
-  background:linear-gradient(135deg,color-mix(in srgb,var(--accent2) 70%,#000),#0a0a12)}
-#thumbEmoji{font-size:clamp(32px,9vh,80px);filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))}
-#thumbTitle{font-size:clamp(13px,2.6vh,24px);font-weight:900;text-align:center;line-height:1.25;
-  text-shadow:0 2px 0 #000,0 0 8px #000,0 0 2px #000;color:#fff;max-width:95%}
-#screenTop{position:absolute;left:8px;top:8px;right:8px;display:flex;justify-content:space-between;font-size:11px;font-weight:800;pointer-events:none}
-.tag{background:rgba(0,0,0,.6);padding:3px 7px;border-radius:6px}
-#recTag{color:#ff5566}
-#screenBottom{position:absolute;left:0;right:0;bottom:0;height:5px;background:rgba(255,255,255,.15)}
+#thumb{position:absolute;inset:0;background-color:var(--tbg,#2f3b8f);
+  background-image:radial-gradient(rgba(255,255,255,.13) 1.5px,transparent 1.8px);background-size:10px 10px}
+#thumbTag{position:absolute;left:5%;top:9%;background:var(--red);color:#fff;font-family:var(--display);font-size:clamp(11px,2.4vh,20px);
+  padding:2px 8px;border:2px solid var(--ink);transform:rotate(-4deg)}
+#thumbWord{position:absolute;left:6%;top:24%;max-width:70%;font-family:var(--display);font-size:clamp(26px,8.5vh,78px);line-height:1;color:var(--yellow);
+  transform:rotate(-3deg);transform-origin:left center;white-space:nowrap;
+  text-shadow:3px 0 0 var(--ink),-3px 0 0 var(--ink),0 3px 0 var(--ink),0 -3px 0 var(--ink),2px 2px 0 var(--ink),-2px 2px 0 var(--ink),2px -2px 0 var(--ink),-2px -2px 0 var(--ink),6px 6px 0 var(--ink)}
+#thumbArrow{position:absolute;right:6%;top:14%;width:24%;height:auto;transform:rotate(8deg)}
+#thumbTitle{position:absolute;left:0;right:0;bottom:5px;background:rgba(29,26,22,.82);color:#fff;font-weight:800;
+  font-size:clamp(11px,2vh,17px);padding:5px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#screenTop{position:absolute;right:8px;top:8px;display:flex;gap:6px;font-size:11px;font-weight:800;pointer-events:none}
+.tag{background:var(--ink);color:#fff;padding:2px 6px;border-radius:3px}
+#recTag{color:#ff8b80}
+#screenBottom{position:absolute;left:0;right:0;bottom:0;height:5px;background:rgba(255,255,255,.25)}
 #editFill{height:100%;width:0;background:var(--red)}
 #comments{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .cmt{position:absolute;left:100%;white-space:nowrap;font-weight:800;font-size:clamp(13px,2.4vh,20px);color:#fff;
-  text-shadow:0 0 3px #000,0 0 3px #000,1px 1px 0 #000;will-change:transform;animation:flow linear forwards}
-.cmt.sc{background:#ff2a55;padding:2px 8px;border-radius:6px;text-shadow:none}
-.cmt.gold{color:#ffd84a}
-.cmt.fire{color:#ff6a4a}
+  text-shadow:1px 1px 0 #000,-1px 1px 0 #000,1px -1px 0 #000,-1px -1px 0 #000;will-change:transform;animation:flow linear forwards}
+.cmt.sc{background:var(--yellow);color:var(--ink);padding:1px 7px;border:2px solid var(--ink);text-shadow:none}
+.cmt.gold{color:var(--yellow)}
+.cmt.fire{color:#ff8b80}
 @keyframes flow{to{transform:translateX(calc(-1 * var(--w) - 100%))}}
-/* rank screen styles */
 body[data-rank="0"] #screen::after{content:"";position:absolute;inset:0;pointer-events:none;
   background:
-   linear-gradient(28deg,transparent 48.6%,rgba(255,255,255,.35) 49.2%,transparent 49.8%),
-   linear-gradient(-62deg,transparent 58.6%,rgba(255,255,255,.25) 59%,transparent 59.6%),
-   linear-gradient(115deg,transparent 30.6%,rgba(255,255,255,.2) 31%,transparent 31.5%);}
-body[data-rank="4"] #screen{border-color:#ffc93c;box-shadow:0 0 30px rgba(255,201,60,.35)}
-body[data-rank="5"] #screen{border-color:transparent;background:linear-gradient(#000,#000) padding-box,linear-gradient(90deg,#ff5cf0,#ffcc33,#3ddc97,#4aa8ff) border-box;box-shadow:0 0 40px rgba(255,92,240,.35)}
-#screen.fever{animation:feverGlow .6s ease-in-out infinite alternate}
-@keyframes feverGlow{from{box-shadow:0 0 20px #ff5cf0}to{box-shadow:0 0 50px #ffcc33}}
+   linear-gradient(28deg,transparent 48.6%,rgba(255,255,255,.5) 49.1%,transparent 49.6%),
+   linear-gradient(-62deg,transparent 58.6%,rgba(255,255,255,.4) 59%,transparent 59.5%),
+   linear-gradient(115deg,transparent 30.6%,rgba(255,255,255,.35) 31%,transparent 31.4%);}
+#screen.fever{animation:feverBorder .4s steps(2) infinite}
+@keyframes feverBorder{50%{border-color:var(--yellow)}}
 #screen.shake{animation:shake .25s}
-@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 
 /* ===== selectors ===== */
-.selRow{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;touch-action:pan-x;flex-shrink:0;padding-bottom:1px}
+.selRow{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;touch-action:pan-x;flex-shrink:0;padding:0 4px 3px 0}
 .selRow::-webkit-scrollbar{display:none}
-.sel{flex-shrink:0;padding:6px 11px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:13px;font-weight:800;white-space:nowrap;color:var(--dim)}
-.sel.on{background:var(--accent);color:#0b0b12;border-color:var(--accent)}
-.sel.locked{opacity:.4}
-.sel .hot{margin-left:3px}
-.sel .risk{font-size:10px;color:#ff8a95;margin-left:4px}
-.sel.on .risk{color:#7a0012}
+.rowLab{flex-shrink:0;align-self:center;font-size:10px;font-weight:800;color:var(--dim);writing-mode:vertical-rl;letter-spacing:.1em}
+.sel{flex-shrink:0;padding:5px 10px;border:2px solid var(--ink);border-radius:4px;background:var(--card);font-size:13px;font-weight:800;white-space:nowrap;box-shadow:2px 2px 0 var(--ink)}
+.sel.on{background:var(--ink);color:var(--paper)}
+.sel.locked{border-style:dashed;color:var(--dim);box-shadow:none;background:transparent}
+.sel .hot{margin-left:5px;font-size:10px;background:var(--red);color:#fff;padding:0 4px;border-radius:2px;vertical-align:1px}
+.sel .mul{font-family:var(--display);font-weight:400;margin-left:4px}
+.sel .risk{font-size:10px;color:var(--red);margin-left:5px}
+.sel.on .risk{color:#ff9f95}
 
 /* ===== action row ===== */
-#actionRow{display:flex;align-items:center;justify-content:center;gap:clamp(10px,4vw,36px);flex-shrink:0}
-.side{width:clamp(76px,19vw,110px);padding:8px 4px;border-radius:16px;background:var(--panel);border:1px solid var(--line);
-  display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:900;font-size:12px;position:relative;overflow:hidden}
-.side .big{font-size:24px}
+#actionRow{display:flex;align-items:center;justify-content:center;gap:clamp(12px,4vw,36px);flex-shrink:0;padding-bottom:4px}
+.side{width:clamp(78px,19vw,112px);padding:9px 4px 8px;border:var(--bd);border-radius:6px;background:var(--card);box-shadow:3px 3px 0 var(--ink);
+  display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;overflow:hidden}
+.side .big{font-family:var(--display);font-size:clamp(17px,2.4vh,22px);line-height:1}
 .side small{font-size:10px;color:var(--dim);font-weight:700}
-.side.ready{border-color:var(--accent);box-shadow:0 0 14px color-mix(in srgb,var(--accent) 45%,transparent)}
-.side.locked{opacity:.45}
-.side .cd{position:absolute;left:0;bottom:0;height:3px;background:var(--accent)}
-#mainWrap{position:relative;width:clamp(120px,min(30vw,22vh),190px);aspect-ratio:1;border-radius:50%;padding:7px;
-  background:conic-gradient(var(--red) calc(var(--p,0)*1%), rgba(255,255,255,.1) 0);flex-shrink:0}
-#mainBtn{width:100%;height:100%;border-radius:50%;touch-action:none;
-  background:radial-gradient(circle at 35% 30%,#ff6b78,#e0001b 60%,#a00014);
-  box-shadow:0 8px 0 #6e000e,0 12px 24px rgba(0,0,0,.5),inset 0 -6px 12px rgba(0,0,0,.25);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;transition:transform .05s}
-#mainBtn:active,#mainBtn.press{transform:translateY(5px) scale(.97);box-shadow:0 3px 0 #6e000e,0 6px 14px rgba(0,0,0,.5)}
-#mainIcon{font-size:clamp(30px,5vh,48px);line-height:1}
-#mainLabel{font-weight:900;font-size:clamp(14px,2.2vh,19px);margin-top:2px}
-#mainSub{font-size:11px;opacity:.85;font-weight:700}
-#mainBtn.live{background:radial-gradient(circle at 35% 30%,#ffe27a,#ffb300 60%,#c47f00);box-shadow:0 8px 0 #7a4f00,0 12px 24px rgba(0,0,0,.5)}
+.side.ready{background:var(--yellow)}
+.side.ready small{color:var(--ink)}
+.side.locked{border-style:dashed;box-shadow:none;background:transparent;color:var(--dim)}
+.side:active:not(.locked){transform:translate(3px,3px);box-shadow:none}
+.side .cd{position:absolute;left:0;bottom:0;height:4px;background:var(--ink)}
+#mainWrap{position:relative;width:clamp(124px,min(30vw,22vh),190px);aspect-ratio:1;border-radius:50%;padding:8px;border:var(--bd);
+  background:conic-gradient(var(--red) calc(var(--p,0)*1%), var(--card) 0);flex-shrink:0}
+#mainBtn{width:100%;height:100%;border-radius:50%;touch-action:none;background:var(--red);border:var(--bd);
+  box-shadow:0 7px 0 var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;transition:transform .04s}
+#mainBtn:active,#mainBtn.press{transform:translateY(5px);box-shadow:0 2px 0 var(--ink)}
+#mainLabel{font-family:var(--display);font-size:clamp(26px,4.4vh,40px);line-height:1;text-shadow:2px 2px 0 var(--ink)}
+#mainSub{font-size:11px;font-weight:800;margin-top:6px;background:var(--ink);padding:1px 7px;border-radius:2px}
+#mainBtn.live{background:var(--yellow);color:var(--ink)}
+#mainBtn.live #mainLabel{text-shadow:2px 2px 0 #fff}
+#mainBtn.live #mainSub{color:var(--yellow)}
 
 /* ===== shop ===== */
-#tabs{display:flex;gap:4px;padding:8px 8px 6px;align-items:center}
-.tab{flex:1;padding:8px 2px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-size:13px;font-weight:900;color:var(--dim);white-space:nowrap}
-.tab.on{background:var(--accent);color:#0b0b12;border-color:var(--accent)}
-#buyN{flex:0 0 auto;padding:8px 10px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);font-weight:900;font-size:12px;min-width:52px}
-#list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding:2px 8px 10px;overscroll-behavior:contain}
-.item{display:flex;align-items:center;gap:10px;padding:8px;margin-bottom:6px;border-radius:14px;background:var(--panel);border:1px solid var(--line)}
-.item .ic{width:44px;height:44px;border-radius:12px;background:var(--panel2);display:grid;place-items:center;font-size:24px;flex-shrink:0}
+#tabs{display:flex;gap:5px;padding:9px 8px 7px;align-items:center}
+.tab{flex:1;padding:7px 2px;border:2px solid var(--ink);border-radius:4px;background:var(--card);font-size:13px;font-weight:800;white-space:nowrap}
+.tab.on{background:var(--ink);color:var(--paper)}
+#buyN{flex:0 0 auto;padding:7px 10px;border:2px solid var(--ink);border-radius:4px;background:var(--yellow);font-family:var(--display);font-size:13px;min-width:54px}
+#list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding:2px 10px 12px 8px;overscroll-behavior:contain}
+.item{display:flex;align-items:center;gap:10px;padding:7px 8px;margin-bottom:7px;border:2px solid var(--ink);border-radius:5px;background:var(--card);box-shadow:2px 2px 0 var(--ink)}
+.item .lvbox{width:46px;height:46px;flex-shrink:0;border:2px solid var(--ink);border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--paper)}
+.item .lvbox small{font-size:9px;font-weight:800;color:var(--dim);line-height:1}
+.item .lvbox b{font-family:var(--display);font-weight:400;font-size:18px;line-height:1.1}
 .item .info{flex:1;min-width:0}
 .item .nm{font-weight:900;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.item .nm .lv{color:var(--accent);font-size:12px;margin-left:4px}
 .item .ds{font-size:11px;color:var(--dim);line-height:1.35}
-.item .ef{font-size:11px;color:var(--green);font-weight:700}
-.buy{flex-shrink:0;min-width:86px;padding:8px 8px;border-radius:12px;background:var(--gold);color:#2a1f00;font-weight:900;font-size:13px;line-height:1.15}
-.buy small{display:block;font-size:10px;opacity:.75}
-.buy:disabled{background:var(--panel2);color:var(--dim);cursor:default}
-.item.locked{opacity:.55}
-.item.locked .ic{filter:grayscale(1)}
-.item.ach .ic{font-size:22px}
-.item.ach.got{border-color:color-mix(in srgb,var(--gold) 60%,transparent);background:linear-gradient(90deg,rgba(255,204,51,.12),var(--panel))}
-.item.ach:not(.got) .ic{filter:grayscale(1);opacity:.5}
-.achHead{font-size:12px;color:var(--dim);padding:2px 4px 8px}
-.achHead b{color:var(--gold)}
-.lockNote{font-size:11px;color:#ff9aa5;font-weight:700}
+.item .ef{font-size:11px;color:var(--green);font-weight:800}
+.buy{flex-shrink:0;min-width:84px;padding:7px 8px;border:2px solid var(--ink);border-radius:4px;background:var(--yellow);font-family:var(--display);font-size:14px;line-height:1.15;box-shadow:2px 2px 0 var(--ink)}
+.buy small{display:block;font-family:var(--font);font-size:10px;font-weight:800;opacity:.7}
+.buy:active:not(:disabled){transform:translate(2px,2px);box-shadow:none}
+.buy:disabled{background:var(--paper2);color:var(--dim);box-shadow:none;cursor:default}
+.item.locked{background:transparent;border-style:dashed;box-shadow:none;color:var(--dim)}
+.item.locked .lvbox{border-style:dashed;background:transparent}
+.lockNote{font-size:11px;color:var(--red);font-weight:800}
+.listHead{font-size:12px;color:var(--dim);padding:2px 2px 8px;font-weight:700}
+.listHead b{color:var(--ink)}
+.item.ach .stamp{width:42px;height:42px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:17px;
+  border:2px dashed var(--paper2);color:var(--paper2)}
+.item.ach.got .stamp{border:3px solid var(--red);color:var(--red);transform:rotate(-12deg)}
+.item.ach:not(.got){box-shadow:none;background:transparent}
 
 /* ===== overlays ===== */
-.overlay{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.72);padding:20px}
-.modal{width:min(440px,100%);max-height:90%;overflow-y:auto;touch-action:pan-y;background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:20px;text-align:center}
-.modal h2{font-size:20px;margin-bottom:10px}
-.modal p{font-size:14px;color:var(--dim);line-height:1.6;margin-bottom:12px}
+.overlay{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(29,26,22,.55);padding:20px}
+.modal{width:min(440px,100%);max-height:90%;overflow-y:auto;touch-action:pan-y;background:var(--card);border:3px solid var(--ink);border-radius:8px;padding:20px;text-align:center;box-shadow:7px 7px 0 var(--ink)}
+.modal h2{font-family:var(--display);font-weight:400;font-size:22px;margin-bottom:12px}
+.modal p{font-size:14px;color:var(--dim);line-height:1.7;margin-bottom:12px}
 .modal .row{display:flex;gap:8px;margin-top:10px}
-.btn{flex:1;padding:12px;border-radius:14px;background:var(--panel2);border:1px solid var(--line);font-weight:900;font-size:15px}
-.btn.primary{background:var(--accent);color:#0b0b12;border-color:var(--accent)}
-.btn.danger{background:var(--red);color:#fff;border-color:var(--red)}
-.howto{text-align:left;font-size:13px;color:var(--dim);line-height:1.7}
-.howto b{color:var(--text)}
-.statList{text-align:left;font-size:13px;line-height:1.9;margin:6px 0 4px;color:var(--dim)}
-.statList span{float:right;color:var(--text);font-weight:800}
+.btn{flex:1;padding:11px;border:2px solid var(--ink);border-radius:5px;background:var(--card);font-weight:900;font-size:15px;box-shadow:3px 3px 0 var(--ink)}
+.btn:active{transform:translate(3px,3px);box-shadow:none}
+.btn.primary{background:var(--yellow)}
+.btn.danger{background:var(--red);color:#fff}
+.howto{text-align:left;font-size:13px;color:var(--ink);line-height:1.75}
+.howto b{display:inline-block;margin-top:6px;background:var(--ink);color:var(--paper);padding:0 6px;border-radius:2px}
+.statList{text-align:left;font-size:13px;line-height:2;margin:4px 0;color:var(--dim);border-top:2px solid var(--ink)}
+.statList div{border-bottom:1px dashed var(--paper2)}
+.statList span{float:right;color:var(--ink);font-weight:800}
+.gainList{font-size:15px;line-height:2;color:var(--ink);font-weight:800;margin:6px 0}
+.gainList span{color:var(--dim);font-weight:700;display:inline-block;width:5em;text-align:left}
 
 /* title */
-#title{position:fixed;inset:0;z-index:80;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
-  background:radial-gradient(circle at 50% 35%,#3a0010,#0b0b12 70%);text-align:center;padding:20px}
-#title .logo{font-size:clamp(40px,10vw,84px);font-weight:900;line-height:1.05;letter-spacing:.02em;
-  background:linear-gradient(180deg,#fff 20%,#ffcc33 60%,#ff3b4e);-webkit-background-clip:text;background-clip:text;color:transparent;
-  filter:drop-shadow(0 4px 0 #5a0010) drop-shadow(0 0 20px rgba(255,59,78,.5))}
-#title .sub{color:var(--dim);font-size:14px;letter-spacing:.2em}
-#title .playIcon{width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3b0,#ffcc33 55%,#c98a00);display:grid;place-items:center;font-size:48px;box-shadow:0 0 40px rgba(255,204,51,.55);animation:bob 1.6s ease-in-out infinite}
-@keyframes bob{50%{transform:translateY(-8px)}}
-#title .start{font-size:18px;font-weight:900;animation:pulse 1.2s infinite}
-#title .ranks{font-size:12px;color:var(--dim);line-height:1.8}
+#title{position:fixed;inset:0;z-index:80;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  background-color:var(--paper);background-image:radial-gradient(rgba(29,26,22,.08) 1px,transparent 1.2px);background-size:16px 16px;text-align:center;padding:20px}
+#title .kicker{font-size:13px;font-weight:800;background:var(--ink);color:var(--paper);padding:3px 10px;transform:rotate(-2deg)}
+#title .logo{font-family:var(--display);font-size:clamp(46px,12vw,104px);line-height:1.02;color:var(--ink);text-shadow:5px 5px 0 var(--red)}
+#title .logo span{display:block;margin-left:1.2em}
+#title .ranks{font-size:12px;color:var(--dim);line-height:1.9;max-width:560px}
+#title .ranks span{white-space:nowrap}
+#title .start{margin-top:10px;font-family:var(--display);font-size:20px;padding:10px 26px;border:var(--bd);background:var(--yellow);box-shadow:4px 4px 0 var(--ink);border-radius:6px}
+#title .foot{position:absolute;bottom:calc(14px + env(safe-area-inset-bottom));font-size:11px;color:var(--dim)}
 
 /* rank up cut-in */
-#cutin{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
-  background:rgba(0,0,0,.85);overflow:hidden;text-align:center;padding:20px}
-#cutin .band{position:absolute;left:-10%;right:-10%;top:50%;height:44%;transform:translateY(-50%) skewY(-6deg);
-  background:linear-gradient(90deg,var(--accent2),var(--accent),var(--accent2));opacity:.25;animation:bandIn .5s ease-out}
-@keyframes bandIn{from{transform:translateY(-50%) skewY(-6deg) translateX(-100%)}}
-#cutin .up{position:relative;font-size:clamp(46px,12vw,110px);font-weight:900;color:#fff;
-  text-shadow:0 0 30px var(--accent),0 6px 0 var(--accent2);animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
-@keyframes pop{from{transform:scale(3);opacity:0}}
-#cutin .change{position:relative;font-size:clamp(18px,4.5vw,34px);font-weight:900;animation:slideUp .6s .25s both}
-#cutin .change .old{color:var(--dim);text-decoration:line-through}
-#cutin .change .new{color:var(--accent)}
-#cutin .icon{position:relative;font-size:clamp(60px,14vw,120px);animation:pop .7s .1s both}
-#cutin .unl{position:relative;font-size:14px;color:#ddd;line-height:1.8;animation:slideUp .6s .5s both}
-#cutin .unl b{color:var(--gold)}
-#cutin .tapclose{position:relative;font-size:12px;color:var(--dim);margin-top:8px;animation:pulse 1.2s infinite}
-@keyframes slideUp{from{opacity:0;transform:translateY(20px)}}
-.confetti{position:absolute;top:-20px;width:10px;height:16px;border-radius:2px;animation:fall linear forwards}
-@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+#cutin{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  background:var(--paper);overflow:hidden;text-align:center;padding:20px}
+#cutin .band{position:absolute;left:-10%;right:-10%;top:50%;height:46%;transform:translateY(-50%) skewY(-7deg);
+  background:repeating-linear-gradient(90deg,var(--accent) 0 40px,color-mix(in srgb,var(--accent) 85%,#000) 40px 80px);
+  border-top:4px solid var(--ink);border-bottom:4px solid var(--ink);animation:bandIn .45s ease-out}
+@keyframes bandIn{from{transform:translateY(-50%) skewY(-7deg) translateX(-110%)}}
+#cutin .up{position:relative;font-family:var(--display);font-size:clamp(64px,16vw,150px);line-height:1;color:var(--yellow);
+  text-shadow:4px 0 0 var(--ink),-4px 0 0 var(--ink),0 4px 0 var(--ink),0 -4px 0 var(--ink),3px 3px 0 var(--ink),-3px -3px 0 var(--ink),3px -3px 0 var(--ink),-3px 3px 0 var(--ink),9px 9px 0 var(--ink);
+  animation:stamp .5s cubic-bezier(.2,1.5,.4,1)}
+@keyframes stamp{from{transform:scale(2.6) rotate(-8deg);opacity:0}}
+#cutin .step{position:relative;font-size:13px;font-weight:900;background:var(--ink);color:var(--paper);padding:2px 10px;animation:slideUp .5s .2s both}
+#cutin .change{position:relative;font-family:var(--display);font-size:clamp(20px,4.6vw,36px);color:#fff;text-shadow:2px 2px 0 var(--ink);animation:slideUp .5s .25s both}
+#cutin .change .old{opacity:.75;text-decoration:line-through}
+#cutin .sub{position:relative;font-family:var(--display);font-size:15px;letter-spacing:.25em;color:var(--yellow);text-shadow:2px 2px 0 var(--ink)}
+#cutin .unl{position:relative;margin-top:6px;font-size:14px;font-weight:800;line-height:1.9;background:var(--card);border:var(--bd);padding:8px 16px;box-shadow:4px 4px 0 var(--ink);text-align:left;animation:slideUp .5s .45s both}
+#cutin .unl li{list-style:none}
+#cutin .unl li::before{content:"＋";color:var(--red);margin-right:4px}
+#cutin .tapclose{position:relative;font-size:12px;font-weight:800;color:var(--paper);background:var(--ink);padding:2px 10px;margin-top:6px}
+@keyframes slideUp{from{opacity:0;transform:translateY(16px)}}
+.confetti{position:absolute;top:-20px;width:10px;height:14px;border:1.5px solid var(--ink);animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
 
 /* incident */
-#incident .modal{border:2px solid var(--red);background:linear-gradient(180deg,#2a0b10,var(--bg2))}
-#incTitle{font-size:24px;font-weight:900;color:#ff6a75}
-#incBtn{width:min(240px,70vw);aspect-ratio:1;border-radius:50%;margin:14px auto 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  background:radial-gradient(circle at 35% 30%,#fff,#d7e3ff 60%,#9fb6ff);color:#1a2a66;font-weight:900;font-size:20px;touch-action:none;
-  box-shadow:0 8px 0 #4a5fa8,0 12px 24px rgba(0,0,0,.5)}
-#incBtn:active{transform:translateY(5px);box-shadow:0 3px 0 #4a5fa8}
-#incBtn .e{font-size:64px;line-height:1}
-#incBar{height:14px;margin:6px 0}
-#incFill{height:100%;width:0;background:linear-gradient(90deg,#4aa8ff,#3ddc97);border-radius:999px}
-#incTime{font-size:13px;color:var(--dim)}
+#incident .modal{border-color:var(--ink);background:var(--card)}
+#incTitle{font-family:var(--display);font-size:34px;color:var(--red);text-shadow:2px 2px 0 var(--ink);line-height:1.2}
+#incBtn{width:min(220px,64vw);aspect-ratio:1;border-radius:50%;margin:12px auto 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--blue);color:#fff;border:3px solid var(--ink);touch-action:none;box-shadow:0 8px 0 var(--ink)}
+#incBtn:active{transform:translateY(6px);box-shadow:0 2px 0 var(--ink)}
+#incLabel{font-family:var(--display);font-size:40px;line-height:1;text-shadow:2px 2px 0 var(--ink)}
+#incSub{font-size:12px;font-weight:800;margin-top:8px}
+#incBar{height:16px;margin:6px 0}
+#incFill{height:100%;width:0;background:var(--green)}
+#incTime{font-size:13px;color:var(--dim);font-weight:700}
 
 /* floaters & toasts */
 #fx{position:fixed;inset:0;pointer-events:none;z-index:40;overflow:hidden}
-.float{position:absolute;font-weight:900;font-size:18px;color:#fff;text-shadow:0 2px 0 #000,0 0 6px #000;white-space:nowrap;
+.float{position:absolute;font-family:var(--display);font-size:18px;color:#fff;white-space:nowrap;
+  text-shadow:2px 0 0 var(--ink),-2px 0 0 var(--ink),0 2px 0 var(--ink),0 -2px 0 var(--ink);
   animation:floatUp .9s ease-out forwards;transform:translate(-50%,-50%)}
-.float.money{color:var(--gold)}
-.float.big{font-size:26px;color:var(--accent)}
-@keyframes floatUp{to{transform:translate(-50%,-150%);opacity:0}}
+.float.money{color:var(--yellow)}
+.float.big{font-size:26px;color:var(--yellow)}
+@keyframes floatUp{to{transform:translate(-50%,-160%);opacity:0}}
 #toasts{position:fixed;left:50%;top:var(--toastTop,120px);transform:translateX(-50%);z-index:70;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none;width:min(92vw,420px)}
-.toast{background:rgba(20,20,30,.95);border:1px solid var(--accent);border-radius:14px;padding:9px 14px;font-size:13px;font-weight:800;
-  box-shadow:0 6px 20px rgba(0,0,0,.5);animation:toastIn .3s ease-out, toastOut .4s ease-in 2.8s forwards;text-align:center}
-.toast.gold{border-color:var(--gold)}
-.toast.bad{border-color:var(--red)}
-@keyframes toastIn{from{transform:translateY(-20px);opacity:0}}
-@keyframes toastOut{to{transform:translateY(-10px);opacity:0}}
+.toast{background:var(--card);border:2px solid var(--ink);border-radius:4px;padding:7px 14px;font-size:13px;font-weight:800;
+  box-shadow:3px 3px 0 var(--ink);animation:toastIn .25s ease-out, toastOut .4s ease-in 2.8s forwards;text-align:center}
+.toast.gold{background:var(--yellow)}
+.toast.bad{background:var(--red);color:#fff}
+@keyframes toastIn{from{transform:translateY(-14px) rotate(-2deg);opacity:0}}
+@keyframes toastOut{to{transform:translateY(-8px);opacity:0}}
 
-/* small screens */
 @media (max-height:700px){
-  header{padding:5px 10px 4px}
-  #stats{margin-top:4px}
-  #stage{gap:5px;padding:5px 10px}
-  .sel{padding:5px 9px;font-size:12px}
+  header{padding:5px 10px 6px}
+  #stats{margin-top:5px}
+  #stage{gap:6px;padding:6px 10px}
+  .sel{padding:4px 8px;font-size:12px}
 }
 @media (max-width:420px){
   #badgeName{font-size:13px}
   .stat .val{font-size:15px}
+  .txtBtn{padding:0 7px}
 }
 </style>
 </head>
@@ -266,40 +284,45 @@ body[data-rank="5"] #screen{border-color:transparent;background:linear-gradient(
   <header>
     <div class="hrow">
       <div id="badge">
-        <div id="badgeIcon">👶</div>
-        <div id="badgeText"><small>称号</small><span id="badgeName">クソガキ</span></div>
+        <div id="badgeNum">1</div>
+        <div id="badgeText"><small>いまの称号</small><span id="badgeName">クソガキ</span></div>
       </div>
       <div id="prog">
         <div id="progText">次の称号</div>
         <div class="bar"><div id="progFill"></div></div>
       </div>
-      <button class="iconBtn" id="muteBtn" aria-label="ミュート切替">🔊</button>
-      <button class="iconBtn" id="menuBtn" aria-label="メニュー">⚙️</button>
+      <button class="txtBtn" id="muteBtn" aria-label="音の切り替え">音 ON</button>
+      <button class="txtBtn" id="menuBtn">メニュー</button>
     </div>
     <div id="stats">
-      <div class="stat" id="stSubs"><div class="lab">👥 登録者</div><div class="val num">0</div><div class="rate num">+0/秒</div></div>
-      <div class="stat" id="stViews"><div class="lab">▶ 総再生数</div><div class="val num">0</div><div class="rate num">+0/秒</div></div>
-      <div class="stat" id="stMoney"><div class="lab">💴 所持資金</div><div class="val num">¥0</div><div class="rate num">+¥0/秒</div></div>
+      <div class="stat" id="stSubs"><div class="lab">チャンネル登録者</div><div class="val num">0</div><div class="rate num">+0/秒</div></div>
+      <div class="stat" id="stViews"><div class="lab">総再生数</div><div class="val num">0</div><div class="rate num">+0/秒</div></div>
+      <div class="stat" id="stMoney"><div class="lab">所持金</div><div class="val num">¥0</div><div class="rate num">+¥0/秒</div></div>
     </div>
   </header>
 
   <div id="body">
     <section id="stage">
       <div id="statusRow">
-        <span class="chip" id="trendChip">🔥 急上昇: <b id="trendName">-</b> <span id="trendTime" class="num"></span></span>
-        <span class="chip hidden" id="feverChip">✨ 神回バズ中 <b id="feverText"></b></span>
-        <span class="chip hidden" id="debuffChip">⚠ <span id="debuffText"></span></span>
-        <span class="chip hidden" id="liveChip">🔴 LIVE <span id="liveText" class="num"></span></span>
+        <span class="chip" id="trendChip"><span class="lab">急上昇</span><b id="trendName">-</b><span id="trendTime" class="num"></span></span>
+        <span class="chip hidden" id="feverChip">神回バズ中 <b id="feverText"></b></span>
+        <span class="chip hidden" id="debuffChip"><span id="debuffText"></span></span>
+        <span class="chip hidden" id="liveChip">生配信中 <span id="liveText" class="num"></span></span>
       </div>
 
       <div id="screenWrap">
         <div id="screen">
           <div id="thumb">
-            <div id="thumbEmoji">📱</div>
-            <div id="thumbTitle">【初投稿】とりあえず撮ってみた</div>
+            <div id="thumbTag">ガチ</div>
+            <div id="thumbWord">初投稿</div>
+            <svg id="thumbArrow" viewBox="0 0 120 120" aria-hidden="true">
+              <path d="M98 10 C 86 40, 70 62, 38 80 L 46 92 L 8 104 L 22 66 L 30 76 C 58 60, 72 40, 82 6 Z"
+                    fill="#e23b2e" stroke="#1d1a16" stroke-width="5" stroke-linejoin="round"/>
+            </svg>
+            <div id="thumbTitle">とりあえず撮ってみた</div>
           </div>
           <div id="comments"></div>
-          <div id="screenTop"><span class="tag" id="recTag">● REC 0%</span><span class="tag" id="videoCount">動画 0本</span></div>
+          <div id="screenTop"><span class="tag" id="recTag">● 編集 0%</span><span class="tag" id="videoCount">動画 0本</span></div>
           <div id="screenBottom"><div id="editFill"></div></div>
         </div>
       </div>
@@ -308,18 +331,18 @@ body[data-rank="5"] #screen{border-color:transparent;background:linear-gradient(
       <div class="selRow" id="styleRow"></div>
 
       <div id="actionRow">
-        <button class="side" id="dealBtn"><span class="big">💼</span>企業案件<small id="dealSub">🔒</small><span class="cd" id="dealCd"></span></button>
-        <div id="mainWrap"><button id="mainBtn" aria-label="撮影・編集"><span id="mainIcon">🎥</span><span id="mainLabel">撮影！</span><span id="mainSub">連打で編集</span></button></div>
-        <button class="side" id="liveBtn"><span class="big">🔴</span>生配信<small id="liveSub">🔒</small><span class="cd" id="liveCd"></span></button>
+        <button class="side" id="dealBtn"><span class="big">案件</span><small id="dealSub">未解放</small><span class="cd" id="dealCd"></span></button>
+        <div id="mainWrap"><button id="mainBtn" aria-label="撮影・編集"><span id="mainLabel">撮影</span><span id="mainSub">連打で編集</span></button></div>
+        <button class="side" id="liveBtn"><span class="big">生配信</span><small id="liveSub">未解放</small><span class="cd" id="liveCd"></span></button>
       </div>
     </section>
 
     <section id="shop">
       <div id="tabs">
-        <button class="tab on" data-tab="equip">🎥 機材</button>
-        <button class="tab" data-tab="skill">✂️ スキル</button>
-        <button class="tab" data-tab="staff">👥 スタッフ</button>
-        <button class="tab" data-tab="ach">🏅 実績</button>
+        <button class="tab on" data-tab="equip">機材</button>
+        <button class="tab" data-tab="skill">スキル</button>
+        <button class="tab" data-tab="staff">スタッフ</button>
+        <button class="tab" data-tab="ach">実績</button>
         <button id="buyN">×1</button>
       </div>
       <div id="list"></div>
@@ -332,11 +355,11 @@ body[data-rank="5"] #screen{border-color:transparent;background:linear-gradient(
 
 <!-- title -->
 <div id="title">
-  <div class="playIcon">🎬</div>
-  <div class="logo">成り上がり<br>動画道</div>
-  <div class="sub">FROM KUSOGAKI TO GOD OF TUBER</div>
-  <div class="ranks">クソガキ → 無断転載 → 底辺YouTuber → 中堅クリエイター<br>→ トップYouTuber → 世界一のYouTuber</div>
-  <div class="start">タップしてスタート</div>
+  <div class="kicker">連打で成り上がる動画投稿ゲーム</div>
+  <div class="logo">成り上がり<span>動画道</span></div>
+  <div class="ranks"><span>クソガキ ／</span> <span>無断転載 ／</span> <span>底辺YouTuber ／</span> <span>中堅クリエイター ／</span> <span>トップYouTuber ／</span> <span>世界一のYouTuber</span></div>
+  <div class="start">はじめる</div>
+  <div class="foot">画面のどこかをタップ</div>
 </div>
 
 <!-- rank up -->
@@ -345,9 +368,9 @@ body[data-rank="5"] #screen{border-color:transparent;background:linear-gradient(
 <!-- incident -->
 <div id="incident" class="overlay hidden">
   <div class="modal">
-    <div id="incTitle">🔥 炎上発生！</div>
-    <p id="incDesc">連打で謝罪動画を出して鎮火しろ！</p>
-    <button id="incBtn"><span class="e" id="incEmoji">🙇</span><span id="incLabel">謝罪連打！</span></button>
+    <div id="incTitle">炎上</div>
+    <p id="incDesc">連打で謝罪動画を出して火を消せ。</p>
+    <button id="incBtn"><span id="incLabel">謝罪</span><span id="incSub">連打</span></button>
     <div class="bar" id="incBar"><div id="incFill"></div></div>
     <div id="incTime" class="num">残り 8.0秒</div>
   </div>
@@ -356,40 +379,40 @@ body[data-rank="5"] #screen{border-color:transparent;background:linear-gradient(
 <!-- menu -->
 <div id="menu" class="overlay hidden">
   <div class="modal">
-    <h2>⚙️ メニュー</h2>
+    <h2>メニュー</h2>
     <div class="statList" id="statList"></div>
-    <div class="row"><button class="btn" id="howBtn">❓ 遊び方</button><button class="btn" id="muteBtn2">🔊 サウンド</button></div>
-    <div class="row"><button class="btn danger" id="resetBtn">🗑 データリセット</button></div>
+    <div class="row"><button class="btn" id="howBtn">遊び方</button><button class="btn" id="muteBtn2">音 ON</button></div>
+    <div class="row"><button class="btn danger" id="resetBtn">データを消す</button></div>
     <div class="row"><button class="btn primary" id="closeMenu">閉じる</button></div>
   </div>
 </div>
 
 <div id="how" class="overlay hidden">
   <div class="modal">
-    <h2>❓ 遊び方</h2>
+    <h2>遊び方</h2>
     <div class="howto">
-      <b>① 連打で撮影・編集</b><br>真ん中の赤いボタンを連打すると編集ゲージが溜まり、満タンで動画を公開！複数の指で同時に連打OK。<br>
-      <b>② ジャンル＆スタイル</b><br>🔥急上昇ジャンルと同じ企画を出すと再生数が大ボーナス。スタイルによって再生数・登録率・リスクが変わる。<br>
-      <b>③ 放置でも伸びる</b><br>公開した動画は毎秒再生され続け、登録者と資金が増えていく。<br>
-      <b>④ 強化</b><br>資金で機材・スキル・スタッフを強化して数字をインフレさせよう。<br>
-      <b>⑤ ハプニング</b><br>✨神回バズ＝フィーバー！ 🔥炎上・⚠著作権警告は連打で鎮火しないと収益ダウン。<br>
-      <b>⑥ 称号</b><br>登録者数で称号が昇格し、新しい機能が解放される。目指せ登録者3億人＝世界一！
+      <b>撮る</b><br>赤いボタンを連打すると編集ゲージが溜まって、満タンで動画が公開される。指を何本使ってもいい。<br>
+      <b>ネタ選び</b><br>急上昇のジャンルに合わせると再生数が伸びる。投稿スタイルで再生数・登録率・リスクが変わる。<br>
+      <b>ほっといても伸びる</b><br>出した動画は放置中も回り続けて、登録者とお金が増えていく。<br>
+      <b>強化</b><br>お金で機材・スキル・スタッフを買って、数字をどんどん大きくする。<br>
+      <b>ハプニング</b><br>神回バズが来たらしばらく全部の伸びが倍。炎上や著作権警告は連打で処理しないと収益が落ちる。<br>
+      <b>称号</b><br>登録者数で称号が上がって、できることが増える。ゴールは登録者3億人の世界一。
     </div>
-    <div class="row"><button class="btn primary" id="closeHow">OK</button></div>
+    <div class="row"><button class="btn primary" id="closeHow">わかった</button></div>
   </div>
 </div>
 
 <div id="confirm" class="overlay hidden">
   <div class="modal">
-    <h2 id="cfTitle">本当にリセットしますか？</h2>
-    <p id="cfText">すべての進行状況が消えます。元に戻せません。</p>
-    <div class="row"><button class="btn" id="cfNo">やめる</button><button class="btn danger" id="cfYes">リセット</button></div>
+    <h2 id="cfTitle">本当に消しますか？</h2>
+    <p id="cfText">登録者もお金も全部なくなって、クソガキからやり直しになります。</p>
+    <div class="row"><button class="btn" id="cfNo">やめる</button><button class="btn danger" id="cfYes">消す</button></div>
   </div>
 </div>
 
 <div id="welcome" class="overlay hidden">
   <div class="modal">
-    <h2>🌙 おかえり！</h2>
+    <h2>おかえり</h2>
     <p id="wbText"></p>
     <div class="row"><button class="btn primary" id="wbOk">受け取る</button></div>
   </div>
@@ -405,93 +428,93 @@ body[data-rank="5"] #screen{border-color:transparent;background:linear-gradient(
 const SAVE_KEY = 'nariagari_douga_do_v1';
 
 const RANKS = [
-  { name:'クソガキ',          icon:'👶', need:0,   mult:1, yen:0.05,  unl:['勢い投稿で気合いの連打投稿！'] },
-  { name:'無断転載',          icon:'🏴‍☠️', need:100, mult:1.5, yen:0.05, unl:['スタイル「無断転載」解禁（著作権リスク）','スキル「釣りサムネ術」'] },
-  { name:'底辺YouTuber',     icon:'📹', need:1e3, mult:1.75, yen:0.08,    unl:['広告収益が本格解禁！（資金×1.6）','オリジナル企画 / ショート連投','機材「一眼レフ」'] },
-  { name:'中堅クリエイター',   icon:'🎬', need:5e4, mult:2, yen:0.1,  unl:['💼 企業案件','🤝 大型コラボ','スタッフ雇用（自動投稿）','アルゴリズム解析 / 防音自宅スタジオ'] },
-  { name:'トップYouTuber',    icon:'🏆', need:1e6, mult:2.5, yen:0.12,  unl:['🔴 生配信スパチャ','巨大専用ビル','企画会議チーム','AI自動企画生成'] },
-  { name:'世界一のYouTuber',  icon:'🌏', need:3e8, mult:3, yen:0.15,    unl:['🌐 グローバル展開（全収益×3）','多言語自動吹き替え','宇宙配信ステーション','グローバル運営法人'], sub:'GOD OF TUBER' },
+  { name:'クソガキ',          need:0,   mult:1, yen:0.05,  unl:['勢い投稿'] },
+  { name:'無断転載',          need:100, mult:1.5, yen:0.05, unl:['スタイル「無断転載」解禁（著作権リスク）','スキル「釣りサムネ術」'] },
+  { name:'底辺YouTuber',     need:1e3, mult:1.75, yen:0.08,    unl:['広告収益（お金の入りが1.6倍）','オリジナル企画 / ショート連投','機材「一眼レフ」'] },
+  { name:'中堅クリエイター',   need:5e4, mult:2, yen:0.1,  unl:['企業案件','大型コラボ','スタッフ雇用（自動投稿）','アルゴリズム解析 / 防音自宅スタジオ'] },
+  { name:'トップYouTuber',    need:1e6, mult:2.5, yen:0.12,  unl:['生配信スパチャ','巨大専用ビル','企画会議チーム','AI自動企画生成'] },
+  { name:'世界一のYouTuber',  need:3e8, mult:3, yen:0.15,    unl:['グローバル展開（全部の伸びが3倍）','多言語自動吹き替え','宇宙配信ステーション','グローバル運営法人'], sub:'GOD OF TUBER' },
 ];
 const HUMANITY = 8e9;
-const RANK_COLORS = [['#a3a3a3','#6b6b6b'],['#b57bff','#6a3fb0'],['#4aa8ff','#1f5fa8'],['#3ddc97','#1c8a5c'],['#ffc93c','#b5841a'],['#ff5cf0','#7a2cff']];
+const RANK_COLORS = ['#8a8478','#7b4bc4','#2f6fdb','#2a9d5c','#d99a00','#e23b2e'];
 /* balance knobs */
 const BAL = { conv:1.25, unit:10, stockRate:0.01, tapView:0.03, tapConv:0.02, passConv:0.015, subsDivK:3.5, subsDivP:5, trendStock:1,
   cut:0.25, solo:0.5, telop:0.2, thumb:0.2, clip:0.25, corp:0.5, ai:0.5, dub:1, meeting:0.2,
   editor:10, aiAuto:20, meetAuto:30, trend:2, trendAlgo:0.25 };
 
 const GENRES = [
-  { id:'game',  name:'ゲーム実況', icon:'🎮', titles:['【初見】クソゲー全クリするまで寝れません','ラスボスを素手で倒してみた','【絶叫】深夜にホラゲー実況','最強キャラで無双してみた','【神プレイ】1000連勝チャレンジ'] },
-  { id:'food',  name:'大食い',     icon:'🍜', titles:['ラーメン10杯完食チャレンジ','コンビニ全商品食べてみた','激辛焼きそば完食するまで帰れない','唐揚げ100個いけるのか','【爆食】給料全部スイーツに使った'] },
-  { id:'prank', name:'ドッキリ',   icon:'😱', titles:['親に退学したとウソついてみた','寝起きドッキリ仕掛けた結果','友達の部屋を勝手に模様替え','【閲覧注意】落とし穴ドッキリ','先生にバレずに授業中に撮影'] },
-  { id:'song',  name:'歌ってみた', icon:'🎤', titles:['【歌ってみた】全力で熱唱','音痴が本気で歌ってみた','【1発撮り】伝説の神曲','カラオケ100点取るまで帰れない','【生演奏】ギター初心者が弾いてみた'] },
-  { id:'test',  name:'検証',       icon:'🧪', titles:['コーラにメントス100個入れてみた','1週間お金使わなかった結果','巨大シャボン玉は作れるのか','【実験】10階から卵を落とすと…','ガチャ100連の確率を検証'] },
-  { id:'pet',   name:'ペット',     icon:'🐶', titles:['猫にキュウリ見せた結果','【癒し】子犬の1日密着','ハムスターに迷路作ってみた','【感動】保護猫との出会い','柴犬に変顔したら…'] },
+  { id:'game',  name:'ゲーム実況', bg:'#2f3b8f', titles:[['全クリ','【初見】クソゲー全クリするまで寝れません'],['素手','ラスボスを素手で倒してみた'],['絶叫','深夜にホラゲー実況したら叫びすぎた'],['無双','最強キャラで無双してみた'],['1000連勝','1000連勝するまで終われません']] },
+  { id:'food',  name:'大食い',     bg:'#c9471b', titles:[['10杯','ラーメン10杯完食チャレンジ'],['全商品','コンビニ全商品食べてみた'],['激辛','激辛焼きそば完食するまで帰れない'],['100個','唐揚げ100個いけるのか'],['給料全部','給料全部スイーツに使った']] },
+  { id:'prank', name:'ドッキリ',   bg:'#5e2a8f', titles:[['退学!?','親に退学したとウソついてみた'],['寝起き','寝起きドッキリ仕掛けた結果'],['模様替え','友達の部屋を勝手に模様替え'],['落とし穴','【閲覧注意】落とし穴ドッキリ'],['バレる?','授業中にバレずに撮影できるか']] },
+  { id:'song',  name:'歌ってみた', bg:'#b0174f', titles:[['熱唱','【歌ってみた】全力で熱唱'],['音痴','音痴が本気で歌ってみた'],['1発撮り','【1発撮り】あの名曲を歌った'],['100点','カラオケ100点取るまで帰れない'],['初心者','ギター初心者が弾いてみた']] },
+  { id:'test',  name:'検証',       bg:'#1d6e62', titles:[['100個','コーラにメントス100個入れてみた'],['0円生活','1週間お金を使わなかった結果'],['巨大','巨大シャボン玉は作れるのか'],['10階','10階から卵を落とすと…'],['100連','ガチャ100連の確率を検証']] },
+  { id:'pet',   name:'ペット',     bg:'#a06a1c', titles:[['キュウリ','猫にキュウリ見せた結果'],['密着','子犬の1日に密着'],['迷路','ハムスターに迷路作ってみた'],['出会い','保護猫との出会い'],['変顔','柴犬に変顔したら…']] },
 ];
 
 const STYLES = [
-  { id:'ikioi',  name:'勢い投稿',     icon:'💥', rank:0, view:1,   conv:0.06, need:100, prefix:'【ガチ】',     risk:{type:'flame', p:0.02} },
-  { id:'tensai', name:'無断転載',     icon:'🏴‍☠️', rank:1, view:2.5,   conv:0.05, need:100, prefix:'【転載】',     risk:{type:'copy',  p:0.15}, money:0.5 },
-  { id:'orig',   name:'オリジナル企画', icon:'💡', rank:2, view:3,   conv:0.10, need:150, prefix:'【企画】',     money:1.5 },
-  { id:'short',  name:'ショート連投',  icon:'⚡', rank:2, view:0.7, conv:0.05, need:40,  prefix:'#shorts ' },
-  { id:'collab', name:'大型コラボ',    icon:'🤝', rank:3, view:12,  conv:0.12, need:400, prefix:'【豪華コラボ】', risk:{type:'flame', p:0.04}, money:1.3 },
+  { id:'ikioi',  name:'勢い投稿',     rank:0, view:1,   conv:0.06, need:100, tag:'ガチ', risk:{type:'flame', p:0.02} },
+  { id:'tensai', name:'無断転載',     rank:1, view:2.5,   conv:0.05, need:100, tag:'転載', risk:{type:'copy',  p:0.15}, money:0.5 },
+  { id:'orig',   name:'オリジナル企画', rank:2, view:3,   conv:0.10, need:150, tag:'企画', money:1.5 },
+  { id:'short',  name:'ショート連投',  rank:2, view:0.7, conv:0.05, need:40,  tag:'#shorts' },
+  { id:'collab', name:'大型コラボ',    rank:3, view:12,  conv:0.12, need:400, tag:'豪華コラボ', risk:{type:'flame', p:0.04}, money:1.3 },
 ];
 
 /* upgrade items: eff(L) returns numeric effect; txt(v) formats it */
 const ITEMS = {
   equip: [
-    { id:'phone',    name:'ボロスマホ',        icon:'📱', rank:0, base:10,   g:1.35, d:'画面バキバキ。でも撮れる。',        k:0.5 },
-    { id:'webcam',   name:'ウェブカメラ',      icon:'📷', rank:0, base:200,  g:1.37, d:'顔出しデビュー。画質が人並みに。',  k:2 },
-    { id:'dslr',     name:'一眼レフ',          icon:'📸', rank:2, base:300000,  g:1.4, d:'背景ボケで一気にプロっぽく。',      k:8 },
-    { id:'studio',   name:'防音自宅スタジオ',   icon:'🎙️', rank:3, base:1e+08,  g:1.42, d:'深夜でも叫べる。音質が神。',        k:30 },
-    { id:'building', name:'巨大専用ビル',      icon:'🏢', rank:4, base:5e+10,  g:1.45, d:'大型企画のセットが組み放題。',      k:120 },
-    { id:'space',    name:'宇宙配信ステーション', icon:'🛰️', rank:5, base:5e+13, g:1.48, d:'衛星から全地球へ同時配信。',       k:500 },
+    { id:'phone',    name:'ボロスマホ',        rank:0, base:10,   g:1.35, d:'画面バキバキ。でも撮れる。',        k:0.5 },
+    { id:'webcam',   name:'ウェブカメラ',      rank:0, base:200,  g:1.37, d:'顔出しデビュー。画質が人並みに。',  k:2 },
+    { id:'dslr',     name:'一眼レフ',          rank:2, base:300000,  g:1.4, d:'背景ボケで一気にプロっぽく。',      k:8 },
+    { id:'studio',   name:'防音自宅スタジオ',   rank:3, base:1e+08,  g:1.42, d:'深夜でも叫べる。音質が神。',        k:30 },
+    { id:'building', name:'巨大専用ビル',      rank:4, base:5e+10,  g:1.45, d:'大型企画のセットが組み放題。',      k:120 },
+    { id:'space',    name:'宇宙配信ステーション', rank:5, base:5e+13, g:1.48, d:'衛星から全地球へ同時配信。',       k:500 },
   ],
   skill: [
-    { id:'cut',   name:'カット編集',       icon:'✂️', rank:0, base:20,  g:2, d:'無駄を切ってテンポUP。1タップの編集量UP。' },
-    { id:'telop', name:'テロップ演出',     icon:'💬', rank:0, base:150, g:2, d:'派手な文字で離脱を防ぐ。放置再生UP。' },
-    { id:'thumb', name:'釣りサムネ術',     icon:'🖼️', rank:1, base:2000,g:2, d:'赤い矢印と驚き顔。登録率UP。' },
-    { id:'algo',  name:'アルゴリズム解析',  icon:'📊', rank:3, base:5e+06, g:1.7, d:'トレンド一致ボーナスと神回確率UP。', max:25 },
-    { id:'ai',    name:'AI自動企画生成',   icon:'🤖', rank:4, base:1e+10, g:1.55, d:'AIが企画を量産。全再生UP＋自動編集。' },
-    { id:'dub',   name:'多言語自動吹き替え', icon:'🌐', rank:5, base:1e+14,g:1.6, d:'全言語で同時公開。全再生が爆増。' },
+    { id:'cut',   name:'カット編集',       rank:0, base:20,  g:2, d:'無駄を切ってテンポUP。1タップの編集量UP。' },
+    { id:'telop', name:'テロップ演出',     rank:0, base:150, g:2, d:'派手な文字で離脱を防ぐ。放置再生UP。' },
+    { id:'thumb', name:'釣りサムネ術',     rank:1, base:2000,g:2, d:'赤い矢印と驚き顔。登録率UP。' },
+    { id:'algo',  name:'アルゴリズム解析',  rank:3, base:5e+06, g:1.7, d:'トレンド一致ボーナスと神回確率UP。', max:25 },
+    { id:'ai',    name:'AI自動企画生成',   rank:4, base:1e+10, g:1.55, d:'AIが企画を量産。全再生UP＋自動編集。' },
+    { id:'dub',   name:'多言語自動吹き替え', rank:5, base:1e+14,g:1.6, d:'全言語で同時公開。全再生が爆増。' },
   ],
   staff: [
-    { id:'solo',    name:'自分ひとり（ワンオペ根性）', icon:'🧍', rank:0, base:40,  g:2, d:'徹夜で撮影。タップ時の再生数UP。' },
-    { id:'editor',  name:'専属編集者',       icon:'🧑‍💻', rank:3, base:2e+06, g:1.6, d:'自動で編集ゲージが溜まり、勝手に投稿。' },
-    { id:'clip',    name:'切り抜き部隊',     icon:'🎞️', rank:3, base:2e+07, g:1.7, d:'切り抜きで過去動画が回り続ける。放置再生UP。' },
-    { id:'meeting', name:'企画会議チーム',   icon:'🗣️', rank:4, base:5e+09, g:1.5, d:'自動投稿が急上昇ジャンルに合わせる＋全再生UP。' },
-    { id:'corp',    name:'グローバル運営法人', icon:'🏛️', rank:5, base:5e+13,g:1.55, d:'完全自動運営。放置再生とオフライン収益UP。' },
+    { id:'solo',    name:'自分ひとり（ワンオペ根性）', rank:0, base:40,  g:2, d:'徹夜で撮影。タップ時の再生数UP。' },
+    { id:'editor',  name:'専属編集者',       rank:3, base:2e+06, g:1.6, d:'自動で編集ゲージが溜まり、勝手に投稿。' },
+    { id:'clip',    name:'切り抜き部隊',     rank:3, base:2e+07, g:1.7, d:'切り抜きで過去動画が回り続ける。放置再生UP。' },
+    { id:'meeting', name:'企画会議チーム',   rank:4, base:5e+09, g:1.5, d:'自動投稿が急上昇ジャンルに合わせる＋全再生UP。' },
+    { id:'corp',    name:'グローバル運営法人', rank:5, base:5e+13,g:1.55, d:'完全自動運営。放置再生とオフライン収益UP。' },
   ],
 };
 const ITEM_BY_ID = {};
 for (const t in ITEMS) for (const it of ITEMS[t]) { it.tab = t; ITEM_BY_ID[it.id] = it; }
 
 const ACHS = [
-  { id:'v1',     icon:'🎬', name:'初投稿',           d:'動画を1本公開',           c:()=>S.st.videos>=1 },
-  { id:'v100',   icon:'📼', name:'量産型',           d:'動画を100本公開',         c:()=>S.st.videos>=100 },
-  { id:'v1k',    icon:'🗄️', name:'動画工場',         d:'動画を1,000本公開',       c:()=>S.st.videos>=1e3 },
-  { id:'v10k',   icon:'🏭', name:'コンテンツの暴力',   d:'動画を10,000本公開',      c:()=>S.st.videos>=1e4 },
-  { id:'s10',    icon:'👪', name:'家族以外に見られた', d:'登録者10人',              c:()=>S.subs>=10 },
-  { id:'s1k',    icon:'💰', name:'収益化ライン',      d:'登録者1,000人',           c:()=>S.subs>=1e3 },
-  { id:'s100k',  icon:'🥈', name:'銀の盾',           d:'登録者10万人',            c:()=>S.subs>=1e5 },
-  { id:'s1m',    icon:'🥇', name:'金の盾',           d:'登録者100万人',           c:()=>S.subs>=1e6 },
-  { id:'s10m',   icon:'💎', name:'ダイヤの盾',        d:'登録者1,000万人',         c:()=>S.subs>=1e7 },
-  { id:'s100m',  icon:'🔴', name:'レッドダイヤの盾',   d:'登録者1億人',             c:()=>S.subs>=1e8 },
-  { id:'s1b',    icon:'🌍', name:'人類の8人に1人',     d:'登録者10億人',            c:()=>S.subs>=1e9 },
-  { id:'s8b',    icon:'👑', name:'全人類登録',        d:'登録者80億人',            c:()=>S.subs>=HUMANITY },
-  { id:'w1k',    icon:'▶️', name:'4桁再生',          d:'総再生1,000回',           c:()=>S.views>=1e3 },
-  { id:'w1m',    icon:'📈', name:'ミリオン再生',      d:'総再生100万回',           c:()=>S.views>=1e6 },
-  { id:'w1b',    icon:'🚀', name:'ビリオン再生',      d:'総再生10億回',            c:()=>S.views>=1e9 },
-  { id:'w1t',    icon:'🌌', name:'1兆再生',          d:'総再生1T回',              c:()=>S.views>=1e12 },
-  { id:'w1qa',   icon:'♾️', name:'京再生',           d:'総再生1Qa回',             c:()=>S.views>=1e15 },
-  { id:'t1k',    icon:'👆', name:'連打の鬼',          d:'1,000回タップ',          c:()=>S.st.taps>=1e3 },
-  { id:'t10k',   icon:'🔨', name:'指が折れる',        d:'10,000回タップ',         c:()=>S.st.taps>=1e4 },
-  { id:'buzz1',  icon:'✨', name:'初めての神回',      d:'神回バズを1回発生',        c:()=>S.st.buzz>=1 },
-  { id:'buzz10', icon:'🌟', name:'バズ職人',          d:'神回バズを10回発生',       c:()=>S.st.buzz>=10 },
-  { id:'fire3',  icon:'🧯', name:'炎上慣れ',          d:'炎上・警告を3回鎮火',      c:()=>S.st.cleared>=3 },
-  { id:'trend50',icon:'🔥', name:'流行の申し子',      d:'トレンド一致で50本投稿',   c:()=>S.st.trendHits>=50 },
-  { id:'deal10', icon:'💼', name:'案件まみれ',        d:'企業案件を10回受ける',     c:()=>S.st.deals>=10 },
-  { id:'live10', icon:'🎙️', name:'配信者の鑑',        d:'生配信を10回行う',         c:()=>S.st.lives>=10 },
-  { id:'m1b',    icon:'🏦', name:'億り人',            d:'所持資金1B円',            c:()=>S.money>=1e9 },
+  { id:'v1',     name:'初投稿',           d:'動画を1本公開',           c:()=>S.st.videos>=1 },
+  { id:'v100',   name:'量産型',           d:'動画を100本公開',         c:()=>S.st.videos>=100 },
+  { id:'v1k',    name:'動画工場',         d:'動画を1,000本公開',       c:()=>S.st.videos>=1e3 },
+  { id:'v10k',   name:'コンテンツの暴力',   d:'動画を10,000本公開',      c:()=>S.st.videos>=1e4 },
+  { id:'s10',    name:'家族以外に見られた', d:'登録者10人',              c:()=>S.subs>=10 },
+  { id:'s1k',    name:'収益化ライン',      d:'登録者1,000人',           c:()=>S.subs>=1e3 },
+  { id:'s100k',  name:'銀の盾',           d:'登録者10万人',            c:()=>S.subs>=1e5 },
+  { id:'s1m',    name:'金の盾',           d:'登録者100万人',           c:()=>S.subs>=1e6 },
+  { id:'s10m',   name:'ダイヤの盾',        d:'登録者1,000万人',         c:()=>S.subs>=1e7 },
+  { id:'s100m',  name:'レッドダイヤの盾',   d:'登録者1億人',             c:()=>S.subs>=1e8 },
+  { id:'s1b',    name:'人類の8人に1人',     d:'登録者10億人',            c:()=>S.subs>=1e9 },
+  { id:'s8b',    name:'全人類登録',        d:'登録者80億人',            c:()=>S.subs>=HUMANITY },
+  { id:'w1k',    name:'4桁再生',          d:'総再生1,000回',           c:()=>S.views>=1e3 },
+  { id:'w1m',    name:'ミリオン再生',      d:'総再生100万回',           c:()=>S.views>=1e6 },
+  { id:'w1b',    name:'ビリオン再生',      d:'総再生10億回',            c:()=>S.views>=1e9 },
+  { id:'w1t',    name:'1兆再生',          d:'総再生1T回',              c:()=>S.views>=1e12 },
+  { id:'w1qa',   name:'京再生',           d:'総再生1Qa回',             c:()=>S.views>=1e15 },
+  { id:'t1k',    name:'連打の鬼',          d:'1,000回タップ',          c:()=>S.st.taps>=1e3 },
+  { id:'t10k',   name:'指が折れる',        d:'10,000回タップ',         c:()=>S.st.taps>=1e4 },
+  { id:'buzz1',  name:'初めての神回',      d:'神回バズを1回発生',        c:()=>S.st.buzz>=1 },
+  { id:'buzz10', name:'バズ職人',          d:'神回バズを10回発生',       c:()=>S.st.buzz>=10 },
+  { id:'fire3',  name:'炎上慣れ',          d:'炎上・警告を3回鎮火',      c:()=>S.st.cleared>=3 },
+  { id:'trend50',name:'流行の申し子',      d:'トレンド一致で50本投稿',   c:()=>S.st.trendHits>=50 },
+  { id:'deal10', name:'案件まみれ',        d:'企業案件を10回受ける',     c:()=>S.st.deals>=10 },
+  { id:'live10', name:'配信者の鑑',        d:'生配信を10回行う',         c:()=>S.st.lives>=10 },
+  { id:'m1b',    name:'億り人',            d:'所持資金1B円',            c:()=>S.money>=1e9 },
 ];
 
 const COMMENTS = [
@@ -502,8 +525,8 @@ const COMMENTS = [
   ['急上昇1位おめ！','金の盾！','伝説の回','テレビで見た','人生変わった','鳥肌','この人天才','公式より面白い'],
   ['GOD','世界一！','Amazing!!','¡Increíble!','太棒了！','Génial!','LEGEND','全人類見てる','神','최고!','Мощно!','Wunderbar!'],
 ];
-const C_FEVER = ['神回確定','バズってて草','急上昇から来ました','伸びすぎw','トレンド入り！','何回でも見れる','ここから来た人👇','伝説の始まり'];
-const C_FLAME = ['炎上してて草','謝罪まだ？','見損なった','擁護できない','燃えてる🔥','説明して','引退しろ'];
+const C_FEVER = ['神回確定','バズってて草','急上昇から来ました','伸びすぎw','トレンド入り！','何回でも見れる','ここから来た人','伝説の始まり'];
+const C_FLAME = ['炎上してて草','謝罪まだ？','見損なった','擁護できない','燃えてる','説明して','引退しろ'];
 const C_COPY  = ['著作権大丈夫？','削除されそう','権利者見てるぞ','これアウトでは'];
 const C_LIVE  = ['¥1,000 応援！','¥5,000 いつもありがとう','¥10,000 神配信','¥50,000 赤スパ失礼します','¥500 初スパ','¥3,000 声が好き'];
 
@@ -695,7 +718,7 @@ function publish(count, auto){
     lastTitleAt = now;
     setThumb(genre, st);
     const r = screenEl.getBoundingClientRect();
-    floatText(r.left + r.width/2, r.top + r.height*0.75, '+' + fmt(burst) + ' 再生' + (match ? ' 🔥' : ''), 'big');
+    floatText(r.left + r.width/2, r.top + r.height*0.75, '+' + fmt(burst) + ' 再生' + (match ? '（急上昇）' : ''), 'big');
     if (match && Math.random() < 0.5) spawnComment('流行りに乗ったな', 'gold');
   }
   if (!auto || now - lastPubSound > 700){ lastPubSound = now; Sound.publish(); }
@@ -711,7 +734,7 @@ function startFever(){
   S.feverLeft = 20;
   S.st.buzz++;
   Sound.fever();
-  toast(`✨ 神回バズ発生！ 20秒間 全収益 ×${S.feverMult}！`, 'gold');
+  toast(`神回バズ！ 20秒間 全部の伸びが ×${S.feverMult}`, 'gold');
   for (let i=0;i<6;i++) setTimeout(()=>spawnComment(pick(C_FEVER),'gold'), i*150);
 }
 
@@ -731,14 +754,14 @@ function doDeal(){
   S.dealCd = 45;
   S.st.deals++;
   Sound.coin(); setTimeout(()=>Sound.coin(), 120);
-  toast(`💼 企業案件ゲット！ ${fmtY(reward)}`, 'gold');
+  toast(`企業案件を受けた　+${fmtY(reward)}`, 'gold');
   spawnComment('案件きたああ', 'gold');
 }
 function doLive(){
   if (S.rank < 4 || S.liveCd > 0 || S.liveLeft > 0) return;
   S.liveLeft = 15; S.liveCd = 120; S.st.lives++;
   Sound.fanfareShort();
-  toast('🔴 生配信スタート！ 15秒間 連打でスパチャを集めろ！', 'gold');
+  toast('生配信スタート。15秒間、連打でスパチャを集めよう', 'gold');
 }
 
 /* ----- incidents (flame / copyright) ----- */
@@ -747,13 +770,13 @@ function startIncident(type){
   Sound.alert();
   screenEl.classList.add('shake'); setTimeout(()=>screenEl.classList.remove('shake'), 300);
   if (type === 'flame'){
-    $('#incTitle').textContent = '🔥 炎上発生！';
-    $('#incDesc').textContent = '過激すぎて大炎上！連打で謝罪動画を出して鎮火しろ！';
-    $('#incEmoji').textContent = '🙇'; $('#incLabel').textContent = '謝罪連打！';
+    $('#incTitle').textContent = '炎上';
+    $('#incDesc').textContent = 'やりすぎて燃えた。連打で謝罪動画を出して火を消せ。';
+    $('#incLabel').textContent = '謝罪'; $('#incSub').textContent = '連打';
   } else {
-    $('#incTitle').textContent = '⚠ 著作権警告！';
-    $('#incDesc').textContent = '権利者から申し立てが！連打で権利処理して動画削除を防げ！';
-    $('#incEmoji').textContent = '📝'; $('#incLabel').textContent = '権利処理連打！';
+    $('#incTitle').textContent = '著作権警告';
+    $('#incDesc').textContent = '権利者から申し立てが来た。連打で処理しないと動画が消される。';
+    $('#incLabel').textContent = '処理'; $('#incSub').textContent = '連打';
   }
   $('#incident').classList.remove('hidden');
   updateIncident();
@@ -778,13 +801,13 @@ function endIncident(ok){
   if (ok){
     S.st.cleared++;
     Sound.publish();
-    if (t === 'flame'){ const b = S.subs*0.02 + 5; S.subs += b; toast(`🧯 鎮火成功！謝罪動画が伸びて登録者+${fmt(b)}`, 'gold'); }
-    else toast('✅ 権利処理完了！動画は守られた', 'gold');
+    if (t === 'flame'){ const b = S.subs*0.02 + 5; S.subs += b; toast(`鎮火した。謝罪動画が伸びて登録者 +${fmt(b)}`, 'gold'); }
+    else toast('権利処理が間に合った。動画は無事', 'gold');
   } else {
     S.debuffLeft = 30;
     Sound.fail();
-    if (t === 'flame'){ const l = S.subs*0.03; S.subs -= l; toast(`💀 鎮火失敗… 登録者-${fmt(l)}・30秒間収益ダウン`, 'bad'); }
-    else { S.stock *= 0.95; toast('🗑 動画削除… 放置再生-5%・30秒間収益ダウン', 'bad'); }
+    if (t === 'flame'){ const l = S.subs*0.03; S.subs -= l; toast(`鎮火失敗… 登録者 -${fmt(l)}、30秒間 伸びが落ちる`, 'bad'); }
+    else { S.stock *= 0.95; toast('動画が消された… 放置再生 -5%、30秒間 伸びが落ちる', 'bad'); }
   }
 }
 
@@ -794,7 +817,7 @@ function newTrend(){
   S.trendLeft = 40;
   renderSelectors();
   const G = GENRES.find(x=>x.id===g);
-  toast(`🔥 急上昇トレンドが「${G.icon}${G.name}」に変わった！`);
+  toast(`急上昇が「${G.name}」に変わった`);
 }
 
 function checkRank(){
@@ -814,7 +837,7 @@ function checkAch(){
   for (const a of ACHS){
     if (!S.ach[a.id] && a.c()){
       S.ach[a.id] = 1;
-      toast(`🏅 実績解除「${a.name}」 全収益+5%`, 'gold');
+      toast(`実績「${a.name}」　全部の伸び +5%`, 'gold');
       Sound.coin();
       if (S.tab === 'ach') buildShop();
     }
@@ -827,11 +850,11 @@ function checkAch(){
 function step(dt){
   S.playTime += dt;
   S.trendLeft -= dt; if (S.trendLeft <= 0) newTrend();
-  if (S.feverLeft > 0){ S.feverLeft -= dt; if (S.feverLeft <= 0){ S.feverLeft = 0; S.feverMult = 1; S.buzzCd = 45; toast('神回バズ終了…また狙おう！'); } }
+  if (S.feverLeft > 0){ S.feverLeft -= dt; if (S.feverLeft <= 0){ S.feverLeft = 0; S.feverMult = 1; S.buzzCd = 45; toast('神回バズ終わり'); } }
   if (S.debuffLeft > 0) S.debuffLeft = Math.max(0, S.debuffLeft - dt);
   if (S.dealCd > 0) S.dealCd = Math.max(0, S.dealCd - dt);
   if (S.liveCd > 0) S.liveCd = Math.max(0, S.liveCd - dt);
-  if (S.liveLeft > 0){ S.liveLeft -= dt; if (S.liveLeft <= 0){ S.liveLeft = 0; toast('🔴 生配信終了！おつかれさま！'); } }
+  if (S.liveLeft > 0){ S.liveLeft -= dt; if (S.liveLeft <= 0){ S.liveLeft = 0; toast('生配信おわり。おつかれ'); } }
   if (S.incCd > 0) S.incCd -= dt;
   if (S.buzzCd > 0) S.buzzCd -= dt;
   if (inc){ inc.left -= dt; if (inc.left <= 0) endIncident(false); else updateIncident(); }
@@ -954,8 +977,12 @@ function spawnComment(text, cls){
 }
 function setThumb(genreId, st){
   const G = GENRES.find(g=>g.id===genreId) || GENRES[0];
-  $('#thumbEmoji').textContent = G.icon;
-  $('#thumbTitle').textContent = st.prefix + pick(G.titles);
+  const [word, title] = pick(G.titles);
+  $('#thumb').style.setProperty('--tbg', G.bg);
+  $('#thumbTag').textContent = st.tag;
+  $('#thumbWord').textContent = word;
+  $('#thumbWord').style.transform = `rotate(${(Math.random()*6-5).toFixed(1)}deg)`;
+  $('#thumbTitle').textContent = st.id === 'short' ? title + ' #shorts' : `【${st.tag}】${title}`;
 }
 
 /* ----- cut-in ----- */
@@ -965,16 +992,15 @@ function showCutin(){
   cutinShowing = true;
   const R = RANKS[n];
   const el = $('#cutin');
-  el.style.setProperty('--accent', RANK_COLORS[n][0]);
-  el.style.setProperty('--accent2', RANK_COLORS[n][1]);
+  el.style.setProperty('--accent', RANK_COLORS[n]);
   el.innerHTML = `<div class="band"></div>
-    <div class="up">昇格！</div>
-    <div class="icon">${R.icon}</div>
-    <div class="change"><span class="old">【${RANKS[o].name}】</span> → <span class="new">【${R.name}】</span></div>
-    ${R.sub ? `<div class="change" style="font-size:16px;letter-spacing:.2em;color:var(--gold)">${R.sub}</div>` : ''}
-    <div class="unl">${R.unl.map(u=>'🔓 <b>'+u+'</b>').join('<br>')}<br>再生倍率 ×${R.mult}</div>
+    <div class="step">称号 ${n+1} / ${RANKS.length}</div>
+    <div class="up">昇格</div>
+    <div class="change"><span class="old">${RANKS[o].name}</span>　→　${R.name}</div>
+    ${R.sub ? `<div class="sub">${R.sub}</div>` : ''}
+    <ul class="unl">${R.unl.map(u=>'<li>'+u+'</li>').join('')}<li>再生倍率 ×${R.mult}</li></ul>
     <div class="tapclose">タップで閉じる</div>`;
-  const cols = ['#ff3b4e','#ffcc33','#3ddc97','#4aa8ff','#ff5cf0','#fff'];
+  const cols = ['#e23b2e','#ffd23f','#2a9d5c','#2f6fdb','#fffdf7'];
   for (let i=0;i<50;i++){
     const c = document.createElement('div');
     c.className = 'confetti';
@@ -1001,14 +1027,14 @@ function applyRankTheme(){ document.body.dataset.rank = S.rank; }
    RENDER
    ========================================================= */
 const els = {
-  badgeIcon:$('#badgeIcon'), badgeName:$('#badgeName'), progText:$('#progText'), progFill:$('#progFill'),
+  badgeNum:$('#badgeNum'), badgeName:$('#badgeName'), progText:$('#progText'), progFill:$('#progFill'),
   subs:$('#stSubs .val'), subsR:$('#stSubs .rate'), views:$('#stViews .val'), viewsR:$('#stViews .rate'),
   money:$('#stMoney .val'), moneyR:$('#stMoney .rate'),
   trendName:$('#trendName'), trendTime:$('#trendTime'),
   feverChip:$('#feverChip'), feverText:$('#feverText'), debuffChip:$('#debuffChip'), debuffText:$('#debuffText'),
   liveChip:$('#liveChip'), liveText:$('#liveText'),
   rec:$('#recTag'), vcount:$('#videoCount'), editFill:$('#editFill'), mainWrap:$('#mainWrap'),
-  mainBtn:$('#mainBtn'), mainIcon:$('#mainIcon'), mainLabel:$('#mainLabel'), mainSub:$('#mainSub'),
+  mainBtn:$('#mainBtn'), mainLabel:$('#mainLabel'), mainSub:$('#mainSub'),
   dealBtn:$('#dealBtn'), dealSub:$('#dealSub'), dealCd:$('#dealCd'), liveBtn:$('#liveBtn'), liveSub:$('#liveSub'), liveCd:$('#liveCd'),
 };
 function setText(el, t){ if (el.textContent !== t) el.textContent = t; }
@@ -1025,7 +1051,7 @@ function updateRates(dt){
 
 function renderHUD(){
   const R = RANKS[S.rank];
-  setText(els.badgeIcon, R.icon);
+  setText(els.badgeNum, String(S.rank + 1));
   setText(els.badgeName, R.name);
   let p, txt;
   if (S.rank < RANKS.length-1){
@@ -1034,7 +1060,7 @@ function renderHUD(){
     txt = `次の称号 <b>【${N.name}】</b> まで ${fmt(S.subs)} / ${fmt(N.need)}人`;
   } else {
     p = Math.log(Math.max(1,S.subs)/R.need) / Math.log(HUMANITY/R.need);
-    txt = S.subs >= HUMANITY ? '<b>全人類が登録済み</b> — 伝説の頂点' : `<b>全人類登録</b>まで ${fmt(S.subs)} / ${fmt(HUMANITY)}人`;
+    txt = S.subs >= HUMANITY ? '<b>全人類が登録した</b>' : `おまけの目標 <b>全人類登録</b> ${fmt(S.subs)} / ${fmt(HUMANITY)}人`;
   }
   if (els.progText.innerHTML !== txt) els.progText.innerHTML = txt;
   els.progFill.style.width = (Math.max(0, Math.min(1, p)) * 100).toFixed(1) + '%';
@@ -1044,38 +1070,37 @@ function renderHUD(){
   setText(els.money, fmtY(S.money)); setText(els.moneyR, '+' + fmtY(rate.money) + '/秒');
 
   const G = GENRES.find(g=>g.id===S.trend);
-  setText(els.trendName, G.icon + G.name + ' ×' + trendMult().toFixed(1));
-  setText(els.trendTime, Math.ceil(S.trendLeft) + 's');
+  setText(els.trendName, G.name + ' ×' + trendMult().toFixed(1));
+  setText(els.trendTime, 'あと' + Math.ceil(S.trendLeft) + '秒');
   els.feverChip.classList.toggle('hidden', !(S.feverLeft > 0));
-  if (S.feverLeft > 0) setText(els.feverText, `×${S.feverMult} ${Math.ceil(S.feverLeft)}s`);
+  if (S.feverLeft > 0) setText(els.feverText, `×${S.feverMult}　あと${Math.ceil(S.feverLeft)}秒`);
   screenEl.classList.toggle('fever', S.feverLeft > 0);
   els.debuffChip.classList.toggle('hidden', !(S.debuffLeft > 0));
-  if (S.debuffLeft > 0) setText(els.debuffText, `収益ダウン ×0.3 ${Math.ceil(S.debuffLeft)}s`);
+  if (S.debuffLeft > 0) setText(els.debuffText, `伸びが落ちてる ×0.3　あと${Math.ceil(S.debuffLeft)}秒`);
   els.liveChip.classList.toggle('hidden', !(S.liveLeft > 0));
-  if (S.liveLeft > 0) setText(els.liveText, Math.ceil(S.liveLeft) + 's');
+  if (S.liveLeft > 0) setText(els.liveText, 'あと' + Math.ceil(S.liveLeft) + '秒');
 
   const st = curStyle();
   const pct = Math.min(100, S.gauge / st.need * 100);
   els.mainWrap.style.setProperty('--p', pct.toFixed(1));
   els.editFill.style.width = pct.toFixed(1) + '%';
-  setText(els.rec, `● 編集中 ${Math.floor(pct)}%`);
+  setText(els.rec, `● 編集 ${Math.floor(pct)}%`);
   setText(els.vcount, `動画 ${fmt(S.st.videos)}本`);
 
   const live = S.liveLeft > 0;
   els.mainBtn.classList.toggle('live', live);
-  setText(els.mainIcon, live ? '💴' : inc ? '🙇' : '🎥');
-  setText(els.mainLabel, live ? 'スパチャ！' : '撮影！');
+  setText(els.mainLabel, live ? '投げ銭' : '撮影');
   const ag = autoGauge();
   setText(els.mainSub, live ? '連打で投げ銭' : ag > 0 ? `自動 +${fmt(ag)}/秒` : '連打で編集');
 
   // side buttons
-  if (S.rank < 3){ setText(els.dealSub, '🔒 中堅で解放'); els.dealBtn.className = 'side locked'; els.dealCd.style.width = '0'; }
-  else if (S.dealCd > 0){ setText(els.dealSub, Math.ceil(S.dealCd) + '秒'); els.dealBtn.className = 'side'; els.dealCd.style.width = (100 - S.dealCd/45*100) + '%'; }
-  else { setText(els.dealSub, 'タップで受注'); els.dealBtn.className = 'side ready'; els.dealCd.style.width = '0'; }
-  if (S.rank < 4){ setText(els.liveSub, '🔒 トップで解放'); els.liveBtn.className = 'side locked'; els.liveCd.style.width = '0'; }
-  else if (S.liveLeft > 0){ setText(els.liveSub, '配信中！'); els.liveBtn.className = 'side ready'; els.liveCd.style.width = '0'; }
-  else if (S.liveCd > 0){ setText(els.liveSub, Math.ceil(S.liveCd) + '秒'); els.liveBtn.className = 'side'; els.liveCd.style.width = (100 - S.liveCd/120*100) + '%'; }
-  else { setText(els.liveSub, 'タップで開始'); els.liveBtn.className = 'side ready'; els.liveCd.style.width = '0'; }
+  if (S.rank < 3){ setText(els.dealSub, '中堅から'); els.dealBtn.className = 'side locked'; els.dealCd.style.width = '0'; }
+  else if (S.dealCd > 0){ setText(els.dealSub, 'あと' + Math.ceil(S.dealCd) + '秒'); els.dealBtn.className = 'side'; els.dealCd.style.width = (100 - S.dealCd/45*100) + '%'; }
+  else { setText(els.dealSub, '受けられる'); els.dealBtn.className = 'side ready'; els.dealCd.style.width = '0'; }
+  if (S.rank < 4){ setText(els.liveSub, 'トップから'); els.liveBtn.className = 'side locked'; els.liveCd.style.width = '0'; }
+  else if (S.liveLeft > 0){ setText(els.liveSub, '配信中'); els.liveBtn.className = 'side ready'; els.liveCd.style.width = '0'; }
+  else if (S.liveCd > 0){ setText(els.liveSub, 'あと' + Math.ceil(S.liveCd) + '秒'); els.liveBtn.className = 'side'; els.liveCd.style.width = (100 - S.liveCd/120*100) + '%'; }
+  else { setText(els.liveSub, '始められる'); els.liveBtn.className = 'side ready'; els.liveCd.style.width = '0'; }
 }
 
 /* ----- selectors ----- */
@@ -1085,7 +1110,7 @@ function renderSelectors(){
   for (const g of GENRES){
     const b = document.createElement('button');
     b.className = 'sel' + (S.genre===g.id ? ' on' : '');
-    b.innerHTML = `${g.icon} ${g.name}${S.trend===g.id ? '<span class="hot">🔥</span>' : ''}`;
+    b.innerHTML = `${g.name}${S.trend===g.id ? '<span class="hot">急上昇</span>' : ''}`;
     b.onclick = () => { S.genre = g.id; Sound.init(); Sound.tap(); renderSelectors(); };
     gr.appendChild(b);
   }
@@ -1096,10 +1121,10 @@ function renderSelectors(){
     const locked = s.rank > S.rank;
     b.className = 'sel' + (S.style===s.id ? ' on' : '') + (locked ? ' locked' : '');
     const risk = s.risk ? `<span class="risk">${s.risk.type==='copy'?'著作権':'炎上'}${Math.round(s.risk.p*100)}%</span>` : '';
-    b.innerHTML = locked ? `🔒 ${s.name}` : `${s.icon} ${s.name} ×${s.view}${risk}`;
+    b.innerHTML = locked ? `${s.name}（未解放）` : `${s.name}<span class="mul">×${s.view}</span>${risk}`;
     b.onclick = () => {
       Sound.init();
-      if (locked){ toast(`🔒「${s.name}」は【${RANKS[s.rank].name}】で解放`); return; }
+      if (locked){ toast(`「${s.name}」は【${RANKS[s.rank].name}】になってから`); return; }
       S.style = s.id; Sound.tap(); renderSelectors();
     };
     sr.appendChild(b);
@@ -1117,13 +1142,13 @@ function buildShop(){
   $('#buyN').classList.toggle('hidden', S.tab==='ach');
   if (S.tab === 'ach'){
     const h = document.createElement('div');
-    h.className = 'achHead';
-    h.innerHTML = `解除 <b>${achCount()}</b> / ${ACHS.length}　（1つにつき全収益 +5%：現在 ×${achMult().toFixed(2)}）`;
+    h.className = 'listHead';
+    h.innerHTML = `達成 <b>${achCount()}</b> / ${ACHS.length}　1つごとに全部の伸び +5%（いま ×${achMult().toFixed(2)}）`;
     list.appendChild(h);
     for (const a of ACHS){
       const d = document.createElement('div');
       d.className = 'item ach' + (S.ach[a.id] ? ' got' : '');
-      d.innerHTML = `<div class="ic">${a.icon}</div><div class="info"><div class="nm">${S.ach[a.id]?a.name:'？？？'}</div><div class="ds">${a.d}</div></div><div class="ef">${S.ach[a.id]?'✅ 達成':''}</div>`;
+      d.innerHTML = `<div class="stamp">済</div><div class="info"><div class="nm">${S.ach[a.id]?a.name:'？？？'}</div><div class="ds">${a.d}</div></div>`;
       list.appendChild(d);
     }
     list.scrollTop = top;
@@ -1131,10 +1156,10 @@ function buildShop(){
   }
   if (S.tab === 'staff'){
     const h = document.createElement('div');
-    h.className = 'achHead';
+    h.className = 'listHead';
     const hired = ITEMS.staff.filter(s=>s.id!=='solo' && lv(s.id)>0).length;
-    h.innerHTML = hired ? `体制：<b>チーム運営中</b>（自動編集 +${fmt(autoGauge())}/秒）`
-      : S.rank >= 3 ? `体制：<b>自分ひとり</b>（スタッフを雇うと自動で投稿してくれる！）`
+    h.innerHTML = hired ? `体制：<b>チームで運営中</b>（自動編集 +${fmt(autoGauge())}/秒）`
+      : S.rank >= 3 ? `体制：<b>自分ひとり</b>（人を雇うと勝手に投稿してくれる）`
       : `体制：<b>自分ひとり</b>（中堅クリエイターになると雇用できる）`;
     list.appendChild(h);
   }
@@ -1142,10 +1167,10 @@ function buildShop(){
     const d = document.createElement('div');
     const locked = it.rank > S.rank;
     d.className = 'item' + (locked ? ' locked' : '');
-    d.innerHTML = `<div class="ic">${it.icon}</div>
-      <div class="info"><div class="nm">${it.name}<span class="lv"></span></div>
+    d.innerHTML = `<div class="lvbox"><small>Lv</small><b class="lv"></b></div>
+      <div class="info"><div class="nm">${it.name}</div>
       <div class="ds">${it.d}</div>
-      ${locked ? `<div class="lockNote">🔒【${RANKS[it.rank].name}】で解放</div>` : `<div class="ef"></div>`}</div>
+      ${locked ? `<div class="lockNote">【${RANKS[it.rank].name}】になったら買える</div>` : `<div class="ef"></div>`}</div>
       <button class="buy" ${locked?'disabled':''}></button>`;
     const btn = d.querySelector('.buy');
     btn.addEventListener('click', () => { if (buy(it)) updateShop(); });
@@ -1158,16 +1183,16 @@ function buildShop(){
 function updateShop(){
   for (const r of rows){
     const it = r.it, L = lv(it.id);
-    setText(r.lv, 'Lv.' + L + (it.max ? '/' + it.max : ''));
-    if (r.locked){ r.btn.innerHTML = '🔒'; continue; }
+    setText(r.lv, String(L));
+    if (r.locked){ r.btn.innerHTML = '未解放'; continue; }
     const maxed = it.max && L >= it.max;
     const n = buyCount(it);
     const c = costFor(it, n);
     if (r.ef){
-      const t = maxed ? effText(it, L) + '（MAX）' : effText(it, L) + ' → ' + effText(it, L + n).replace(/^[^×+]*/, '');
+      const t = maxed ? effText(it, L) + '（最大）' : effText(it, L) + ' → ' + effText(it, L + n).replace(/^[^×+]*/, '');
       setText(r.ef, t);
     }
-    const html = maxed ? 'MAX' : `${fmtY(c)}<small>${S.buyN==='max' ? '×' + n : '×' + n}</small>`;
+    const html = maxed ? '最大' : `${fmtY(c)}<small>${n}レベル分</small>`;
     if (r.btn.innerHTML !== html) r.btn.innerHTML = html;
     r.btn.disabled = maxed || c > S.money;
   }
@@ -1184,8 +1209,8 @@ mainBtn.addEventListener('pointerdown', e => {
   tap(e.clientX, e.clientY);
 });
 $('#incBtn').addEventListener('pointerdown', e => { e.preventDefault(); if (inc) incTap(); });
-$('#dealBtn').addEventListener('click', () => { Sound.init(); if (S.rank < 3) toast('🔒 企業案件は【中堅クリエイター】で解放'); else doDeal(); });
-$('#liveBtn').addEventListener('click', () => { Sound.init(); if (S.rank < 4) toast('🔒 生配信は【トップYouTuber】で解放'); else doLive(); });
+$('#dealBtn').addEventListener('click', () => { Sound.init(); if (S.rank < 3) toast('企業案件は【中堅クリエイター】になってから'); else doDeal(); });
+$('#liveBtn').addEventListener('click', () => { Sound.init(); if (S.rank < 4) toast('生配信は【トップYouTuber】になってから'); else doLive(); });
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => { S.tab = t.dataset.tab; Sound.init(); Sound.tap(); buildShop(); }));
 $('#buyN').addEventListener('click', () => {
   S.buyN = S.buyN === 1 ? 10 : S.buyN === 10 ? 'max' : 1;
@@ -1208,8 +1233,8 @@ document.addEventListener('touchmove', e => {
 }, { passive:false });
 
 function updateMuteUI(){
-  $('#muteBtn').textContent = S.muted ? '🔇' : '🔊';
-  $('#muteBtn2').textContent = S.muted ? '🔇 サウンドOFF' : '🔊 サウンドON';
+  $('#muteBtn').textContent = S.muted ? '音 OFF' : '音 ON';
+  $('#muteBtn2').textContent = S.muted ? '音 OFF' : '音 ON';
 }
 function toggleMute(){ S.muted = !S.muted; Sound.init(); updateMuteUI(); if (!S.muted) Sound.coin(); save(); }
 $('#muteBtn').addEventListener('click', toggleMute);
@@ -1235,7 +1260,7 @@ $('#cfYes').addEventListener('click', () => {
   $('#confirm').classList.add('hidden'); $('#incident').classList.add('hidden');
   applyRankTheme(); renderSelectors(); buildShop(); setThumb(S.genre, curStyle());
   $('#buyN').textContent = '×1';
-  toast('データをリセットしました。クソガキからやり直し！');
+  toast('データを消した。クソガキからやり直し');
   save();
 });
 
@@ -1256,9 +1281,9 @@ function applyOffline(o){
 }
 function showOffline(o){
   const h = Math.floor(o.sec/3600), m = Math.floor(o.sec%3600/60);
-  $('#wbText').innerHTML = `${h?h+'時間':''}${m}分のあいだに動画が再生されていた！<br><br>
-    ▶ +${fmt(o.views)} 再生<br>👥 +${fmt(o.subs)} 人<br>💴 +${fmtY(o.money)}<br>
-    <small>（オフライン効率 ${Math.round(offlineRate()*100)}%）</small>`;
+  $('#wbText').innerHTML = `いなかった${h?h+'時間':''}${m}分のあいだも動画は回っていた。
+    <div class="gainList"><span>再生</span>+${fmt(o.views)}<br><span>登録者</span>+${fmt(o.subs)}人<br><span>お金</span>+${fmtY(o.money)}</div>
+    <small>放置中の効率 ${Math.round(offlineRate()*100)}%</small>`;
   $('#welcome').classList.remove('hidden');
 }
 $('#wbOk').addEventListener('click', () => { $('#welcome').classList.add('hidden'); Sound.coin(); });
