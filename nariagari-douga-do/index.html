@@ -11,15 +11,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#f3ede1;
-  --paper2:#e6dcc8;
-  --card:#fffdf7;
-  --ink:#1d1a16;
-  --dim:#7a7164;
-  --red:#e23b2e;
-  --yellow:#ffd23f;
-  --blue:#2f6fdb;
-  --green:#2a9d5c;
+  --paper:#f3ede1; --paper2:#e6dcc8; --card:#fffdf7; --ink:#1d1a16; --dim:#7a7164;
+  --red:#e23b2e; --yellow:#ffd23f; --blue:#2f6fdb; --green:#2a9d5c; --purple:#7b4bc4;
   --accent:#8a8478;
   --display:"Dela Gothic One","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",sans-serif;
   --font:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Yu Gothic","Meiryo",system-ui,sans-serif;
@@ -30,251 +23,409 @@ body[data-rank="2"]{--accent:#2f6fdb}
 body[data-rank="3"]{--accent:#2a9d5c}
 body[data-rank="4"]{--accent:#d99a00}
 body[data-rank="5"]{--accent:#e23b2e}
-
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;color:var(--ink);font-family:var(--font);
   -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:none;overscroll-behavior:none;-webkit-text-size-adjust:100%}
-body{background-color:var(--paper);
-  background-image:radial-gradient(rgba(29,26,22,.07) 1px,transparent 1.2px);background-size:16px 16px}
+body{background-color:var(--paper);background-image:radial-gradient(rgba(29,26,22,.07) 1px,transparent 1.2px);background-size:16px 16px}
 button{font-family:inherit;color:inherit;border:none;background:none;cursor:pointer;touch-action:manipulation}
 button:focus-visible{outline:3px dashed var(--blue);outline-offset:2px}
 .hidden{display:none !important}
 .num{font-variant-numeric:tabular-nums;white-space:nowrap}
-.disp{font-family:var(--display);font-weight:400}
 
-/* ===== layout ===== */
+/* ---------- layout ---------- */
 #app{position:fixed;inset:0;display:flex;flex-direction:column;
   padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 #body{flex:1;min-height:0;display:flex;flex-direction:column}
-#stage{flex:1;min-height:0;display:flex;flex-direction:column;gap:9px;padding:10px 12px}
-#shop{height:38%;min-height:200px;display:flex;flex-direction:column;background:var(--paper2);border-top:var(--bd)}
+#stage{flex:1;min-height:0;min-width:0;display:flex;flex-direction:column;gap:7px;padding:8px 10px 8px}
+#shop{height:37%;min-height:210px;min-width:0;flex-shrink:0;display:flex;flex-direction:column;background:var(--paper2);border-top:var(--bd);position:relative}
 @media (orientation:landscape) and (min-width:760px){
   #body{flex-direction:row}
-  #shop{height:auto;width:min(420px,40%);border-top:none;border-left:var(--bd)}
+  #shop{height:auto;width:min(430px,40%);border-top:none;border-left:var(--bd)}
 }
 
-/* ===== header ===== */
-header{padding:8px 12px 8px;background:var(--card);border-bottom:var(--bd)}
-.hrow{display:flex;align-items:center;gap:10px}
+/* ---------- header ---------- */
+header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);position:relative;z-index:5}
+.hrow{display:flex;align-items:center;gap:8px}
 #badge{display:flex;align-items:stretch;border:var(--bd);border-radius:6px;overflow:hidden;flex-shrink:0;box-shadow:3px 3px 0 var(--ink);background:var(--card)}
-#badgeNum{background:var(--ink);color:var(--paper);font-family:var(--display);font-size:20px;width:34px;display:grid;place-items:center}
-#badgeText{display:flex;flex-direction:column;justify-content:center;line-height:1.1;padding:3px 10px 4px;background:var(--accent);color:#fff}
-#badgeText small{font-size:10px;font-weight:700;opacity:.85}
-#badgeName{font-family:var(--display);font-size:15px;white-space:nowrap}
+#badgeNum{background:var(--ink);color:var(--paper);font-family:var(--display);font-size:19px;width:32px;display:grid;place-items:center}
+#badgeText{display:flex;flex-direction:column;justify-content:center;line-height:1.1;padding:3px 9px 4px;background:var(--accent);color:#fff;transition:background .4s}
+#badgeText small{font-size:9px;font-weight:700;opacity:.85}
+#badgeName{font-family:var(--display);font-size:14px;white-space:nowrap}
 #prog{flex:1;min-width:0}
 #progText{font-size:11px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
 #progText b{color:var(--ink)}
 .bar{height:12px;border:2px solid var(--ink);border-radius:3px;background:var(--card);overflow:hidden}
-#progFill{height:100%;width:0;background:repeating-linear-gradient(-45deg,var(--accent) 0 6px,color-mix(in srgb,var(--accent) 75%,#fff) 6px 12px);transition:width .3s}
-.txtBtn{height:36px;padding:0 10px;border:2px solid var(--ink);border-radius:5px;background:var(--card);font-size:12px;font-weight:800;flex-shrink:0;box-shadow:2px 2px 0 var(--ink)}
+#progFill{height:100%;width:0;background:repeating-linear-gradient(-45deg,var(--accent) 0 6px,color-mix(in srgb,var(--accent) 72%,#fff) 6px 12px);background-size:17px 17px;animation:stripes 1s linear infinite;transition:width .35s}
+@keyframes stripes{to{background-position:17px 0}}
+.txtBtn{height:34px;padding:0 9px;border:2px solid var(--ink);border-radius:5px;background:var(--card);font-size:12px;font-weight:800;flex-shrink:0;box-shadow:2px 2px 0 var(--ink)}
 .txtBtn:active{transform:translate(2px,2px);box-shadow:none}
-#stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
-.stat{background:var(--card);border:2px solid var(--ink);border-radius:5px;padding:4px 8px 5px;min-width:0}
+#stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:7px}
+.stat{background:var(--card);border:2px solid var(--ink);border-radius:5px;padding:3px 8px 4px;min-width:0;position:relative}
 .stat .lab{font-size:10px;color:var(--dim);font-weight:700;white-space:nowrap}
-.stat .val{font-family:var(--display);font-size:clamp(16px,2.6vw,23px);line-height:1.15}
+.stat .val{font-family:var(--display);font-size:clamp(16px,2.6vw,23px);line-height:1.15;display:inline-block;transform-origin:left center}
+.stat .val.bump{animation:bump .25s ease-out}
+@keyframes bump{40%{transform:scale(1.12)}}
 .stat .rate{font-size:10px;color:var(--green);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #stMoney .val{color:#b07800}
 
-/* ===== status chips ===== */
-#statusRow{display:flex;gap:6px;flex-wrap:wrap;min-height:26px}
-.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border:2px solid var(--ink);border-radius:4px;font-size:12px;font-weight:800;background:var(--card);white-space:nowrap}
-.chip b{font-family:var(--display);font-weight:400}
-#trendChip{background:var(--red);color:#fff}
-#trendChip .lab{background:#fff;color:var(--red);padding:0 4px;border-radius:2px;font-size:10px}
-#feverChip{background:var(--yellow);animation:blink .5s steps(2) infinite}
-#debuffChip{background:var(--ink);color:#ffb3a8}
-#liveChip{background:var(--red);color:#fff}
-@keyframes blink{50%{background:#fff}}
+/* ---------- scene ---------- */
+#sceneWrap{flex:1;min-height:150px;position:relative;border:3px solid var(--ink);border-radius:10px;overflow:hidden;box-shadow:5px 5px 0 var(--ink);background:#bfe0f2;touch-action:none;cursor:pointer}
+#scene{position:absolute;inset:0;width:100%;height:100%;display:block}
+#sceneWrap.shake{animation:shake .25s}
+@keyframes shake{25%{transform:translate(-5px,2px)}50%{transform:translate(4px,-2px)}75%{transform:translate(-3px,1px)}}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+#flash.on{animation:flash .18s ease-out}
+@keyframes flash{0%{opacity:.55}100%{opacity:0}}
+#zoneFx{position:absolute;inset:-20%;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:repeating-conic-gradient(from 0deg at 50% 60%,rgba(255,255,255,.0) 0deg 7deg,rgba(255,255,255,.35) 7deg 9deg);animation:spin 6s linear infinite}
+#sceneWrap.zone #zoneFx{opacity:1}
+#sceneWrap.fever{animation:feverBorder .4s steps(2) infinite}
+@keyframes feverBorder{50%{border-color:var(--yellow)}}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-/* ===== video screen (thumbnail) ===== */
-#screenWrap{flex:1;min-height:90px;display:flex;align-items:center;justify-content:center}
-#screen{position:relative;height:100%;max-width:100%;aspect-ratio:16/9;border-radius:8px;overflow:hidden;
-  background:#222;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink)}
-@supports not (aspect-ratio:16/9){#screen{width:100%}}
-#thumb{position:absolute;inset:0;background-color:var(--tbg,#2f3b8f);
-  background-image:radial-gradient(rgba(255,255,255,.13) 1.5px,transparent 1.8px);background-size:10px 10px}
-#thumbTag{position:absolute;left:5%;top:9%;background:var(--red);color:#fff;font-family:var(--display);font-size:clamp(11px,2.4vh,20px);
-  padding:2px 8px;border:2px solid var(--ink);transform:rotate(-4deg)}
-#thumbWord{position:absolute;left:6%;top:24%;max-width:70%;font-family:var(--display);font-size:clamp(26px,8.5vh,78px);line-height:1;color:var(--yellow);
-  transform:rotate(-3deg);transform-origin:left center;white-space:nowrap;
-  text-shadow:3px 0 0 var(--ink),-3px 0 0 var(--ink),0 3px 0 var(--ink),0 -3px 0 var(--ink),2px 2px 0 var(--ink),-2px 2px 0 var(--ink),2px -2px 0 var(--ink),-2px -2px 0 var(--ink),6px 6px 0 var(--ink)}
-#thumbArrow{position:absolute;right:6%;top:14%;width:24%;height:auto;transform:rotate(8deg)}
-#thumbTitle{position:absolute;left:0;right:0;bottom:5px;background:rgba(29,26,22,.82);color:#fff;font-weight:800;
-  font-size:clamp(11px,2vh,17px);padding:5px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#screenTop{position:absolute;right:8px;top:8px;display:flex;gap:6px;font-size:11px;font-weight:800;pointer-events:none}
-.tag{background:var(--ink);color:#fff;padding:2px 6px;border-radius:3px}
-#recTag{color:#ff8b80}
-#screenBottom{position:absolute;left:0;right:0;bottom:0;height:5px;background:rgba(255,255,255,.25)}
-#editFill{height:100%;width:0;background:var(--red)}
-#comments{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-.cmt{position:absolute;left:100%;white-space:nowrap;font-weight:800;font-size:clamp(13px,2.4vh,20px);color:#fff;
-  text-shadow:1px 1px 0 #000,-1px 1px 0 #000,1px -1px 0 #000,-1px -1px 0 #000;will-change:transform;animation:flow linear forwards}
+/* svg parts */
+#scene .ink{stroke:#1d1a16;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.chara{transform-box:fill-box;transform-origin:50% 100%;animation:idle 1.9s ease-in-out infinite}
+@keyframes idle{50%{transform:translateY(-3px)}}
+.chara .cbody{transform-box:fill-box;transform-origin:50% 100%;transition:transform .08s}
+.chara.act .cbody{transform:scale(1.05,.94)}
+.chara .arm{transform-box:fill-box;transform-origin:0% 92%;transition:transform .08s}
+.chara.act .arm{transform:rotate(-16deg)}
+.chara .m-open,.chara .sweat,.chara .m-wow{display:none}
+.chara.act .m-open{display:inline}
+.chara.act .m-norm{display:none}
+.chara.jump{animation:jump .5s ease-out}
+@keyframes jump{30%{transform:translateY(-22px) rotate(-4deg)}60%{transform:translateY(0) scale(1.06,.94)}}
+.chara.panic{animation:panic .18s linear infinite}
+.chara.panic .sweat{display:inline}
+.chara.panic .m-norm{display:none}
+.chara.panic .m-wow{display:inline}
+@keyframes panic{50%{transform:translateX(3px)}}
+.chara.dance{animation:dance .42s ease-in-out infinite alternate}
+@keyframes dance{from{transform:rotate(-5deg) translateY(-2px)}to{transform:rotate(5deg) translateY(1px)}}
+.eyes{transform-box:fill-box;transform-origin:center;animation:blink 4.2s infinite}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+.bob{transform-box:fill-box;transform-origin:50% 100%;animation:idle 1.3s ease-in-out infinite}
+.bob2{transform-box:fill-box;transform-origin:50% 100%;animation:idle 1.05s ease-in-out infinite .3s}
+.type{transform-box:fill-box;transform-origin:50% 100%;animation:typing .25s steps(2) infinite}
+@keyframes typing{50%{transform:translateY(-1.5px)}}
+.hover{animation:hover 2.4s ease-in-out infinite}
+@keyframes hover{0%,100%{transform:translate(0,0)}25%{transform:translate(30px,-6px)}50%{transform:translate(60px,2px)}75%{transform:translate(28px,6px)}}
+.glow{animation:glow 1.6s ease-in-out infinite}
+@keyframes glow{50%{opacity:.55}}
+.sway{transform-box:fill-box;transform-origin:50% 0%;animation:sway 3s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+.orbit{transform-box:view-box;transform-origin:300px 92px;animation:spin 14s linear infinite}
+.earth{transform-box:fill-box;transform-origin:center;animation:drift 30s linear infinite}
+@keyframes drift{to{transform:translateX(-60px)}}
+.peek{transform-box:fill-box;animation:peek 9s ease-in-out infinite}
+@keyframes peek{0%,60%,100%{transform:translateX(-70px)}66%,90%{transform:translateX(0)}}
+.cloud{animation:cloud 18s linear infinite}
+@keyframes cloud{from{transform:translateX(-40px)}to{transform:translateX(60px)}}
+.blinkLed{animation:glow .8s steps(2) infinite}
+
+/* scene overlays */
+#thumbCard{position:absolute;left:8px;top:8px;width:min(42%,230px);aspect-ratio:16/10;border:2.5px solid var(--ink);border-radius:6px;overflow:hidden;
+  background-color:var(--tbg,#2f3b8f);background-image:radial-gradient(rgba(255,255,255,.13) 1.3px,transparent 1.6px);background-size:8px 8px;box-shadow:3px 3px 0 var(--ink);pointer-events:none}
+#thumbCard.pop{animation:cardPop .45s cubic-bezier(.2,1.6,.4,1)}
+@keyframes cardPop{from{transform:scale(.6) rotate(-6deg);opacity:.2}}
+#thumbTag{position:absolute;left:6%;top:8%;background:var(--red);color:#fff;font-family:var(--display);font-size:clamp(8px,1.5vh,12px);padding:1px 5px;border:1.5px solid var(--ink);transform:rotate(-4deg)}
+#thumbWord{position:absolute;left:7%;top:30%;max-width:88%;font-family:var(--display);font-size:clamp(16px,4.4vh,40px);line-height:1;color:var(--yellow);white-space:nowrap;transform:rotate(-3deg);
+  text-shadow:2px 0 0 var(--ink),-2px 0 0 var(--ink),0 2px 0 var(--ink),0 -2px 0 var(--ink),2px 2px 0 var(--ink),-2px 2px 0 var(--ink),2px -2px 0 var(--ink),-2px -2px 0 var(--ink),4px 4px 0 var(--ink)}
+#thumbArrow{position:absolute;right:5%;top:8%;width:26%}
+#thumbViews{position:absolute;left:0;right:0;bottom:0;background:rgba(29,26,22,.85);color:#fff;font-size:clamp(9px,1.4vh,12px);font-weight:800;padding:2px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#stampPub{position:absolute;right:6%;bottom:22%;font-family:var(--display);font-size:clamp(12px,2.4vh,20px);color:var(--red);border:3px solid var(--red);padding:0 6px;border-radius:4px;transform:rotate(-14deg);opacity:0;background:rgba(255,253,247,.9)}
+#thumbCard.pop #stampPub{animation:stampIn .9s ease-out forwards}
+@keyframes stampIn{0%{opacity:0;transform:rotate(-14deg) scale(2.2)}20%{opacity:1;transform:rotate(-14deg) scale(1)}80%{opacity:1}100%{opacity:0}}
+#comboBox{position:absolute;right:10px;top:8px;text-align:right;pointer-events:none;opacity:0;transition:opacity .2s}
+#comboBox.on{opacity:1}
+#comboNum{font-family:var(--display);font-size:clamp(28px,6vh,54px);line-height:1;color:#fff;
+  text-shadow:3px 0 0 var(--ink),-3px 0 0 var(--ink),0 3px 0 var(--ink),0 -3px 0 var(--ink),3px 3px 0 var(--ink),-3px -3px 0 var(--ink),5px 5px 0 var(--ink)}
+#comboNum.hit{animation:comboHit .12s ease-out}
+@keyframes comboHit{50%{transform:scale(1.18) rotate(-3deg)}}
+#comboLab{display:inline-block;font-family:var(--display);font-size:13px;background:var(--ink);color:#fff;padding:1px 6px;margin-top:2px}
+#comboBox.lv2 #comboNum{color:var(--yellow)}
+#comboBox.lv3 #comboNum{color:#ff8b80}
+#comboBox.lv3 #comboLab{background:var(--red)}
+#comments{position:absolute;left:0;right:0;top:0;height:58%;pointer-events:none;overflow:hidden}
+.cmt{position:absolute;left:100%;white-space:nowrap;font-weight:800;font-size:clamp(13px,2.3vh,19px);color:#fff;
+  text-shadow:1px 1px 0 #000,-1px 1px 0 #000,1px -1px 0 #000,-1px -1px 0 #000;will-change:transform;animation:flow 5s linear forwards}
 .cmt.sc{background:var(--yellow);color:var(--ink);padding:1px 7px;border:2px solid var(--ink);text-shadow:none}
+.cmt.sc.big{background:var(--red);color:#fff}
 .cmt.gold{color:var(--yellow)}
 .cmt.fire{color:#ff8b80}
 @keyframes flow{to{transform:translateX(calc(-1 * var(--w) - 100%))}}
-body[data-rank="0"] #screen::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:
-   linear-gradient(28deg,transparent 48.6%,rgba(255,255,255,.5) 49.1%,transparent 49.6%),
-   linear-gradient(-62deg,transparent 58.6%,rgba(255,255,255,.4) 59%,transparent 59.5%),
-   linear-gradient(115deg,transparent 30.6%,rgba(255,255,255,.35) 31%,transparent 31.4%);}
-#screen.fever{animation:feverBorder .4s steps(2) infinite}
-@keyframes feverBorder{50%{border-color:var(--yellow)}}
-#screen.shake{animation:shake .25s}
-@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+#golden{position:absolute;left:0;top:0;width:66px;height:66px;margin:-33px 0 0 -33px;z-index:3;cursor:pointer;touch-action:none}
+#golden svg{width:100%;height:100%;animation:goldSpin 2.2s ease-in-out infinite;filter:drop-shadow(3px 3px 0 rgba(29,26,22,.9))}
+@keyframes goldSpin{0%,100%{transform:rotate(-12deg) scale(1)}50%{transform:rotate(12deg) scale(1.12)}}
+#golden.got{pointer-events:none}
+#golden.got svg{animation:goldGot .35s ease-out forwards}
+@keyframes goldGot{to{transform:scale(2.4) rotate(40deg);opacity:0}}
+#eventBubble{position:absolute;left:50%;top:14%;transform:translateX(-50%);z-index:3;background:var(--card);border:2.5px solid var(--ink);border-radius:8px;padding:6px 12px;
+  font-weight:900;font-size:13px;box-shadow:3px 3px 0 var(--ink);animation:bubble 1s ease-in-out infinite;white-space:nowrap;cursor:pointer}
+#eventBubble::after{content:"";position:absolute;left:50%;bottom:-10px;margin-left:-8px;border:8px solid transparent;border-top-color:var(--ink);border-bottom:0}
+#eventBubble b{color:var(--red);font-family:var(--display);font-weight:400;margin-right:6px}
+@keyframes bubble{50%{transform:translateX(-50%) translateY(-5px)}}
+#tapHint{position:absolute;left:50%;bottom:16%;transform:translateX(-50%);pointer-events:none;z-index:2;text-align:center}
+#tapHint .finger{width:56px;height:56px;margin:0 auto;animation:poke .7s ease-in-out infinite}
+#tapHint span{display:inline-block;margin-top:4px;background:var(--ink);color:#fff;font-weight:900;font-size:13px;padding:3px 10px;border-radius:3px}
+@keyframes poke{50%{transform:translateY(8px) scale(.92)}}
+#buffs{position:absolute;left:8px;bottom:8px;display:flex;flex-direction:column;gap:4px;align-items:flex-start;pointer-events:none;z-index:2}
+.buff{font-size:11px;font-weight:900;background:var(--card);border:2px solid var(--ink);padding:1px 7px;border-radius:3px;box-shadow:2px 2px 0 var(--ink)}
+.buff.y{background:var(--yellow)}
+.buff.r{background:var(--red);color:#fff}
+.buff.k{background:var(--ink);color:#ffb3a8}
+#trendTag{position:absolute;right:8px;bottom:8px;z-index:2;pointer-events:none;background:var(--red);color:#fff;border:2px solid var(--ink);padding:2px 8px;border-radius:3px;font-size:11px;font-weight:900;box-shadow:2px 2px 0 var(--ink)}
+#trendTag b{font-family:var(--display);font-weight:400;font-size:13px;margin:0 3px}
 
-/* ===== selectors ===== */
-.selRow{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;touch-action:pan-x;flex-shrink:0;padding:0 4px 3px 0}
+
+.bigStamp{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);font-family:var(--display);font-size:clamp(48px,12vh,110px);line-height:1;color:var(--c);pointer-events:none;z-index:4;white-space:nowrap;
+  text-shadow:4px 0 0 var(--ink),-4px 0 0 var(--ink),0 4px 0 var(--ink),0 -4px 0 var(--ink),3px 3px 0 var(--ink),-3px -3px 0 var(--ink),3px -3px 0 var(--ink),-3px 3px 0 var(--ink),8px 8px 0 var(--ink);
+  animation:bigStampA 1.3s ease-out forwards}
+@keyframes bigStampA{0%{transform:translate(-50%,-50%) scale(2.6) rotate(-10deg);opacity:0}15%{transform:translate(-50%,-50%) scale(1) rotate(-4deg);opacity:1}75%{opacity:1}100%{transform:translate(-50%,-80%) scale(1) rotate(-4deg);opacity:0}}
+
+/* ---------- gauge ---------- */
+#gaugeRow{display:flex;align-items:center;gap:8px;flex-shrink:0}
+#gauge{flex:1;height:26px;border:var(--bd);border-radius:5px;background:var(--card);position:relative;overflow:hidden;box-shadow:3px 3px 0 var(--ink)}
+#gaugeFill{position:absolute;left:0;top:0;bottom:0;width:0;background:repeating-linear-gradient(-45deg,var(--red) 0 8px,#f2645a 8px 16px);background-size:22.6px 22.6px;animation:stripes .6s linear infinite}
+#gauge.full #gaugeFill{background:var(--yellow)}
+#gaugeText{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 8px;font-size:12px;font-weight:900;color:var(--ink);text-shadow:0 0 3px #fff,0 0 3px #fff}
+#videoCount{font-family:var(--display);font-size:13px;flex-shrink:0;min-width:72px;text-align:right}
+
+/* ---------- selectors ---------- */
+.selRow{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;touch-action:pan-x;flex-shrink:0;padding:0 4px 3px 0;align-items:center}
 .selRow::-webkit-scrollbar{display:none}
-.rowLab{flex-shrink:0;align-self:center;font-size:10px;font-weight:800;color:var(--dim);writing-mode:vertical-rl;letter-spacing:.1em}
-.sel{flex-shrink:0;padding:5px 10px;border:2px solid var(--ink);border-radius:4px;background:var(--card);font-size:13px;font-weight:800;white-space:nowrap;box-shadow:2px 2px 0 var(--ink)}
+.rowLab{flex-shrink:0;font-size:10px;font-weight:900;color:var(--dim);width:2.2em;line-height:1.1}
+.sel{flex-shrink:0;padding:4px 9px;border:2px solid var(--ink);border-radius:4px;background:var(--card);font-size:12.5px;font-weight:800;white-space:nowrap;box-shadow:2px 2px 0 var(--ink)}
+.sel:active{transform:translate(2px,2px);box-shadow:none}
 .sel.on{background:var(--ink);color:var(--paper)}
 .sel.locked{border-style:dashed;color:var(--dim);box-shadow:none;background:transparent}
 .sel .hot{margin-left:5px;font-size:10px;background:var(--red);color:#fff;padding:0 4px;border-radius:2px;vertical-align:1px}
-.sel .mul{font-family:var(--display);font-weight:400;margin-left:4px}
+.sel .mul{font-family:var(--display);margin-left:4px}
 .sel .risk{font-size:10px;color:var(--red);margin-left:5px}
 .sel.on .risk{color:#ff9f95}
 
-/* ===== action row ===== */
-#actionRow{display:flex;align-items:center;justify-content:center;gap:clamp(12px,4vw,36px);flex-shrink:0;padding-bottom:4px}
-.side{width:clamp(78px,19vw,112px);padding:9px 4px 8px;border:var(--bd);border-radius:6px;background:var(--card);box-shadow:3px 3px 0 var(--ink);
-  display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;overflow:hidden}
-.side .big{font-family:var(--display);font-size:clamp(17px,2.4vh,22px);line-height:1}
-.side small{font-size:10px;color:var(--dim);font-weight:700}
-.side.ready{background:var(--yellow)}
-.side.ready small{color:var(--ink)}
-.side.locked{border-style:dashed;box-shadow:none;background:transparent;color:var(--dim)}
-.side:active:not(.locked){transform:translate(3px,3px);box-shadow:none}
-.side .cd{position:absolute;left:0;bottom:0;height:4px;background:var(--ink)}
-#mainWrap{position:relative;width:clamp(124px,min(30vw,22vh),190px);aspect-ratio:1;border-radius:50%;padding:8px;border:var(--bd);
-  background:conic-gradient(var(--red) calc(var(--p,0)*1%), var(--card) 0);flex-shrink:0}
-#mainBtn{width:100%;height:100%;border-radius:50%;touch-action:none;background:var(--red);border:var(--bd);
-  box-shadow:0 7px 0 var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;transition:transform .04s}
-#mainBtn:active,#mainBtn.press{transform:translateY(5px);box-shadow:0 2px 0 var(--ink)}
-#mainLabel{font-family:var(--display);font-size:clamp(26px,4.4vh,40px);line-height:1;text-shadow:2px 2px 0 var(--ink)}
-#mainSub{font-size:11px;font-weight:800;margin-top:6px;background:var(--ink);padding:1px 7px;border-radius:2px}
-#mainBtn.live{background:var(--yellow);color:var(--ink)}
-#mainBtn.live #mainLabel{text-shadow:2px 2px 0 #fff}
-#mainBtn.live #mainSub{color:var(--yellow)}
+/* ---------- actions ---------- */
+#actionRow{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;flex-shrink:0}
+.act{position:relative;padding:6px 3px 5px;border:var(--bd);border-radius:6px;background:var(--card);box-shadow:3px 3px 0 var(--ink);display:flex;flex-direction:column;align-items:center;gap:1px;overflow:hidden}
+.act .big{font-family:var(--display);font-size:clamp(14px,2.1vh,18px);line-height:1.1}
+.act small{font-size:10px;color:var(--dim);font-weight:800;white-space:nowrap}
+.act.ready{background:var(--yellow)}
+.act.ready small{color:var(--ink)}
+.act.ready::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.7) 50%,transparent 70%);background-size:250% 100%;animation:shine 2.2s linear infinite}
+@keyframes shine{from{background-position:150% 0}to{background-position:-100% 0}}
+.act.locked{border-style:dashed;box-shadow:none;background:transparent;color:var(--dim)}
+.act:active:not(.locked){transform:translate(3px,3px);box-shadow:none}
+.act .cd{position:absolute;left:0;bottom:0;height:4px;background:var(--ink)}
+.dot{position:absolute;right:-5px;top:-6px;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:var(--red);color:#fff;font-size:11px;font-weight:900;border:2px solid var(--ink);display:grid;place-items:center;z-index:2}
+.act .dot{right:3px;top:3px}
 
-/* ===== shop ===== */
-#tabs{display:flex;gap:5px;padding:9px 8px 7px;align-items:center}
-.tab{flex:1;padding:7px 2px;border:2px solid var(--ink);border-radius:4px;background:var(--card);font-size:13px;font-weight:800;white-space:nowrap}
+/* ---------- shop ---------- */
+#tabs{display:flex;gap:5px;padding:9px 8px 7px;align-items:center;overflow-x:auto;scrollbar-width:none;touch-action:pan-x;flex-shrink:0}
+#tabs::-webkit-scrollbar{display:none}
+.tab{position:relative;flex:1 0 auto;padding:7px 9px;border:2px solid var(--ink);border-radius:4px;background:var(--card);font-size:12.5px;font-weight:900;white-space:nowrap}
 .tab.on{background:var(--ink);color:var(--paper)}
 #buyN{flex:0 0 auto;padding:7px 10px;border:2px solid var(--ink);border-radius:4px;background:var(--yellow);font-family:var(--display);font-size:13px;min-width:54px}
-#list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding:2px 10px 12px 8px;overscroll-behavior:contain}
-.item{display:flex;align-items:center;gap:10px;padding:7px 8px;margin-bottom:7px;border:2px solid var(--ink);border-radius:5px;background:var(--card);box-shadow:2px 2px 0 var(--ink)}
-.item .lvbox{width:46px;height:46px;flex-shrink:0;border:2px solid var(--ink);border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--paper)}
+#list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding:2px 10px 14px 8px;overscroll-behavior:contain}
+.item{display:flex;align-items:center;gap:9px;padding:7px 8px;margin-bottom:7px;border:2px solid var(--ink);border-radius:5px;background:var(--card);box-shadow:2px 2px 0 var(--ink);position:relative}
+.item.can{border-color:var(--ink);background:#fffbe6}
+.item .lvbox{width:46px;height:46px;flex-shrink:0;border:2px solid var(--ink);border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--paper);position:relative;overflow:hidden}
 .item .lvbox small{font-size:9px;font-weight:800;color:var(--dim);line-height:1}
 .item .lvbox b{font-family:var(--display);font-weight:400;font-size:18px;line-height:1.1}
+.item .lvbox.up{animation:lvUp .4s ease-out}
+@keyframes lvUp{30%{transform:scale(1.25);background:var(--yellow)}}
 .item .info{flex:1;min-width:0}
 .item .nm{font-weight:900;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .nm .new{font-size:9px;background:var(--red);color:#fff;padding:0 4px;margin-left:5px;border-radius:2px;vertical-align:2px}
 .item .ds{font-size:11px;color:var(--dim);line-height:1.35}
 .item .ef{font-size:11px;color:var(--green);font-weight:800}
+.item .pbar{height:6px;border:1.5px solid var(--ink);border-radius:2px;margin-top:3px;overflow:hidden;background:var(--paper)}
+.item .pbar i{display:block;height:100%;background:var(--green)}
 .buy{flex-shrink:0;min-width:84px;padding:7px 8px;border:2px solid var(--ink);border-radius:4px;background:var(--yellow);font-family:var(--display);font-size:14px;line-height:1.15;box-shadow:2px 2px 0 var(--ink)}
 .buy small{display:block;font-family:var(--font);font-size:10px;font-weight:800;opacity:.7}
 .buy:active:not(:disabled){transform:translate(2px,2px);box-shadow:none}
 .buy:disabled{background:var(--paper2);color:var(--dim);box-shadow:none;cursor:default}
+.buy.green{background:var(--green);color:#fff}
 .item.locked{background:transparent;border-style:dashed;box-shadow:none;color:var(--dim)}
 .item.locked .lvbox{border-style:dashed;background:transparent}
 .lockNote{font-size:11px;color:var(--red);font-weight:800}
-.listHead{font-size:12px;color:var(--dim);padding:2px 2px 8px;font-weight:700}
+.listHead{font-size:12px;color:var(--dim);padding:2px 2px 8px;font-weight:700;line-height:1.5}
 .listHead b{color:var(--ink)}
-.item.ach .stamp{width:42px;height:42px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:17px;
-  border:2px dashed var(--paper2);color:var(--paper2)}
-.item.ach.got .stamp{border:3px solid var(--red);color:var(--red);transform:rotate(-12deg)}
+.stamp{width:42px;height:42px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:17px;border:2px dashed var(--paper2);color:var(--paper2)}
+.item.got .stamp{border:3px solid var(--red);color:var(--red);transform:rotate(-12deg)}
 .item.ach:not(.got){box-shadow:none;background:transparent}
+.secHead{font-family:var(--display);font-size:14px;margin:10px 2px 6px;display:flex;align-items:center;gap:8px}
+.secHead::after{content:"";flex:1;border-top:2px solid var(--ink)}
+.bigBtn{width:100%;padding:12px;border:var(--bd);border-radius:6px;background:var(--yellow);font-family:var(--display);font-size:17px;box-shadow:3px 3px 0 var(--ink);margin-bottom:8px}
+.bigBtn small{display:block;font-family:var(--font);font-size:11px;font-weight:800}
+.bigBtn:disabled{background:var(--paper2);color:var(--dim);box-shadow:none}
+.bigBtn:active:not(:disabled){transform:translate(3px,3px);box-shadow:none}
+.cardGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.ccard{border:2px solid var(--ink);border-radius:6px;background:var(--card);padding:4px 4px 5px;text-align:center;box-shadow:2px 2px 0 var(--ink);position:relative}
+.ccard svg{width:100%;height:auto;display:block;border-radius:4px;border:1.5px solid var(--ink)}
+.ccard .cn{font-size:10.5px;font-weight:900;line-height:1.2;margin-top:3px;min-height:2.4em;display:flex;align-items:center;justify-content:center}
+.ccard .cb{font-size:10px;color:var(--green);font-weight:800}
+.ccard .rar{position:absolute;left:-2px;top:-2px;font-family:var(--display);font-size:10px;padding:0 5px;border:2px solid var(--ink);border-radius:4px 0 4px 0;background:var(--card)}
+.ccard.R .rar{background:var(--blue);color:#fff}
+.ccard.SR .rar{background:var(--purple);color:#fff}
+.ccard.SSR .rar{background:var(--yellow)}
+.ccard.SSR{background:linear-gradient(135deg,#fff7d1,#fffdf7 50%,#ffe68a)}
+.ccard.no{box-shadow:none;border-style:dashed;background:transparent}
+.ccard.no svg{filter:brightness(0) opacity(.18)}
+.ccard .clv{position:absolute;right:3px;top:3px;font-family:var(--display);font-size:10px;background:var(--ink);color:#fff;padding:0 4px;border-radius:2px}
+.mission{display:block}
+.mission .mtop{display:flex;align-items:center;gap:8px}
+.mission .rew{font-size:11px;font-weight:900;color:#b07800}
 
-/* ===== overlays ===== */
-.overlay{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(29,26,22,.55);padding:20px}
-.modal{width:min(440px,100%);max-height:90%;overflow-y:auto;touch-action:pan-y;background:var(--card);border:3px solid var(--ink);border-radius:8px;padding:20px;text-align:center;box-shadow:7px 7px 0 var(--ink)}
-.modal h2{font-family:var(--display);font-weight:400;font-size:22px;margin-bottom:12px}
-.modal p{font-size:14px;color:var(--dim);line-height:1.7;margin-bottom:12px}
+/* ---------- overlays ---------- */
+.overlay{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(29,26,22,.55);padding:18px}
+.overlay.show .modal{animation:modalIn .32s cubic-bezier(.2,1.4,.4,1)}
+@keyframes modalIn{from{transform:translateY(30px) scale(.94);opacity:0}}
+.modal{width:min(440px,100%);max-height:92%;overflow-y:auto;touch-action:pan-y;background:var(--card);border:3px solid var(--ink);border-radius:8px;padding:18px;text-align:center;box-shadow:7px 7px 0 var(--ink);position:relative}
+.modal h2{font-family:var(--display);font-weight:400;font-size:22px;margin-bottom:10px}
+.modal p{font-size:14px;color:var(--dim);line-height:1.7;margin-bottom:10px}
 .modal .row{display:flex;gap:8px;margin-top:10px}
 .btn{flex:1;padding:11px;border:2px solid var(--ink);border-radius:5px;background:var(--card);font-weight:900;font-size:15px;box-shadow:3px 3px 0 var(--ink)}
+.btn small{display:block;font-size:11px;font-weight:700;color:var(--dim);margin-top:2px}
 .btn:active{transform:translate(3px,3px);box-shadow:none}
 .btn.primary{background:var(--yellow)}
 .btn.danger{background:var(--red);color:#fff}
-.howto{text-align:left;font-size:13px;color:var(--ink);line-height:1.75}
+.btn.danger small{color:#ffd5d0}
+.howto{text-align:left;font-size:13px;line-height:1.75}
 .howto b{display:inline-block;margin-top:6px;background:var(--ink);color:var(--paper);padding:0 6px;border-radius:2px}
 .statList{text-align:left;font-size:13px;line-height:2;margin:4px 0;color:var(--dim);border-top:2px solid var(--ink)}
 .statList div{border-bottom:1px dashed var(--paper2)}
 .statList span{float:right;color:var(--ink);font-weight:800}
+.toggles{display:flex;gap:8px;margin:6px 0}
 .gainList{font-size:15px;line-height:2;color:var(--ink);font-weight:800;margin:6px 0}
 .gainList span{color:var(--dim);font-weight:700;display:inline-block;width:5em;text-align:left}
+.evArt{height:110px;margin:-4px -4px 10px;border:2.5px solid var(--ink);border-radius:6px;display:grid;place-items:center;overflow:hidden;position:relative;
+  background-color:var(--evbg,#2f6fdb);background-image:repeating-linear-gradient(-45deg,rgba(255,255,255,.08) 0 10px,transparent 10px 20px)}
+.evArt b{font-family:var(--display);font-size:38px;color:#fff;text-shadow:3px 3px 0 var(--ink);transform:rotate(-3deg)}
+.evArt small{position:absolute;left:8px;top:6px;font-size:11px;font-weight:900;background:var(--ink);color:#fff;padding:1px 6px}
+#eventModal .row{flex-direction:column}
 
 /* title */
-#title{position:fixed;inset:0;z-index:80;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+#title{position:fixed;inset:0;z-index:80;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;overflow:hidden;
   background-color:var(--paper);background-image:radial-gradient(rgba(29,26,22,.08) 1px,transparent 1.2px);background-size:16px 16px;text-align:center;padding:20px}
-#title .kicker{font-size:13px;font-weight:800;background:var(--ink);color:var(--paper);padding:3px 10px;transform:rotate(-2deg)}
+#title .kicker{font-size:13px;font-weight:800;background:var(--ink);color:var(--paper);padding:3px 10px;transform:rotate(-2deg);animation:fadeDown .6s .1s both}
 #title .logo{font-family:var(--display);font-size:clamp(46px,12vw,104px);line-height:1.02;color:var(--ink);text-shadow:5px 5px 0 var(--red)}
-#title .logo span{display:block;margin-left:1.2em}
-#title .ranks{font-size:12px;color:var(--dim);line-height:1.9;max-width:560px}
+#title .logo span{display:inline-block;animation:dropIn .55s cubic-bezier(.2,1.5,.4,1) both}
+#title .ranks{font-size:12px;color:var(--dim);line-height:1.9;max-width:560px;animation:fadeDown .6s .9s both}
 #title .ranks span{white-space:nowrap}
-#title .start{margin-top:10px;font-family:var(--display);font-size:20px;padding:10px 26px;border:var(--bd);background:var(--yellow);box-shadow:4px 4px 0 var(--ink);border-radius:6px}
+#title .start{margin-top:8px;font-family:var(--display);font-size:20px;padding:10px 28px;border:var(--bd);background:var(--yellow);box-shadow:4px 4px 0 var(--ink);border-radius:6px;animation:fadeDown .6s 1.1s both, pulse 1.3s 1.8s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.06)}}
+@keyframes dropIn{from{transform:translateY(-120px) rotate(-10deg);opacity:0}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-10px)}}
 #title .foot{position:absolute;bottom:calc(14px + env(safe-area-inset-bottom));font-size:11px;color:var(--dim)}
+#titleChara{width:150px;height:130px;animation:fadeDown .6s .7s both}
+.floatDeco{position:absolute;font-family:var(--display);color:var(--ink);opacity:.08;font-size:80px;pointer-events:none;animation:floatDeco 9s ease-in-out infinite}
+@keyframes floatDeco{50%{transform:translateY(-24px) rotate(6deg)}}
 
-/* rank up cut-in */
-#cutin{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
-  background:var(--paper);overflow:hidden;text-align:center;padding:20px}
-#cutin .band{position:absolute;left:-10%;right:-10%;top:50%;height:46%;transform:translateY(-50%) skewY(-7deg);
-  background:repeating-linear-gradient(90deg,var(--accent) 0 40px,color-mix(in srgb,var(--accent) 85%,#000) 40px 80px);
-  border-top:4px solid var(--ink);border-bottom:4px solid var(--ink);animation:bandIn .45s ease-out}
+/* cut-in */
+#cutin{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--paper);overflow:hidden;text-align:center;padding:20px}
+#cutin .band{position:absolute;left:-10%;right:-10%;top:50%;height:50%;transform:translateY(-50%) skewY(-7deg);
+  background:repeating-linear-gradient(90deg,var(--accent) 0 40px,color-mix(in srgb,var(--accent) 85%,#000) 40px 80px);background-size:80px 100%;
+  border-top:4px solid var(--ink);border-bottom:4px solid var(--ink);animation:bandIn .45s ease-out, bandMove 1.2s linear infinite}
 @keyframes bandIn{from{transform:translateY(-50%) skewY(-7deg) translateX(-110%)}}
+@keyframes bandMove{to{background-position:80px 0}}
 #cutin .up{position:relative;font-family:var(--display);font-size:clamp(64px,16vw,150px);line-height:1;color:var(--yellow);
   text-shadow:4px 0 0 var(--ink),-4px 0 0 var(--ink),0 4px 0 var(--ink),0 -4px 0 var(--ink),3px 3px 0 var(--ink),-3px -3px 0 var(--ink),3px -3px 0 var(--ink),-3px 3px 0 var(--ink),9px 9px 0 var(--ink);
-  animation:stamp .5s cubic-bezier(.2,1.5,.4,1)}
-@keyframes stamp{from{transform:scale(2.6) rotate(-8deg);opacity:0}}
+  animation:stampBig .5s cubic-bezier(.2,1.5,.4,1)}
+@keyframes stampBig{from{transform:scale(2.6) rotate(-8deg);opacity:0}}
 #cutin .step{position:relative;font-size:13px;font-weight:900;background:var(--ink);color:var(--paper);padding:2px 10px;animation:slideUp .5s .2s both}
-#cutin .change{position:relative;font-family:var(--display);font-size:clamp(20px,4.6vw,36px);color:#fff;text-shadow:2px 2px 0 var(--ink);animation:slideUp .5s .25s both}
+#cutin .cchara{position:relative;width:150px;height:130px;animation:spinIn .7s .15s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes spinIn{from{transform:scale(0) rotate(-200deg)}}
+#cutin .change{position:relative;font-family:var(--display);font-size:clamp(20px,4.6vw,36px);color:#fff;text-shadow:2px 2px 0 var(--ink);animation:slideUp .5s .3s both}
 #cutin .change .old{opacity:.75;text-decoration:line-through}
 #cutin .sub{position:relative;font-family:var(--display);font-size:15px;letter-spacing:.25em;color:var(--yellow);text-shadow:2px 2px 0 var(--ink)}
-#cutin .unl{position:relative;margin-top:6px;font-size:14px;font-weight:800;line-height:1.9;background:var(--card);border:var(--bd);padding:8px 16px;box-shadow:4px 4px 0 var(--ink);text-align:left;animation:slideUp .5s .45s both}
+#cutin .unl{position:relative;margin-top:4px;font-size:14px;font-weight:800;line-height:1.85;background:var(--card);border:var(--bd);padding:8px 16px;box-shadow:4px 4px 0 var(--ink);text-align:left;animation:slideUp .5s .5s both}
 #cutin .unl li{list-style:none}
 #cutin .unl li::before{content:"＋";color:var(--red);margin-right:4px}
-#cutin .tapclose{position:relative;font-size:12px;font-weight:800;color:var(--paper);background:var(--ink);padding:2px 10px;margin-top:6px}
+#cutin .tapclose{position:relative;font-size:12px;font-weight:800;color:var(--paper);background:var(--ink);padding:2px 10px;margin-top:4px}
 @keyframes slideUp{from{opacity:0;transform:translateY(16px)}}
-.confetti{position:absolute;top:-20px;width:10px;height:14px;border:1.5px solid var(--ink);animation:fall linear forwards}
-@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+.confetti{position:fixed;top:-20px;width:10px;height:14px;border:1.5px solid var(--ink);z-index:95;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(115vh) rotate(540deg)}}
+
+/* gacha */
+#gacha{z-index:85}
+#gachaStage{position:relative;width:min(300px,80vw);aspect-ratio:3/4;margin:0 auto;perspective:900px}
+#gachaCard{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.3,1.4,.5,1)}
+#gachaCard.flip{transform:rotateY(180deg)}
+.gface{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:3px solid var(--ink);border-radius:10px;box-shadow:6px 6px 0 var(--ink);overflow:hidden}
+.gback{background:var(--ink);display:grid;place-items:center;background-image:repeating-linear-gradient(45deg,#2c2823 0 12px,#1d1a16 12px 24px)}
+.gback b{font-family:var(--display);color:var(--yellow);font-size:30px;transform:rotate(-8deg)}
+.gback.shake{animation:gShake .12s linear infinite}
+@keyframes gShake{25%{transform:rotate(-2deg)}75%{transform:rotate(2deg)}}
+.gfront{transform:rotateY(180deg);background:var(--card);display:flex;flex-direction:column;align-items:center;padding:12px}
+.gfront svg{width:86%;height:auto;border:2px solid var(--ink);border-radius:6px}
+.gfront .gr{font-family:var(--display);font-size:26px;margin-top:6px}
+.gfront .gn{font-weight:900;font-size:15px;margin-top:2px}
+.gfront .gb{font-size:12px;color:var(--green);font-weight:800;margin-top:3px}
+.gfront.R{background:#e7efff}.gfront.SR{background:#f0e6ff}.gfront.SSR{background:#fff3c2}
+.gfront.SSR .gr{color:var(--red);text-shadow:2px 2px 0 var(--yellow)}
+#gachaRays{position:absolute;inset:-40%;opacity:0;background:repeating-conic-gradient(rgba(255,210,63,.45) 0 10deg,transparent 10deg 20deg);animation:spin 8s linear infinite;pointer-events:none}
+#gachaRays.on{opacity:1;transition:opacity .4s}
 
 /* incident */
-#incident .modal{border-color:var(--ink);background:var(--card)}
 #incTitle{font-family:var(--display);font-size:34px;color:var(--red);text-shadow:2px 2px 0 var(--ink);line-height:1.2}
-#incBtn{width:min(220px,64vw);aspect-ratio:1;border-radius:50%;margin:12px auto 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+#incBtn{width:min(210px,62vw);aspect-ratio:1;border-radius:50%;margin:10px auto 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;
   background:var(--blue);color:#fff;border:3px solid var(--ink);touch-action:none;box-shadow:0 8px 0 var(--ink)}
-#incBtn:active{transform:translateY(6px);box-shadow:0 2px 0 var(--ink)}
+#incBtn:active,#incBtn.press{transform:translateY(6px);box-shadow:0 2px 0 var(--ink)}
 #incLabel{font-family:var(--display);font-size:40px;line-height:1;text-shadow:2px 2px 0 var(--ink)}
 #incSub{font-size:12px;font-weight:800;margin-top:8px}
 #incBar{height:16px;margin:6px 0}
-#incFill{height:100%;width:0;background:var(--green)}
+#incFill{height:100%;width:0;background:var(--green);transition:width .08s}
 #incTime{font-size:13px;color:var(--dim);font-weight:700}
+#incident .modal{animation:none}
+#incident.show .modal{animation:incIn .35s cubic-bezier(.2,1.5,.4,1)}
+@keyframes incIn{from{transform:scale(1.4) rotate(4deg);opacity:0}}
 
-/* floaters & toasts */
-#fx{position:fixed;inset:0;pointer-events:none;z-index:40;overflow:hidden}
+/* tutorial */
+#tut{position:fixed;z-index:60;pointer-events:none;max-width:250px;background:var(--card);border:2.5px solid var(--ink);border-radius:8px;padding:8px 12px;font-size:13px;font-weight:800;line-height:1.5;box-shadow:4px 4px 0 var(--ink);animation:bubble2 1.2s ease-in-out infinite}
+#tut::after{content:"";position:absolute;width:14px;height:14px;background:var(--card);border-right:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);transform:rotate(45deg);bottom:-9px;left:var(--ax,30px)}
+#tut.below::after{bottom:auto;top:-9px;transform:rotate(225deg)}
+@keyframes bubble2{50%{transform:translateY(-4px)}}
+#tut small{display:block;color:var(--dim);font-size:11px}
+
+/* fx */
+#fx{position:fixed;inset:0;pointer-events:none;z-index:45;overflow:hidden}
 .float{position:absolute;font-family:var(--display);font-size:18px;color:#fff;white-space:nowrap;
   text-shadow:2px 0 0 var(--ink),-2px 0 0 var(--ink),0 2px 0 var(--ink),0 -2px 0 var(--ink);
-  animation:floatUp .9s ease-out forwards;transform:translate(-50%,-50%)}
+  animation:floatUp .85s ease-out forwards;transform:translate(-50%,-50%)}
 .float.money{color:var(--yellow)}
 .float.big{font-size:26px;color:var(--yellow)}
-@keyframes floatUp{to{transform:translate(-50%,-160%);opacity:0}}
+.float.huge{font-size:34px;color:var(--yellow)}
+@keyframes floatUp{to{transform:translate(-50%,-170%);opacity:0}}
+.pt{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;animation:ptFly .8s cubic-bezier(.2,.7,.4,1) forwards}
+@keyframes ptFly{0%{transform:translate(0,0) scale(.4) rotate(0)}30%{transform:translate(calc(var(--dx)*.5),calc(var(--dy)*.6)) scale(1.1) rotate(calc(var(--r)*.5))}100%{transform:translate(var(--dx),var(--dy)) scale(.7) rotate(var(--r));opacity:0}}
+.coin{position:absolute;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:var(--yellow);border:2px solid var(--ink);font-family:var(--display);font-size:10px;display:grid;place-items:center;line-height:1}
+.ring{position:absolute;width:40px;height:40px;margin:-20px 0 0 -20px;border:3px solid var(--ink);border-radius:50%;animation:ring .35s ease-out forwards}
+@keyframes ring{from{transform:scale(.3);opacity:1}to{transform:scale(1.8);opacity:0}}
 #toasts{position:fixed;left:50%;top:var(--toastTop,120px);transform:translateX(-50%);z-index:70;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none;width:min(92vw,420px)}
 .toast{background:var(--card);border:2px solid var(--ink);border-radius:4px;padding:7px 14px;font-size:13px;font-weight:800;
-  box-shadow:3px 3px 0 var(--ink);animation:toastIn .25s ease-out, toastOut .4s ease-in 2.8s forwards;text-align:center}
+  box-shadow:3px 3px 0 var(--ink);animation:toastIn .3s cubic-bezier(.2,1.5,.4,1), toastOut .4s ease-in 2.8s forwards;text-align:center}
 .toast.gold{background:var(--yellow)}
 .toast.bad{background:var(--red);color:#fff}
-@keyframes toastIn{from{transform:translateY(-14px) rotate(-2deg);opacity:0}}
+.toast.ach{background:var(--ink);color:#fff}
+.toast.ach b{color:var(--yellow)}
+@keyframes toastIn{from{transform:translateY(-16px) rotate(-3deg) scale(.9);opacity:0}}
 @keyframes toastOut{to{transform:translateY(-8px);opacity:0}}
 
-@media (max-height:700px){
-  header{padding:5px 10px 6px}
+@media (max-height:760px){
+  header{padding:5px 10px 5px}
   #stats{margin-top:5px}
-  #stage{gap:6px;padding:6px 10px}
-  .sel{padding:4px 8px;font-size:12px}
+  #stage{gap:5px;padding:6px 8px}
+  .sel{padding:3px 8px;font-size:12px}
+  .act{padding:4px 3px}
 }
 @media (max-width:420px){
-  #badgeName{font-size:13px}
+  .act .big{font-size:13px;white-space:nowrap}
+  #actionRow{gap:5px}
+  #badgeName{font-size:12px}
   .stat .val{font-size:15px}
   .txtBtn{padding:0 7px}
+  #thumbCard{width:46%}
 }
 </style>
 </head>
@@ -291,7 +442,6 @@ body[data-rank="0"] #screen::after{content:"";position:absolute;inset:0;pointer-
         <div id="progText">次の称号</div>
         <div class="bar"><div id="progFill"></div></div>
       </div>
-      <button class="txtBtn" id="muteBtn" aria-label="音の切り替え">音 ON</button>
       <button class="txtBtn" id="menuBtn">メニュー</button>
     </div>
     <div id="stats">
@@ -303,37 +453,42 @@ body[data-rank="0"] #screen::after{content:"";position:absolute;inset:0;pointer-
 
   <div id="body">
     <section id="stage">
-      <div id="statusRow">
-        <span class="chip" id="trendChip"><span class="lab">急上昇</span><b id="trendName">-</b><span id="trendTime" class="num"></span></span>
-        <span class="chip hidden" id="feverChip">神回バズ中 <b id="feverText"></b></span>
-        <span class="chip hidden" id="debuffChip"><span id="debuffText"></span></span>
-        <span class="chip hidden" id="liveChip">生配信中 <span id="liveText" class="num"></span></span>
+      <div id="sceneWrap">
+        <svg id="scene" viewBox="0 0 400 260" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
+        <div id="zoneFx"></div>
+        <div id="comments"></div>
+        <div id="thumbCard">
+          <div id="thumbTag">ガチ</div>
+          <div id="thumbWord">初投稿</div>
+          <svg id="thumbArrow" viewBox="0 0 120 120" aria-hidden="true">
+            <path d="M98 10 C 86 40, 70 62, 38 80 L 46 92 L 8 104 L 22 66 L 30 76 C 58 60, 72 40, 82 6 Z" fill="#e23b2e" stroke="#1d1a16" stroke-width="6" stroke-linejoin="round"/>
+          </svg>
+          <div id="stampPub">公開</div>
+          <div id="thumbViews">まだ動画がない</div>
+        </div>
+        <div id="comboBox"><div id="comboNum">0</div><div id="comboLab">コンボ</div></div>
+        <div id="buffs"></div>
+        <div id="trendTag">急上昇<b id="trendName">-</b><span id="trendTime"></span></div>
+        <div id="tapHint" class="hidden">
+          <svg class="finger" viewBox="0 0 60 60"><path d="M26 6 q6 0 6 6 v18 l12 3 q6 2 5 8 l-3 14 h-22 l-12 -16 q-3 -5 2 -7 q4 -1 6 2 l0 -22 q0 -6 6 -6z" fill="#fffdf7" stroke="#1d1a16" stroke-width="3" stroke-linejoin="round"/></svg>
+          <span>ここを連打して撮影</span>
+        </div>
+        <div id="flash"></div>
       </div>
 
-      <div id="screenWrap">
-        <div id="screen">
-          <div id="thumb">
-            <div id="thumbTag">ガチ</div>
-            <div id="thumbWord">初投稿</div>
-            <svg id="thumbArrow" viewBox="0 0 120 120" aria-hidden="true">
-              <path d="M98 10 C 86 40, 70 62, 38 80 L 46 92 L 8 104 L 22 66 L 30 76 C 58 60, 72 40, 82 6 Z"
-                    fill="#e23b2e" stroke="#1d1a16" stroke-width="5" stroke-linejoin="round"/>
-            </svg>
-            <div id="thumbTitle">とりあえず撮ってみた</div>
-          </div>
-          <div id="comments"></div>
-          <div id="screenTop"><span class="tag" id="recTag">● 編集 0%</span><span class="tag" id="videoCount">動画 0本</span></div>
-          <div id="screenBottom"><div id="editFill"></div></div>
-        </div>
+      <div id="gaugeRow">
+        <div id="gauge"><div id="gaugeFill"></div><div id="gaugeText"><span id="gaugeL">編集ゲージ</span><span id="gaugeR">0%</span></div></div>
+        <div id="videoCount">動画0本</div>
       </div>
 
       <div class="selRow" id="genreRow"></div>
       <div class="selRow" id="styleRow"></div>
 
       <div id="actionRow">
-        <button class="side" id="dealBtn"><span class="big">案件</span><small id="dealSub">未解放</small><span class="cd" id="dealCd"></span></button>
-        <div id="mainWrap"><button id="mainBtn" aria-label="撮影・編集"><span id="mainLabel">撮影</span><span id="mainSub">連打で編集</span></button></div>
-        <button class="side" id="liveBtn"><span class="big">生配信</span><small id="liveSub">未解放</small><span class="cd" id="liveCd"></span></button>
+        <button class="act" id="dealBtn"><span class="big">案件</span><small id="dealSub">未解放</small><span class="cd" id="dealCd"></span></button>
+        <button class="act" id="liveBtn"><span class="big">生配信</span><small id="liveSub">未解放</small><span class="cd" id="liveCd"></span></button>
+        <button class="act" id="gachaBtn"><span class="big">コラボ</span><small id="gachaSub">依頼する</small></button>
+        <button class="act" id="missionBtn"><span class="big">ミッション</span><small id="missionSub">0/3</small></button>
       </div>
     </section>
 
@@ -342,7 +497,10 @@ body[data-rank="0"] #screen::after{content:"";position:absolute;inset:0;pointer-
         <button class="tab on" data-tab="equip">機材</button>
         <button class="tab" data-tab="skill">スキル</button>
         <button class="tab" data-tab="staff">スタッフ</button>
+        <button class="tab" data-tab="collab">コラボ図鑑</button>
+        <button class="tab" data-tab="mission">ミッション</button>
         <button class="tab" data-tab="ach">実績</button>
+        <button class="tab" data-tab="legend">殿堂</button>
         <button id="buyN">×1</button>
       </div>
       <div id="list"></div>
@@ -352,20 +510,23 @@ body[data-rank="0"] #screen::after{content:"";position:absolute;inset:0;pointer-
 
 <div id="fx"></div>
 <div id="toasts"></div>
+<div id="tut" class="hidden"></div>
 
 <!-- title -->
 <div id="title">
+  <div class="floatDeco" style="left:6%;top:10%">再生</div>
+  <div class="floatDeco" style="right:4%;top:22%;animation-delay:-3s">登録</div>
+  <div class="floatDeco" style="left:10%;bottom:12%;animation-delay:-5s">神回</div>
   <div class="kicker">連打で成り上がる動画投稿ゲーム</div>
-  <div class="logo">成り上がり<span>動画道</span></div>
+  <svg id="titleChara" viewBox="140 70 120 170"></svg>
+  <div class="logo"><span>成</span><span style="animation-delay:.08s">り</span><span style="animation-delay:.16s">上</span><span style="animation-delay:.24s">が</span><span style="animation-delay:.32s">り</span><br><span style="animation-delay:.45s">動</span><span style="animation-delay:.53s">画</span><span style="animation-delay:.61s">道</span></div>
   <div class="ranks"><span>クソガキ ／</span> <span>無断転載 ／</span> <span>底辺YouTuber ／</span> <span>中堅クリエイター ／</span> <span>トップYouTuber ／</span> <span>世界一のYouTuber</span></div>
   <div class="start">はじめる</div>
   <div class="foot">画面のどこかをタップ</div>
 </div>
 
-<!-- rank up -->
 <div id="cutin" class="hidden"></div>
 
-<!-- incident -->
 <div id="incident" class="overlay hidden">
   <div class="modal">
     <div id="incTitle">炎上</div>
@@ -376,13 +537,30 @@ body[data-rank="0"] #screen::after{content:"";position:absolute;inset:0;pointer-
   </div>
 </div>
 
-<!-- menu -->
+<div id="eventModal" class="overlay hidden">
+  <div class="modal">
+    <div class="evArt" id="evArt"><small id="evKind">できごと</small><b id="evBig">!?</b></div>
+    <h2 id="evTitle">できごと</h2>
+    <p id="evText"></p>
+    <div class="row" id="evChoices"></div>
+  </div>
+</div>
+
+<div id="gacha" class="overlay hidden">
+  <div class="modal" style="overflow:hidden">
+    <div id="gachaRays"></div>
+    <h2 id="gachaTitle" style="position:relative">コラボ依頼中…</h2>
+    <div id="gachaStage"><div id="gachaCard"><div class="gface gback"><b>コラボ?</b></div><div class="gface gfront" id="gachaFront"></div></div></div>
+    <div class="row" style="position:relative"><button class="btn primary" id="gachaOk" disabled>タップでめくる</button></div>
+  </div>
+</div>
+
 <div id="menu" class="overlay hidden">
   <div class="modal">
     <h2>メニュー</h2>
+    <div class="toggles"><button class="btn" id="bgmBtn">BGM ON</button><button class="btn" id="seBtn">効果音 ON</button></div>
     <div class="statList" id="statList"></div>
-    <div class="row"><button class="btn" id="howBtn">遊び方</button><button class="btn" id="muteBtn2">音 ON</button></div>
-    <div class="row"><button class="btn danger" id="resetBtn">データを消す</button></div>
+    <div class="row"><button class="btn" id="howBtn">遊び方</button><button class="btn danger" id="resetBtn">データを消す</button></div>
     <div class="row"><button class="btn primary" id="closeMenu">閉じる</button></div>
   </div>
 </div>
@@ -391,12 +569,14 @@ body[data-rank="0"] #screen::after{content:"";position:absolute;inset:0;pointer-
   <div class="modal">
     <h2>遊び方</h2>
     <div class="howto">
-      <b>撮る</b><br>赤いボタンを連打すると編集ゲージが溜まって、満タンで動画が公開される。指を何本使ってもいい。<br>
+      <b>撮る</b><br>画面を連打すると編集ゲージが溜まって、満タンで動画が公開される。速く連打するとコンボがつながって、100コンボでゾーンに入る。<br>
       <b>ネタ選び</b><br>急上昇のジャンルに合わせると再生数が伸びる。投稿スタイルで再生数・登録率・リスクが変わる。<br>
       <b>ほっといても伸びる</b><br>出した動画は放置中も回り続けて、登録者とお金が増えていく。<br>
-      <b>強化</b><br>お金で機材・スキル・スタッフを買って、数字をどんどん大きくする。<br>
-      <b>ハプニング</b><br>神回バズが来たらしばらく全部の伸びが倍。炎上や著作権警告は連打で処理しないと収益が落ちる。<br>
-      <b>称号</b><br>登録者数で称号が上がって、できることが増える。ゴールは登録者3億人の世界一。
+      <b>強化</b><br>機材・スキル・スタッフを買うと、部屋に物や人が増えていく。<br>
+      <b>金のタネ</b><br>たまに画面を飛んでいく金色のタネをタップすると、いいことが起きる。<br>
+      <b>できごと</b><br>キャラの上に吹き出しが出たらタップ。選び方しだいで得したり燃えたりする。<br>
+      <b>コラボ</b><br>お金でコラボを依頼すると、配信者仲間が図鑑に増えて全体が伸びる。<br>
+      <b>殿堂</b><br>中堅クリエイターになったら引退できる。殿堂ポイントで永久に強くなって、また一からやり直せる。
     </div>
     <div class="row"><button class="btn primary" id="closeHow">わかった</button></div>
   </div>
@@ -425,22 +605,22 @@ body[data-rank="0"] #screen::after{content:"";position:absolute;inset:0;pointer-
 /* =========================================================
    DATA
    ========================================================= */
-const SAVE_KEY = 'nariagari_douga_do_v1';
+const SAVE_KEY = 'nariagari_douga_do_v2';
+const OLD_KEY = 'nariagari_douga_do_v1';
 
 const RANKS = [
-  { name:'クソガキ',          need:0,   mult:1, yen:0.05,  unl:['勢い投稿'] },
-  { name:'無断転載',          need:100, mult:1.5, yen:0.05, unl:['スタイル「無断転載」解禁（著作権リスク）','スキル「釣りサムネ術」'] },
-  { name:'底辺YouTuber',     need:1e3, mult:1.75, yen:0.08,    unl:['広告収益（お金の入りが1.6倍）','オリジナル企画 / ショート連投','機材「一眼レフ」'] },
-  { name:'中堅クリエイター',   need:5e4, mult:2, yen:0.1,  unl:['企業案件','大型コラボ','スタッフ雇用（自動投稿）','アルゴリズム解析 / 防音自宅スタジオ'] },
-  { name:'トップYouTuber',    need:1e6, mult:2.5, yen:0.12,  unl:['生配信スパチャ','巨大専用ビル','企画会議チーム','AI自動企画生成'] },
-  { name:'世界一のYouTuber',  need:3e8, mult:3, yen:0.15,    unl:['グローバル展開（全部の伸びが3倍）','多言語自動吹き替え','宇宙配信ステーション','グローバル運営法人'], sub:'GOD OF TUBER' },
+  { name:'クソガキ',         need:0,   mult:1,    yen:0.05, unl:['勢い投稿','母に撮影を頼める'] },
+  { name:'無断転載',         need:100, mult:1.5,  yen:0.05, unl:['無断転載 / 炎上狙い','釣りサムネ術・コンボ道','コラボ依頼'] },
+  { name:'底辺YouTuber',     need:1e3, mult:1.75, yen:0.08, unl:['広告収益（お金の入りが1.6倍）','オリジナル企画 / ショート連投','一眼レフ・ゲーミングPC'] },
+  { name:'中堅クリエイター', need:5e4, mult:2,    yen:0.1,  unl:['企業案件','大型コラボ','専属編集者などスタッフ雇用','殿堂入り（引退）ができる'] },
+  { name:'トップYouTuber',   need:1e6, mult:2.5,  yen:0.12, unl:['生配信スパチャ','長編ドキュメンタリー','巨大専用ビル・中継車','AI自動企画生成'] },
+  { name:'世界一のYouTuber', need:3e8, mult:3,    yen:0.15, unl:['グローバル展開（全部の伸びが3倍）','宇宙配信ステーション','多言語自動吹き替え','海外支部・運営法人'], sub:'GOD OF TUBER' },
 ];
 const HUMANITY = 8e9;
 const RANK_COLORS = ['#8a8478','#7b4bc4','#2f6fdb','#2a9d5c','#d99a00','#e23b2e'];
-/* balance knobs */
-const BAL = { conv:1.25, unit:10, stockRate:0.01, tapView:0.03, tapConv:0.02, passConv:0.015, subsDivK:3.5, subsDivP:5, trendStock:1,
-  cut:0.25, solo:0.5, telop:0.2, thumb:0.2, clip:0.25, corp:0.5, ai:0.5, dub:1, meeting:0.2,
-  editor:10, aiAuto:20, meetAuto:30, trend:2, trendAlgo:0.25 };
+
+const BAL = { conv:2, unit:10, stockRate:0.01, tapView:0.03, tapConv:0.02, passConv:0.015, subsDivK:3.5, subsDivP:8,
+  achBonus:0.015, legendBonus:0.02, trend:2, comboCap:100, comboWin:0.5, comboDiv:400, zone:1.2, costMul:3, missionSec:60, gEq:0.25, gSk:0.8, gachaBase:1000, gachaG:4 };
 
 const GENRES = [
   { id:'game',  name:'ゲーム実況', bg:'#2f3b8f', titles:[['全クリ','【初見】クソゲー全クリするまで寝れません'],['素手','ラスボスを素手で倒してみた'],['絶叫','深夜にホラゲー実況したら叫びすぎた'],['無双','最強キャラで無双してみた'],['1000連勝','1000連勝するまで終われません']] },
@@ -449,115 +629,171 @@ const GENRES = [
   { id:'song',  name:'歌ってみた', bg:'#b0174f', titles:[['熱唱','【歌ってみた】全力で熱唱'],['音痴','音痴が本気で歌ってみた'],['1発撮り','【1発撮り】あの名曲を歌った'],['100点','カラオケ100点取るまで帰れない'],['初心者','ギター初心者が弾いてみた']] },
   { id:'test',  name:'検証',       bg:'#1d6e62', titles:[['100個','コーラにメントス100個入れてみた'],['0円生活','1週間お金を使わなかった結果'],['巨大','巨大シャボン玉は作れるのか'],['10階','10階から卵を落とすと…'],['100連','ガチャ100連の確率を検証']] },
   { id:'pet',   name:'ペット',     bg:'#a06a1c', titles:[['キュウリ','猫にキュウリ見せた結果'],['密着','子犬の1日に密着'],['迷路','ハムスターに迷路作ってみた'],['出会い','保護猫との出会い'],['変顔','柴犬に変顔したら…']] },
+  { id:'cook',  name:'料理',       bg:'#8a5a2b', titles:[['3分','3分で作れる激うま飯'],['失敗','料理下手が本気出した結果'],['巨大','巨大オムライス作ってみた'],['給食','給食のあの味を再現'],['100均','100均の道具だけでフルコース']] },
+  { id:'asmr',  name:'ASMR',       bg:'#3d5a80', titles:[['咀嚼音','【ASMR】せんべいの咀嚼音'],['睡眠','【ASMR】寝落ち用の雨の音'],['耳かき','【ASMR】耳かきロールプレイ'],['シュワ','【ASMR】炭酸の泡の音'],['無言','【ASMR】無言でキーボード打つだけ']] },
+  { id:'vlog',  name:'Vlog',       bg:'#4f7a3a', titles:[['密着','【Vlog】底辺配信者の1日に密着'],['迷子','ひとり旅で迷子になった'],['引っ越し','6畳から引っ越しました'],['遅刻','モーニングルーティン（遅刻）'],['爆買い','給料日の爆買い']] },
+  { id:'trivia',name:'雑学',       bg:'#6c4b8a', titles:[['9割','9割が知らない雑学'],['ウソ','その常識、実はウソです'],['裏側','コンビニの裏側を調べた'],['なぜ','なぜ信号は青と言うのか'],['3選','明日話したくなる雑学3選']] },
 ];
 
 const STYLES = [
-  { id:'ikioi',  name:'勢い投稿',     rank:0, view:1,   conv:0.06, need:100, tag:'ガチ', risk:{type:'flame', p:0.02} },
-  { id:'tensai', name:'無断転載',     rank:1, view:2.5,   conv:0.05, need:100, tag:'転載', risk:{type:'copy',  p:0.15}, money:0.5 },
-  { id:'orig',   name:'オリジナル企画', rank:2, view:3,   conv:0.10, need:150, tag:'企画', money:1.5 },
-  { id:'short',  name:'ショート連投',  rank:2, view:0.7, conv:0.05, need:40,  tag:'#shorts' },
-  { id:'collab', name:'大型コラボ',    rank:3, view:12,  conv:0.12, need:400, tag:'豪華コラボ', risk:{type:'flame', p:0.04}, money:1.3 },
+  { id:'ikioi',  name:'勢い投稿',          rank:0, view:1,   conv:0.06, need:100,  tag:'ガチ',     risk:{type:'flame', p:0.02} },
+  { id:'tensai', name:'無断転載',          rank:1, view:2.5, conv:0.05, need:100,  tag:'転載',     risk:{type:'copy',  p:0.15}, money:0.5 },
+  { id:'enjo',   name:'炎上狙い',          rank:1, view:4,   conv:0.04, need:120,  tag:'閲覧注意', risk:{type:'flame', p:0.2},  money:0.8 },
+  { id:'orig',   name:'オリジナル企画',    rank:2, view:3,   conv:0.10, need:150,  tag:'企画',     money:1.5 },
+  { id:'short',  name:'ショート連投',      rank:2, view:0.7, conv:0.05, need:40,   tag:'#shorts' },
+  { id:'collab', name:'大型コラボ',        rank:3, view:12,  conv:0.12, need:400,  tag:'豪華コラボ', risk:{type:'flame', p:0.04}, money:1.3 },
+  { id:'docu',   name:'長編ドキュメンタリー', rank:4, view:50, conv:0.2,  need:1500, tag:'完全密着', money:2 },
 ];
 
-/* upgrade items: eff(L) returns numeric effect; txt(v) formats it */
+/* fx keys: eq tapG tapV vps conv burst all auto trend buzz gold combo risk deal sc offline */
+const FX_LABEL = { eq:'動画品質', tapG:'編集量', tapV:'タップ再生', vps:'放置再生', conv:'登録率', burst:'公開時の再生', all:'全部の伸び',
+  auto:'自動編集', trend:'急上昇ボーナス', buzz:'神回確率', gold:'金のタネ', combo:'コンボ上限', risk:'事故リスク', deal:'案件報酬', sc:'スパチャ', offline:'放置中の効率' };
+
 const ITEMS = {
   equip: [
-    { id:'phone',    name:'ボロスマホ',        rank:0, base:10,   g:1.35, d:'画面バキバキ。でも撮れる。',        k:0.5 },
-    { id:'webcam',   name:'ウェブカメラ',      rank:0, base:200,  g:1.37, d:'顔出しデビュー。画質が人並みに。',  k:2 },
-    { id:'dslr',     name:'一眼レフ',          rank:2, base:300000,  g:1.4, d:'背景ボケで一気にプロっぽく。',      k:8 },
-    { id:'studio',   name:'防音自宅スタジオ',   rank:3, base:1e+08,  g:1.42, d:'深夜でも叫べる。音質が神。',        k:30 },
-    { id:'building', name:'巨大専用ビル',      rank:4, base:5e+10,  g:1.45, d:'大型企画のセットが組み放題。',      k:120 },
-    { id:'space',    name:'宇宙配信ステーション', rank:5, base:5e+13, g:1.48, d:'衛星から全地球へ同時配信。',       k:500 },
+    { id:'phone',    name:'ボロスマホ',          rank:0, base:10,   g:1.35, fx:{eq:0.5},  d:'画面バキバキ。でも撮れる。' },
+    { id:'selfie',   name:'自撮り棒',            rank:0, base:60,   g:1.36, fx:{eq:1},    d:'腕を伸ばすより100倍マシ。' },
+    { id:'webcam',   name:'中古ウェブカメラ',    rank:0, base:250,  g:1.37, fx:{eq:2},    d:'フリマで300円。顔がちゃんと映る。' },
+    { id:'ring',     name:'リングライト',        rank:1, base:1500, g:1.38, fx:{eq:4},    d:'目にキラッと輪っかが入る。' },
+    { id:'pinmic',   name:'ピンマイク',          rank:1, base:6000, g:1.38, fx:{eq:6},    d:'声がこもらなくなった。' },
+    { id:'dslr',     name:'一眼レフ',            rank:2, base:1e5,  g:1.40, fx:{eq:8},    d:'背景がボケるだけでプロっぽい。' },
+    { id:'pc',       name:'編集用ゲーミングPC',  rank:2, base:6e5,  g:1.40, fx:{eq:14},   d:'光る。書き出しが速い。' },
+    { id:'green',    name:'グリーンバック',      rank:2, base:3e6,  g:1.41, fx:{eq:20},   d:'どこにでも行ける。合成で。' },
+    { id:'studio',   name:'防音自宅スタジオ',    rank:3, base:3e7,  g:1.42, fx:{eq:30},   d:'深夜に叫んでも苦情が来ない。' },
+    { id:'drone',    name:'ドローン',            rank:3, base:2e8,  g:1.42, fx:{eq:45},   d:'空撮で一気に映画っぽく。' },
+    { id:'lights',   name:'照明セット一式',      rank:3, base:1e9,  g:1.43, fx:{eq:70},   d:'テレビ局と同じやつ。' },
+    { id:'building', name:'巨大専用ビル',        rank:4, base:5e10, g:1.45, fx:{eq:120},  d:'大型企画のセットが組み放題。' },
+    { id:'van',      name:'中継車',              rank:4, base:5e11, g:1.45, fx:{eq:200},  d:'どこからでも生中継。' },
+    { id:'space',    name:'宇宙配信ステーション', rank:5, base:5e13, g:1.48, fx:{eq:500},  d:'衛星軌道から全世界へ。' },
+    { id:'sat',      name:'自前の通信衛星',      rank:5, base:1e15, g:1.50, fx:{eq:1200}, d:'回線がもう混まない。' },
   ],
   skill: [
-    { id:'cut',   name:'カット編集',       rank:0, base:20,  g:2, d:'無駄を切ってテンポUP。1タップの編集量UP。' },
-    { id:'telop', name:'テロップ演出',     rank:0, base:150, g:2, d:'派手な文字で離脱を防ぐ。放置再生UP。' },
-    { id:'thumb', name:'釣りサムネ術',     rank:1, base:2000,g:2, d:'赤い矢印と驚き顔。登録率UP。' },
-    { id:'algo',  name:'アルゴリズム解析',  rank:3, base:5e+06, g:1.7, d:'トレンド一致ボーナスと神回確率UP。', max:25 },
-    { id:'ai',    name:'AI自動企画生成',   rank:4, base:1e+10, g:1.55, d:'AIが企画を量産。全再生UP＋自動編集。' },
-    { id:'dub',   name:'多言語自動吹き替え', rank:5, base:1e+14,g:1.6, d:'全言語で同時公開。全再生が爆増。' },
+    { id:'cut',      name:'カット編集',          rank:0, base:20,   g:2,    fx:{tapG:0.25}, d:'無駄を切ってテンポを上げる。' },
+    { id:'telop',    name:'テロップ演出',        rank:0, base:150,  g:2,    fx:{vps:0.2},   d:'派手な文字で離脱を防ぐ。' },
+    { id:'bgm',      name:'BGM選び',             rank:0, base:400,  g:2,    fx:{tapV:0.3},  d:'ノリのいい曲で見られる。' },
+    { id:'thumb',    name:'釣りサムネ術',        rank:1, base:2000, g:2,    fx:{conv:0.2},  d:'赤い矢印と驚き顔。' },
+    { id:'combo',    name:'コンボ道',            rank:1, base:3000, g:2.2,  fx:{combo:20}, max:10, d:'連打のリズムを体に覚えさせる。' },
+    { id:'avoid',    name:'炎上回避術',          rank:1, base:5000, g:2.2,  fx:{risk:0.08}, max:10, d:'言っていいことと悪いことを学ぶ。' },
+    { id:'titles',   name:'タイトル職人',        rank:1, base:1.2e4,g:2,    fx:{burst:0.25}, d:'つい押したくなる言葉選び。' },
+    { id:'jump',     name:'ジャンプカット',      rank:2, base:8e4,  g:2,    fx:{tapG:0.25}, d:'息つぎもカット。' },
+    { id:'sns',      name:'SNS拡散術',           rank:2, base:4e5,  g:2,    fx:{gold:0.1},  max:15, d:'金のタネがよく飛んでくる。' },
+    { id:'reply',    name:'コメント返し',        rank:2, base:1.5e6,g:2,    fx:{conv:0.2},  d:'全部のコメントに返信する。' },
+    { id:'algo',     name:'アルゴリズム解析',    rank:3, base:5e6,  g:1.7,  fx:{trend:0.25, buzz:0.002}, max:25, d:'おすすめに載る法則を探す。' },
+    { id:'psych',    name:'心理学サムネ',        rank:3, base:3e7,  g:1.9,  fx:{conv:0.25}, d:'色と顔の角度を計算する。' },
+    { id:'ai',       name:'AI自動企画生成',      rank:4, base:1e10, g:1.55, fx:{all:0.5, auto:20}, d:'企画を考えなくてよくなった。' },
+    { id:'livetech', name:'ライブ配信術',        rank:4, base:5e10, g:1.8,  fx:{sc:0.5},    d:'スパチャ読みがうまくなる。' },
+    { id:'dub',      name:'多言語自動吹き替え',  rank:5, base:1e14, g:1.6,  fx:{all:1},     d:'全言語で同時公開。' },
   ],
   staff: [
-    { id:'solo',    name:'自分ひとり（ワンオペ根性）', rank:0, base:40,  g:2, d:'徹夜で撮影。タップ時の再生数UP。' },
-    { id:'editor',  name:'専属編集者',       rank:3, base:2e+06, g:1.6, d:'自動で編集ゲージが溜まり、勝手に投稿。' },
-    { id:'clip',    name:'切り抜き部隊',     rank:3, base:2e+07, g:1.7, d:'切り抜きで過去動画が回り続ける。放置再生UP。' },
-    { id:'meeting', name:'企画会議チーム',   rank:4, base:5e+09, g:1.5, d:'自動投稿が急上昇ジャンルに合わせる＋全再生UP。' },
-    { id:'corp',    name:'グローバル運営法人', rank:5, base:5e+13,g:1.55, d:'完全自動運営。放置再生とオフライン収益UP。' },
+    { id:'solo',     name:'自分ひとり（ワンオペ根性）', rank:0, base:40,  g:2,   fx:{tapV:0.5}, d:'徹夜で撮る。気合いで回す。' },
+    { id:'mom',      name:'母（撮影係）',        rank:0, base:300,  g:1.9,  fx:{auto:2},    d:'頼んでないのに撮ってくれる。' },
+    { id:'friend',   name:'友達（ネタ出し係）',  rank:1, base:2000, g:1.9,  fx:{trend:0.1, burst:0.1}, d:'「それウケる」が口ぐせ。' },
+    { id:'editor',   name:'専属編集者',          rank:3, base:2e6,  g:1.6,  fx:{auto:10},   d:'寝てる間に編集が終わってる。' },
+    { id:'designer', name:'サムネデザイナー',    rank:3, base:8e6,  g:1.7,  fx:{conv:0.2},  d:'サムネだけでクリックさせる。' },
+    { id:'clip',     name:'切り抜き部隊',        rank:3, base:2e7,  g:1.7,  fx:{vps:0.25},  d:'過去動画を切り抜いて回し続ける。' },
+    { id:'manager',  name:'マネージャー',        rank:3, base:6e7,  g:1.7,  fx:{deal:0.5},  d:'案件の単価を上げてくれる。' },
+    { id:'meeting',  name:'企画会議チーム',      rank:4, base:5e9,  g:1.5,  fx:{all:0.2, auto:30}, d:'自動投稿を急上昇に合わせてくれる。' },
+    { id:'mod',      name:'モデレーター部隊',    rank:4, base:2e10, g:1.8,  fx:{risk:0.06}, max:10, d:'荒れる前にコメントを整える。' },
+    { id:'overseas', name:'海外支部',            rank:5, base:1e13, g:1.6,  fx:{vps:0.5},   d:'時差で24時間再生される。' },
+    { id:'corp',     name:'グローバル運営法人',  rank:5, base:5e13, g:1.55, fx:{vps:0.5, offline:0.1}, d:'完全に自動で回る会社。' },
+    { id:'aiarmy',   name:'AIアシスタント軍団',  rank:5, base:1e15, g:1.6,  fx:{auto:500},  d:'疲れない。文句も言わない。' },
   ],
 };
-const ITEM_BY_ID = {};
-for (const t in ITEMS) for (const it of ITEMS[t]) { it.tab = t; ITEM_BY_ID[it.id] = it; }
+const ALL_ITEMS = [...ITEMS.equip, ...ITEMS.skill, ...ITEMS.staff];
+for (const t in ITEMS) for (const it of ITEMS[t]) it.tab = t;
 
-const ACHS = [
-  { id:'v1',     name:'初投稿',           d:'動画を1本公開',           c:()=>S.st.videos>=1 },
-  { id:'v100',   name:'量産型',           d:'動画を100本公開',         c:()=>S.st.videos>=100 },
-  { id:'v1k',    name:'動画工場',         d:'動画を1,000本公開',       c:()=>S.st.videos>=1e3 },
-  { id:'v10k',   name:'コンテンツの暴力',   d:'動画を10,000本公開',      c:()=>S.st.videos>=1e4 },
-  { id:'s10',    name:'家族以外に見られた', d:'登録者10人',              c:()=>S.subs>=10 },
-  { id:'s1k',    name:'収益化ライン',      d:'登録者1,000人',           c:()=>S.subs>=1e3 },
-  { id:'s100k',  name:'銀の盾',           d:'登録者10万人',            c:()=>S.subs>=1e5 },
-  { id:'s1m',    name:'金の盾',           d:'登録者100万人',           c:()=>S.subs>=1e6 },
-  { id:'s10m',   name:'ダイヤの盾',        d:'登録者1,000万人',         c:()=>S.subs>=1e7 },
-  { id:'s100m',  name:'レッドダイヤの盾',   d:'登録者1億人',             c:()=>S.subs>=1e8 },
-  { id:'s1b',    name:'人類の8人に1人',     d:'登録者10億人',            c:()=>S.subs>=1e9 },
-  { id:'s8b',    name:'全人類登録',        d:'登録者80億人',            c:()=>S.subs>=HUMANITY },
-  { id:'w1k',    name:'4桁再生',          d:'総再生1,000回',           c:()=>S.views>=1e3 },
-  { id:'w1m',    name:'ミリオン再生',      d:'総再生100万回',           c:()=>S.views>=1e6 },
-  { id:'w1b',    name:'ビリオン再生',      d:'総再生10億回',            c:()=>S.views>=1e9 },
-  { id:'w1t',    name:'1兆再生',          d:'総再生1T回',              c:()=>S.views>=1e12 },
-  { id:'w1qa',   name:'京再生',           d:'総再生1Qa回',             c:()=>S.views>=1e15 },
-  { id:'t1k',    name:'連打の鬼',          d:'1,000回タップ',          c:()=>S.st.taps>=1e3 },
-  { id:'t10k',   name:'指が折れる',        d:'10,000回タップ',         c:()=>S.st.taps>=1e4 },
-  { id:'buzz1',  name:'初めての神回',      d:'神回バズを1回発生',        c:()=>S.st.buzz>=1 },
-  { id:'buzz10', name:'バズ職人',          d:'神回バズを10回発生',       c:()=>S.st.buzz>=10 },
-  { id:'fire3',  name:'炎上慣れ',          d:'炎上・警告を3回鎮火',      c:()=>S.st.cleared>=3 },
-  { id:'trend50',name:'流行の申し子',      d:'トレンド一致で50本投稿',   c:()=>S.st.trendHits>=50 },
-  { id:'deal10', name:'案件まみれ',        d:'企業案件を10回受ける',     c:()=>S.st.deals>=10 },
-  { id:'live10', name:'配信者の鑑',        d:'生配信を10回行う',         c:()=>S.st.lives>=10 },
-  { id:'m1b',    name:'億り人',            d:'所持資金1B円',            c:()=>S.money>=1e9 },
+/* ---------- collab partners (30) ---------- */
+const COLLABS = [
+  ['ゆるふわ散歩部','N'],['筋トレおじさん','N'],['激辛マニア','N'],['昆虫少年ムシオ','N'],['家電レビューの鈴木','N'],['早口オタク','N'],
+  ['田舎のばあちゃん','N'],['釣り好きの漁太','N'],['料理下手のミサキ','N'],['鉄道好きの車掌くん','N'],['歌い手見習いリン','N'],['深夜ラジオ部','N'],
+  ['ゲーム廃人ネムリ','R'],['ドッキリ職人ヤミー','R'],['大食い女王モグ子','R'],['検証バカ一代','R'],['猫と暮らすシロ','R'],
+  ['新人Vのピコ','R'],['ダンス部エース','R'],['怪談師ヨミ','R'],['旅する夫婦','R'],['科学のお兄さん','R'],
+  ['登録者1000万の男','SR'],['初代実況者','SR'],['歌姫アオイ','SR'],['億り人トレーダー','SR'],['お笑いコンビ山と谷','SR'],['天才子役ミナト','SR'],
+  ['覆面配信者X','SSR'],['世界のビッグボス','SSR'],
+].map(([name, r], i) => ({ id:i, name, r, bonus:{N:0.03,R:0.08,SR:0.2,SSR:0.5}[r] }));
+const RARITY_RATE = { SSR:0.015, SR:0.085, R:0.30 };
+
+/* ---------- perks (15) ---------- */
+const PERKS = [
+  { id:'dash',    name:'スタートダッシュ',  max:8,  cost:1, d:L=>`引退後、所持金 ¥${fmt(100*Math.pow(10,L))} から始まる` },
+  { id:'talent',  name:'才能',              max:20, cost:1, d:L=>`編集量 +${50*L}%` },
+  { id:'charisma',name:'カリスマ',          max:20, cost:1, d:L=>`登録率 +${25*L}%` },
+  { id:'kin',     name:'金運',              max:20, cost:1, d:L=>`お金 +${25*L}%` },
+  { id:'idle',    name:'放置の達人',        max:20, cost:1, d:L=>`放置再生 +${30*L}%` },
+  { id:'offline', name:'オフライン延長',    max:4,  cost:2, d:L=>`放置で受け取れる上限 ${8+2*L}時間` },
+  { id:'buzzP',   name:'バズ体質',          max:6,  cost:2, d:L=>`神回確率 +${(0.5*L).toFixed(1)}%` },
+  { id:'luck',    name:'神引き',            max:5,  cost:2, d:L=>`コラボでSR以上が出る確率 +${2*L}%` },
+  { id:'comboP',  name:'コンボマスター',    max:4,  cost:2, d:L=>`コンボ上限 +${50*L}` },
+  { id:'shield',  name:'炎上耐性',          max:4,  cost:2, d:L=>`事故リスク -${15*L}%` },
+  { id:'early',   name:'早熟',              max:5,  cost:3, d:L=>`引退後、登録者 ${fmt(100*L*L)}人 から始まる` },
+  { id:'goldP',   name:'金のタネ体質',      max:5,  cost:2, d:L=>`金のタネの出現 +${20*L}%` },
+  { id:'autoP',   name:'自動化の鬼',        max:20, cost:1, d:L=>`自動編集 +${25*L}%` },
+  { id:'network', name:'企業人脈',          max:10, cost:1, d:L=>`案件報酬 +${50*L}%` },
+  { id:'blood',   name:'伝説の血',          max:30, cost:2, d:L=>`全部の伸び +${10*L}%` },
 ];
 
+/* ---------- comments ---------- */
 const COMMENTS = [
-  ['おもんな','親に怒られるぞw','画面揺れすぎ','ガキ乙','音割れしてる','初見です','寝ろ','何してんのw','スマホ縦やん','声でかすぎ','おつ','意外と好き'],
-  ['これ転載じゃね？','元動画の方が面白い','パクリ乙','どこかで見た','伸びてて草','見つけたの天才','通報しました','まとめ助かる'],
-  ['地味に好き','サムネ詐欺','編集うまくなった？','応援してます','収益化おめ！','企画おもろい','もっと伸びるべき','毎回見てる'],
-  ['案件きたああ','コラボ神','切り抜きから来ました','毎日の楽しみ','グッズ出して','ファンです！','神編集','ここ好き'],
-  ['急上昇1位おめ！','金の盾！','伝説の回','テレビで見た','人生変わった','鳥肌','この人天才','公式より面白い'],
-  ['GOD','世界一！','Amazing!!','¡Increíble!','太棒了！','Génial!','LEGEND','全人類見てる','神','최고!','Мощно!','Wunderbar!'],
+  ['おもんな','親に怒られるぞw','画面揺れすぎ','ガキ乙','音割れしてる','初見です','寝ろ','何してんのw','スマホ縦やん','声でかすぎ','おつ','意外と好き','宿題やった？','謎にクセになる'],
+  ['これ転載じゃね？','元動画の方が面白い','パクリ乙','どこかで見た','伸びてて草','見つけたの天才','通報しました','まとめ助かる','また燃えてて草'],
+  ['地味に好き','サムネ詐欺','編集うまくなった？','応援してます','収益化おめ','企画おもろい','もっと伸びるべき','毎回見てる','BGMのセンスいい'],
+  ['案件きたああ','コラボ神','切り抜きから来ました','毎日の楽しみ','グッズ出して','ファンです','神編集','ここ好き','声が好き'],
+  ['急上昇1位おめ','金の盾','伝説の回','テレビで見た','人生変わった','鳥肌','この人天才','公式より面白い','親子で見てます'],
+  ['GOD','世界一','Amazing!!','Increible','太棒了','Genial','LEGEND','全人類見てる','神','최고','Мощно','Wunderbar'],
 ];
-const C_FEVER = ['神回確定','バズってて草','急上昇から来ました','伸びすぎw','トレンド入り！','何回でも見れる','ここから来た人','伝説の始まり'];
+const C_FEVER = ['神回確定','バズってて草','急上昇から来ました','伸びすぎw','トレンド入り','何回でも見れる','ここから来た人','伝説の始まり'];
 const C_FLAME = ['炎上してて草','謝罪まだ？','見損なった','擁護できない','燃えてる','説明して','引退しろ'];
 const C_COPY  = ['著作権大丈夫？','削除されそう','権利者見てるぞ','これアウトでは'];
-const C_LIVE  = ['¥1,000 応援！','¥5,000 いつもありがとう','¥10,000 神配信','¥50,000 赤スパ失礼します','¥500 初スパ','¥3,000 声が好き'];
+const C_LIVE  = ['¥1,000 応援','¥5,000 いつもありがとう','¥10,000 神配信','¥50,000 赤スパ失礼します','¥500 初スパ','¥3,000 声が好き','¥120 ジュース代'];
+const C_ZONE  = ['手が見えない','連打の鬼','指どうなってんの','速すぎw','ゾーン入った'];
 
 /* =========================================================
    STATE
    ========================================================= */
 function defaults(){
   return {
-    v:1, subs:0, views:0, money:0, stock:0, gauge:0, rank:0,
-    lv:{}, ach:{},
-    st:{ taps:0, videos:0, buzz:0, cleared:0, trendHits:0, deals:0, lives:0, maxSubs:0 },
+    v:2, subs:0, views:0, money:0, stock:0, gauge:0, rank:0,
+    lv:{}, ach:{}, seen:{},
+    st:{ taps:0, videos:0, buzz:0, cleared:0, trendHits:0, deals:0, lives:0, maxSubs:0, maxSubsRun:0, golden:0, events:0, gacha:0,
+         retires:0, missions:0, maxCombo:0, zones:0, sc:0, bestBurst:0, totalViews:0, buys:0, genres:{}, styles:{}, ssr:0, buzzInFever:0, noFlameRun:1 },
     style:'ikioi', genre:'game', tab:'equip', buyN:1,
     trend:'food', trendLeft:40,
-    feverLeft:0, feverMult:1, debuffLeft:0,
-    dealCd:0, liveCd:0, liveLeft:0, incCd:15, buzzCd:20,
-    muted:false, lastSave:Date.now(), playTime:0,
+    feverLeft:0, feverMult:1, debuffLeft:0, buffs:{},
+    rerollCd:0, dealCd:0, liveCd:0, liveLeft:0, incCd:15, buzzCd:20, goldenCd:35, eventCd:70,
+    collabs:{}, pullsRun:0, tickets:0,
+    legend:{ pts:0, total:0, perks:{} },
+    missions:[],
+    settings:{ bgm:true, se:true }, tutStep:0,
+    lastSave:Date.now(), playTime:0, runTime:0,
   };
 }
 let S = defaults();
 
 function load(){
   try{
-    const raw = localStorage.getItem(SAVE_KEY);
-    if(!raw) return false;
-    const d = JSON.parse(raw);
-    const base = defaults();
+    let raw = localStorage.getItem(SAVE_KEY), old = false;
+    if (!raw){ raw = localStorage.getItem(OLD_KEY); old = !!raw; }
+    if (!raw) return false;
+    const d = JSON.parse(raw), base = defaults();
     S = Object.assign(base, d);
+    S.v = 2;
     S.lv = Object.assign({}, d.lv||{});
-    S.ach = Object.assign({}, d.ach||{});
-    S.st = Object.assign(base.st, d.st||{});
-    for (const k of ['subs','views','money','stock','gauge']) if(!isFinite(S[k]) || S[k]<0) S[k]=0;
+    S.ach = old ? {} : Object.assign({}, d.ach||{});
+    S.seen = Object.assign({}, d.seen||{});
+    S.st = Object.assign(defaults().st, d.st||{});
+    S.st.genres = Object.assign({}, (d.st&&d.st.genres)||{});
+    S.st.styles = Object.assign({}, (d.st&&d.st.styles)||{});
+    S.buffs = Object.assign({}, d.buffs||{});
+    S.collabs = Object.assign({}, d.collabs||{});
+    S.legend = Object.assign(defaults().legend, d.legend||{});
+    S.legend.perks = Object.assign({}, (d.legend&&d.legend.perks)||{});
+    S.settings = Object.assign(defaults().settings, d.settings||{});
+    if (old){ S.settings.se = !d.muted; S.tutStep = 9; }
+    S.missions = Array.isArray(d.missions) ? d.missions : [];
+    for (const k of ['subs','views','money','stock','gauge']) if (!isFinite(S[k]) || S[k] < 0) S[k] = 0;
+    if (!GENRES.some(g=>g.id===S.genre)) S.genre = 'game';
+    if (!GENRES.some(g=>g.id===S.trend)) S.trend = 'food';
+    if (!STYLES.some(s=>s.id===S.style)) S.style = 'ikioi';
     return true;
   }catch(e){ return false; }
 }
@@ -570,81 +806,108 @@ function save(){
    FORMULAS
    ========================================================= */
 const lv = id => S.lv[id] || 0;
+const perk = id => S.legend.perks[id] || 0;
 const UNITS = ['','K','M','B','T','Qa','Qi','Sx','Sp','Oc','No','Dc','UDc','DDc','TDc','QaDc','QiDc','SxDc','SpDc','OcDc','NoDc','Vg'];
 function fmt(n, dec){
-  if(!isFinite(n)) return '∞';
-  if(n < 0) return '-' + fmt(-n, dec);
-  if(n < 1000){
-    if(dec && n < 100 && n % 1 !== 0) return (n < 10 ? n.toFixed(1) : n.toFixed(0)).replace(/\.0$/,'');
+  if (!isFinite(n)) return '∞';
+  if (n < 0) return '-' + fmt(-n, dec);
+  if (n < 1000){
+    if (dec && n < 100 && n % 1 !== 0) return (n < 10 ? n.toFixed(1) : n.toFixed(0)).replace(/\.0$/,'');
     return Math.floor(n).toString();
   }
-  let e = Math.floor(Math.log10(n) / 3);
-  let v = n / Math.pow(1000, e);
-  if(v >= 999.95){ e++; v /= 1000; }
-  if(e >= UNITS.length) return n.toExponential(2).replace('+','');
+  let e = Math.floor(Math.log10(n) / 3), v = n / Math.pow(1000, e);
+  if (v >= 999.95){ e++; v /= 1000; }
+  if (e >= UNITS.length) return n.toExponential(2).replace('+','');
   return (v < 10 ? v.toFixed(2) : v < 100 ? v.toFixed(1) : v.toFixed(0)) + UNITS[e];
 }
 const fmtY = n => '¥' + fmt(n);
 
-function itemPts(it){ const L = lv(it.id); return it.k * L * Math.pow(2, Math.floor(L/25)); }
-function equipMult(){ let m = 1; for (const it of ITEMS.equip) m += itemPts(it); return m; }
-function subsFactor(){ return 1 + Math.log10(1 + S.subs) * 0.25; }
-function achCount(){ let n=0; for(const k in S.ach) if(S.ach[k]) n++; return n; }
-function achMult(){ return 1 + 0.05 * achCount(); }
+let fxCache = null;
+function sumFx(key){
+  if (!fxCache){
+    fxCache = {};
+    for (const it of ALL_ITEMS){
+      const L = lv(it.id); if (!L) continue;
+      for (const k in it.fx){
+        const v = it.fx[k] * L * (k === 'eq' ? Math.pow(2, Math.floor(L/25)) : 1);
+        fxCache[k] = (fxCache[k] || 0) + v;
+      }
+    }
+  }
+  return fxCache[key] || 0;
+}
+const dirtyFx = () => { fxCache = null; };
+function buff(k){ const b = S.buffs[k]; return b && b.left > 0 ? b.m : 1; }
+function addBuff(k, m, sec, label){ S.buffs[k] = { m, left:sec, label }; }
+
+function achCount(){ let n=0; for (const k in S.ach) if (S.ach[k]) n++; return n; }
+function achMult(){ return 1 + BAL.achBonus * achCount(); }
+function collabCount(){ return Object.keys(S.collabs).length; }
+function collabMult(){
+  let m = 1;
+  for (const id in S.collabs){ const c = COLLABS[id]; if (c) m += c.bonus * (1 + 0.5*(S.collabs[id]-1)); }
+  return m;
+}
+function legendMult(){ return (1 + BAL.legendBonus * S.legend.total) * (1 + 0.1*perk('blood')); }
 function globalMult(){ return S.rank >= 5 ? 3 : 1; }
+function subsFactor(){ return 1 + Math.log10(1 + S.subs) * 0.25; }
 function eventMult(){
   let m = S.feverLeft > 0 ? S.feverMult : 1;
   if (S.debuffLeft > 0) m *= 0.3;
   if (inc) m *= 0.2;
-  return m;
+  return m * buff('all') * buff('slump');
 }
-/* views per "quality unit" */
+function allMult(){ return 1 + sumFx('all'); }
 function unit(){
-  return BAL.unit * equipMult() * RANKS[S.rank].mult * subsFactor() * achMult() * globalMult()
-    * allMult() * eventMult();
+  return BAL.unit * (1 + sumFx('eq')) * RANKS[S.rank].mult * subsFactor() * achMult() * globalMult()
+    * allMult() * collabMult() * legendMult() * eventMult();
 }
-function allMult(){ return 1 + BAL.ai*lv('ai') + BAL.dub*lv('dub') + BAL.meeting*lv('meeting'); }
-function tapGauge(){ return 12 * (1 + BAL.cut*lv('cut')); }
-function tapViews(){ return unit() * BAL.tapView * (1 + BAL.solo*lv('solo')); }
-function autoGauge(){ return BAL.editor*lv('editor') + BAL.aiAuto*lv('ai') + BAL.meetAuto*lv('meeting'); }
-function vpsMult(){ return 1 + BAL.telop*lv('telop') + BAL.clip*lv('clip') + BAL.corp*lv('corp'); }
+function comboCap(){ return BAL.comboCap + sumFx('combo') + 50*perk('comboP'); }
+function comboMult(){ const c = Math.min(combo, comboCap()); return (1 + c/BAL.comboDiv) * (combo >= 100 ? BAL.zone : 1); }
+function tapGauge(){ return 12 * (1 + sumFx('tapG') + 0.5*perk('talent')) * comboMult() * buff('tap'); }
+function tapViews(){ return unit() * BAL.tapView * (1 + sumFx('tapV')) * comboMult() * buff('tap'); }
+function autoGauge(){ return sumFx('auto') * (1 + 0.25*perk('autoP')) * buff('auto'); }
+function vpsMult(){ return 1 + sumFx('vps') + 0.3*perk('idle'); }
 function vps(){ return S.stock * unit() * BAL.stockRate * vpsMult(); }
-function convMult(){ return BAL.conv * (1 + BAL.thumb*lv('thumb')); }
+function convMult(){ return BAL.conv * (1 + sumFx('conv')) * (1 + 0.25*perk('charisma')) * buff('conv'); }
+function burstMult(){ return (1 + sumFx('burst')) * buff('burst'); }
 function subsDiv(){ return Math.pow(1 + Math.log10(1 + S.subs) / BAL.subsDivK, BAL.subsDivP); }
-function trendMult(){ return BAL.trend + BAL.trendAlgo*lv('algo'); }
-function buzzChance(){ return 0.012 + 0.002*lv('algo'); }
-function yenPerView(){ return RANKS[S.rank].yen * globalMult(); }
+function trendMult(){ return BAL.trend + sumFx('trend'); }
+function buzzChance(){ return 0.012 + sumFx('buzz') + 0.005*perk('buzzP'); }
+function riskMult(){ return Math.max(0.1, (1 - sumFx('risk')) * (1 - 0.15*perk('shield'))); }
+function moneyMult(){ return 1 + 0.25*perk('kin'); }
+function yenPerView(){ return RANKS[S.rank].yen * globalMult() * moneyMult(); }
+function yps(){ return vps() * yenPerView(); }
+function goldFreq(){ return 1 + sumFx('gold') + 0.2*perk('goldP'); }
+function offlineRate(){ return Math.min(1, 0.25 + sumFx('offline') + 0.05*lv('clip')); }
+function offlineCapH(){ return 8 + 2*perk('offline'); }
 function curStyle(){ return STYLES.find(s=>s.id===S.style) || STYLES[0]; }
-function offlineRate(){ return Math.min(1, 0.25 + 0.1*lv('corp') + 0.05*lv('clip')); }
+function incomeEstimate(){ return Math.max(yps(), tapViews() * 5 * yenPerView()); }
 
-/* effect descriptions */
 function effText(it, L){
-  switch(it.id){
-    case 'cut':     return `編集量 +${fmt(BAL.cut*100*L)}%`;
-    case 'telop':   return `放置再生 +${fmt(BAL.telop*100*L)}%`;
-    case 'thumb':   return `登録率 +${fmt(BAL.thumb*100*L)}%`;
-    case 'algo':    return `トレンド ×${(BAL.trend+BAL.trendAlgo*L).toFixed(2)} / 神回 ${((0.012+0.002*L)*100).toFixed(1)}%`;
-    case 'ai':      return `全再生 +${fmt(BAL.ai*100*L)}% / 自動編集 +${fmt(BAL.aiAuto*L)}/秒`;
-    case 'dub':     return `全再生 +${fmt(BAL.dub*100*L)}%`;
-    case 'solo':    return `タップ再生 +${fmt(BAL.solo*100*L)}%`;
-    case 'editor':  return `自動編集 +${fmt(BAL.editor*L)}/秒`;
-    case 'clip':    return `放置再生 +${fmt(BAL.clip*100*L)}%`;
-    case 'meeting': return `全再生 +${fmt(BAL.meeting*100*L)}% / 自動編集 +${fmt(BAL.meetAuto*L)}/秒`;
-    case 'corp':    return `放置再生 +${fmt(BAL.corp*100*L)}% / オフライン ${Math.round(Math.min(1,0.25+0.1*L+0.05*lv('clip'))*100)}%`;
-    default: return `動画品質 +${fmt(it.k * L * Math.pow(2, Math.floor(L/25)), true)}`;
+  const parts = [];
+  for (const k in it.fx){
+    const v = it.fx[k] * L;
+    if (k === 'eq') parts.push(`動画品質 +${fmt(v * Math.pow(2, Math.floor(L/25)), true)}`);
+    else if (k === 'auto') parts.push(`自動編集 +${fmt(v)}/秒`);
+    else if (k === 'trend') parts.push(`急上昇 +${v.toFixed(2)}倍`);
+    else if (k === 'buzz') parts.push(`神回 +${(v*100).toFixed(1)}%`);
+    else if (k === 'combo') parts.push(`コンボ上限 +${fmt(v)}`);
+    else if (k === 'risk') parts.push(`事故 -${Math.round(v*100)}%`);
+    else parts.push(`${FX_LABEL[k]} +${fmt(v*100)}%`);
   }
+  return parts.join(' / ');
 }
-
+const gOf = it => it.g + (it.tab === 'equip' ? BAL.gEq : BAL.gSk);
 function costFor(it, n){
-  const L = lv(it.id);
+  const L = lv(it.id), g = gOf(it);
   if (it.max) n = Math.min(n, it.max - L);
   if (n <= 0) return Infinity;
-  return it.base * Math.pow(it.g, L) * (Math.pow(it.g, n) - 1) / (it.g - 1);
+  return BAL.costMul * it.base * Math.pow(g, L) * (Math.pow(g, n) - 1) / (g - 1) * buff('sale');
 }
 function maxBuy(it){
-  const L = lv(it.id);
-  const c0 = it.base * Math.pow(it.g, L);
-  let n = Math.floor(Math.log(S.money * (it.g - 1) / c0 + 1) / Math.log(it.g));
+  const L = lv(it.id), g = gOf(it), c0 = BAL.costMul * it.base * Math.pow(g, L) * buff('sale');
+  let n = Math.floor(Math.log(S.money * (g - 1) / c0 + 1) / Math.log(g));
   if (it.max) n = Math.min(n, it.max - L);
   return Math.max(0, n);
 }
@@ -662,36 +925,152 @@ function buy(it){
   if (c > S.money) return false;
   S.money -= c;
   S.lv[it.id] = lv(it.id) + n;
+  S.st.buys += n;
+  dirtyFx();
+  track(it.tab === 'equip' ? 'buyEquip' : it.tab === 'skill' ? 'buySkill' : 'buyStaff', n);
   Sound.buy();
+  sceneDirty = true;
+  if (S.tutStep === 1) setTut(2);
   return true;
+}
+
+/* =========================================================
+   ACHIEVEMENTS (80)
+   ========================================================= */
+const ACHS = [];
+function A(id, name, d, c){ ACHS.push({ id, name, d, c }); }
+[[1,'初投稿'],[10,'10本目'],[100,'量産型'],[1e3,'動画工場'],[1e4,'コンテンツの暴力'],[1e5,'もはや放送局']].forEach(([n,nm],i)=>A('v'+i, nm, `動画を${fmt(n)}本公開`, ()=>S.st.videos>=n));
+[[10,'家族以外に見られた'],[100,'クラスで話題'],[1e3,'収益化ライン'],[1e4,'学校の有名人'],[1e5,'銀の盾'],[1e6,'金の盾'],[1e7,'ダイヤの盾'],[1e8,'レッドダイヤの盾'],[1e9,'人類の8人に1人'],[HUMANITY,'全人類登録']].forEach(([n,nm],i)=>A('s'+i, nm, `登録者${fmt(n)}人`, ()=>S.st.maxSubs>=n));
+[[1e3,'4桁再生'],[1e6,'ミリオン再生'],[1e9,'ビリオン再生'],[1e12,'1兆再生'],[1e15,'京再生'],[1e18,'もう数えられない']].forEach(([n,nm],i)=>A('w'+i, nm, `累計再生 ${fmt(n)}回`, ()=>S.st.totalViews>=n));
+[[1e4,'お小遣い卒業'],[1e8,'億り人'],[1e12,'兆り人'],[1e16,'国家予算']].forEach(([n,nm],i)=>A('m'+i, nm, `所持金 ${fmtY(n)}`, ()=>S.money>=n));
+[[100,'指慣らし'],[1e3,'連打の鬼'],[1e4,'指が折れる'],[1e5,'人間やめた']].forEach(([n,nm],i)=>A('t'+i, nm, `${fmt(n)}回タップ`, ()=>S.st.taps>=n));
+[[30,'リズム感'],[100,'ゾーン到達'],[300,'無我の境地']].forEach(([n,nm],i)=>A('c'+i, nm, `${n}コンボ`, ()=>S.st.maxCombo>=n));
+[[1,'初めての神回'],[10,'バズ職人'],[50,'バズの神']].forEach(([n,nm],i)=>A('b'+i, nm, `神回を${n}回`, ()=>S.st.buzz>=n));
+[[1,'金のタネ'],[10,'タネ拾い'],[50,'金のなる木'],[200,'錬金術師']].forEach(([n,nm],i)=>A('g'+i, nm, `金のタネを${n}個`, ()=>S.st.golden>=n));
+[[1,'初鎮火'],[10,'炎上慣れ'],[50,'消防団長']].forEach(([n,nm],i)=>A('f'+i, nm, `炎上・警告を${n}回処理`, ()=>S.st.cleared>=n));
+[[1,'初案件'],[10,'案件まみれ'],[100,'企業の顔']].forEach(([n,nm],i)=>A('d'+i, nm, `案件を${n}回`, ()=>S.st.deals>=n));
+[[1,'初配信'],[10,'配信者の鑑'],[50,'24時間テレビ']].forEach(([n,nm],i)=>A('l'+i, nm, `生配信を${n}回`, ()=>S.st.lives>=n));
+[[1,'初コラボ'],[10,'顔が広い'],[50,'コラボ中毒']].forEach(([n,nm],i)=>A('p'+i, nm, `コラボ依頼を${n}回`, ()=>S.st.gacha>=n));
+[[5,'友達100人の第一歩'],[15,'業界の人脈'],[30,'図鑑コンプリート']].forEach(([n,nm],i)=>A('o'+i, nm, `コラボ相手を${n}人集める`, ()=>collabCount()>=n));
+[[1,'事件です'],[10,'話題の人'],[50,'波乱万丈']].forEach(([n,nm],i)=>A('e'+i, nm, `できごとに${n}回答える`, ()=>S.st.events>=n));
+[[1,'殿堂入り'],[5,'不死鳥'],[20,'輪廻転生']].forEach(([n,nm],i)=>A('r'+i, nm, `引退を${n}回`, ()=>S.st.retires>=n));
+[[1,'初ミッション'],[10,'働き者'],[50,'仕事人'],[200,'ミッション中毒']].forEach(([n,nm],i)=>A('q'+i, nm, `ミッションを${n}回クリア`, ()=>S.st.missions>=n));
+[[10,'買い物上手'],[100,'機材オタク'],[500,'散財王'],[2000,'経済を回す']].forEach(([n,nm],i)=>A('u'+i, nm, `強化を合計${n}回`, ()=>S.st.buys>=n));
+[[10,'流行に敏感'],[100,'流行の申し子'],[1000,'トレンドそのもの']].forEach(([n,nm],i)=>A('h'+i, nm, `急上昇で${fmt(n)}本`, ()=>S.st.trendHits>=n));
+A('x0','全ジャンル制覇','全ジャンルで10本ずつ', ()=>GENRES.every(g=>(S.st.genres[g.id]||0)>=10));
+A('x1','なんでも屋','全スタイルで投稿', ()=>STYLES.every(s=>(S.st.styles[s.id]||0)>=1));
+A('x2','1本で100万再生','1本で100万再生', ()=>S.st.bestBurst>=1e6);
+A('x3','1本で10億再生','1本で10億再生', ()=>S.st.bestBurst>=1e9);
+A('x4','SSRを引いた','SSRのコラボ相手', ()=>S.st.ssr>=1);
+A('x5','神回の中の神回','神回中にもう一度神回', ()=>S.st.buzzInFever>=1);
+A('x6','1時間プレイ','合計1時間遊ぶ', ()=>S.playTime>=3600);
+A('x7','クリーンな成り上がり','1度も炎上せずに中堅へ', ()=>S.rank>=3 && S.st.noFlameRun===1);
+
+/* =========================================================
+   MISSIONS (20 templates)
+   ========================================================= */
+const MT = [
+  { id:'videos',  t:n=>`動画を${fmt(n)}本公開する`,         r:0, n:[15,40,120,400,1500,6000] },
+  { id:'trend',   t:n=>`急上昇ジャンルで${fmt(n)}本出す`,   r:0, n:[5,15,40,120,400,1500] },
+  { id:'comboMax',t:n=>`${n}コンボを決める`,                 r:0, n:[30,50,80,100,150,200], max:true },
+  { id:'taps',    t:n=>`${fmt(n)}回タップする`,               r:0, n:[150,300,600,1000,1500,2000] },
+  { id:'buyEquip',t:n=>`機材を${n}回強化する`,               r:0, n:[3,5,8,10,15,20] },
+  { id:'buySkill',t:n=>`スキルを${n}回強化する`,             r:0, n:[2,3,4,5,6,8] },
+  { id:'golden',  t:n=>`金のタネを${n}個取る`,               r:0, n:[1,1,2,2,3,3] },
+  { id:'buzz',    t:n=>`神回を${n}回出す`,                   r:0, n:[1,1,1,2,2,3] },
+  { id:'events',  t:n=>`できごとに${n}回答える`,             r:0, n:[1,1,2,2,3,3] },
+  { id:'cleared', t:n=>`炎上・警告を${n}回処理する`,         r:1, n:[1,1,1,2,2,3] },
+  { id:'deals',   t:n=>`企業案件を${n}回受ける`,             r:3, n:[1,1,1,2,3,4] },
+  { id:'lives',   t:n=>`生配信を${n}回する`,                 r:4, n:[1,1,1,1,2,2] },
+  { id:'sc',      t:n=>`スパチャを${n}回もらう`,             r:4, n:[30,30,30,30,50,80] },
+  { id:'gacha',   t:n=>`コラボ依頼を${n}回する`,             r:1, n:[1,1,1,2,2,3] },
+  { id:'st_short',t:n=>`ショート連投で${fmt(n)}本出す`,       r:2, n:[20,20,30,60,200,800] },
+  { id:'st_collab',t:n=>`大型コラボで${fmt(n)}本出す`,       r:3, n:[5,5,5,10,40,150] },
+  { id:'genre',   t:(n,x)=>`「${gName(x)}」で${fmt(n)}本出す`, r:0, n:[8,20,60,200,700,3000] },
+  { id:'buyStaff',t:n=>`スタッフを${n}回雇う`,               r:0, n:[2,3,4,5,6,8] },
+  { id:'subsGain',t:n=>`登録者を${fmt(n)}人増やす`,           r:0, n:null },
+  { id:'zone',    t:n=>`ゾーンに${n}回入る`,                 r:0, n:[1,1,2,2,3,3] },
+];
+const gName = id => (GENRES.find(g=>g.id===id)||GENRES[0]).name;
+function newMission(exclude){
+  const pool = MT.filter(m => m.r <= S.rank && !exclude.includes(m.id));
+  const m = pick(pool);
+  let n = m.n ? m.n[S.rank] : Math.max(50, Math.round(S.subs * 0.4));
+  const x = m.id === 'genre' ? pick(GENRES).id : null;
+  return { id:m.id, n, p:0, x, ticket: Math.random() < 0.25 && S.rank >= 1 };
+}
+function fillMissions(){
+  while (S.missions.length < 3) S.missions.push(newMission(S.missions.map(m=>m.id)));
+}
+function track(key, amount, extra){
+  for (const m of S.missions){
+    if (m.p >= m.n) continue;
+    const t = MT.find(x=>x.id===m.id); if (!t) continue;
+    if (m.id === key || (m.id === 'genre' && key === 'genre' && extra === m.x)){
+      if (t.max) m.p = Math.max(m.p, amount); else m.p += amount;
+      if (m.p >= m.n){ m.p = m.n; toast(`ミッション達成「${t.t(m.n, m.x)}」`, 'gold'); Sound.chime(); }
+    }
+  }
+}
+function missionReward(m){
+  if (m.ticket) return { ticket:1, text:'コラボ券 1枚' };
+  const y = Math.max(30, incomeEstimate() * BAL.missionSec);
+  return { money:y, text:fmtY(y) };
+}
+function rerollMission(i){
+  if (S.rerollCd > 0 || !S.missions[i]) return;
+  S.missions.splice(i, 1);
+  S.missions.push(newMission(S.missions.map(x=>x.id)));
+  S.rerollCd = 60;
+  Sound.tap(0);
+  buildShop();
+}
+function claimMission(i){
+  const m = S.missions[i]; if (!m || m.p < m.n) return;
+  const r = missionReward(m);
+  if (r.ticket) S.tickets += r.ticket; else S.money += r.money;
+  S.st.missions++;
+  Sound.coin(); Sound.chime();
+  toast(`報酬 ${r.text}`, 'gold');
+  S.missions.splice(i, 1);
+  S.missions.push(newMission(S.missions.map(x=>x.id)));
+  buildShop();
 }
 
 /* =========================================================
    GAME ACTIONS
    ========================================================= */
-let inc = null;   // active incident
-let lastTitleAt = 0, lastPubSound = 0;
+let inc = null, combo = 0, lastTapAt = 0, lastTitleAt = 0, lastPubSound = 0, sceneDirty = true;
 
 function gain(views, conv, moneyMul){
   if (!(views > 0)) return;
-  S.views += views;
+  S.views += views; S.st.totalViews += views;
   S.money += views * yenPerView() * (moneyMul || 1);
-  S.subs  += views * conv * convMult() / subsDiv();
+  const before = S.subs;
+  S.subs += views * conv * convMult() / subsDiv();
   if (S.subs > S.st.maxSubs) S.st.maxSubs = S.subs;
+  if (S.subs > S.st.maxSubsRun) S.st.maxSubsRun = S.subs;
+  if (S.subs > before) track('subsGain', S.subs - before);
 }
 
 function tap(x, y){
   Sound.init();
   if (inc){ incTap(); return; }
-  S.st.taps++;
+  S.st.taps++; track('taps', 1);
+  const now = performance.now();
+  combo = (now - lastTapAt < BAL.comboWin * 1000) ? combo + 1 : 1;
+  lastTapAt = now;
+  if (combo > S.st.maxCombo) S.st.maxCombo = combo;
+  track('comboMax', combo);
+  if (combo === 100){ S.st.zones++; track('zone', 1); toast('ゾーン突入　連打がさらに伸びる', 'gold'); Sound.zone(); spawnComment(pick(C_ZONE), 'gold'); }
   if (S.liveLeft > 0){ superchat(x, y); return; }
   S.gauge += tapGauge();
   const tv = tapViews();
   gain(tv, BAL.tapConv, 1);
-  floatText(x, y - 30, '+' + fmt(tv, true), '');
-  Sound.tap();
+  UI.tapFx(x, y, tv);
+  Sound.tap(combo);
   checkPublish(false);
-  if (Math.random() < 0.08) spawnComment();
+  if (Math.random() < 0.06) spawnComment(combo >= 100 && Math.random() < .5 ? pick(C_ZONE) : null);
 }
 
 function checkPublish(auto){
@@ -707,86 +1086,94 @@ function publish(count, auto){
   const genre = (auto && lv('meeting') > 0) ? S.trend : S.genre;
   const match = genre === S.trend;
   const gm = match ? trendMult() : 1;
-  const burst = st.view * unit() * gm * count;
+  const per = st.view * unit() * gm * burstMult();
+  const burst = per * count;
   gain(burst, st.conv, st.money || 1);
-  S.stock += st.view * count * (match ? BAL.trendStock : 1);
+  S.stock += st.view * count;
   S.st.videos += count;
-  if (match) S.st.trendHits += count;
+  S.st.genres[genre] = (S.st.genres[genre]||0) + count;
+  S.st.styles[st.id] = (S.st.styles[st.id]||0) + count;
+  if (per > S.st.bestBurst) S.st.bestBurst = per;
+  if (match){ S.st.trendHits += count; track('trend', count); }
+  track('videos', count); track('genre', count, genre);
+  if (st.id === 'short') track('st_short', count);
+  if (st.id === 'collab'){ track('st_collab', count); if (Math.random() < 0.03 * Math.min(count, 5)) { S.tickets++; toast('コラボ相手と仲良くなった　コラボ券 +1', 'gold'); } }
+  if (S.tutStep === 0) setTut(1);
 
   const now = performance.now();
-  if (!auto || now - lastTitleAt > 1200){
+  if (!auto || now - lastTitleAt > 1400){
     lastTitleAt = now;
-    setThumb(genre, st);
-    const r = screenEl.getBoundingClientRect();
-    floatText(r.left + r.width/2, r.top + r.height*0.75, '+' + fmt(burst) + ' 再生' + (match ? '（急上昇）' : ''), 'big');
-    if (match && Math.random() < 0.5) spawnComment('流行りに乗ったな', 'gold');
+    UI.publishFx(genre, st, burst, match);
   }
-  if (!auto || now - lastPubSound > 700){ lastPubSound = now; Sound.publish(); }
+  if (!auto || now - lastPubSound > 800){ lastPubSound = now; Sound.publish(); }
 
-  // buzz
-  if (S.feverLeft <= 0 && S.buzzCd <= 0 && Math.random() < buzzChance()) startFever();
-  // risk
-  if (st.risk && !inc && S.incCd <= 0 && Math.random() < st.risk.p) startIncident(st.risk.type);
+  if (S.buzzCd <= 0 && Math.random() < buzzChance()){
+    if (S.feverLeft > 0) S.st.buzzInFever++;
+    startFever();
+  }
+  if (st.risk && !inc && S.incCd <= 0 && Math.random() < st.risk.p * riskMult()) startIncident(st.risk.type);
 }
 
-function startFever(){
-  S.feverMult = 2 + Math.floor(Math.random() * (2 + S.rank));
+function startFever(mult){
+  S.feverMult = mult || (2 + Math.floor(Math.random() * (1 + S.rank/2)));
   S.feverLeft = 20;
-  S.st.buzz++;
+  S.st.buzz++; track('buzz', 1);
   Sound.fever();
-  toast(`神回バズ！ 20秒間 全部の伸びが ×${S.feverMult}`, 'gold');
+  UI.bigText('神回', '#ffd23f');
+  toast(`神回バズ　20秒間 全部の伸びが ×${S.feverMult}`, 'gold');
   for (let i=0;i<6;i++) setTimeout(()=>spawnComment(pick(C_FEVER),'gold'), i*150);
 }
 
 function superchat(x, y){
-  const yen = Math.max(100, yps() * 0.4) * (0.5 + Math.random()*2.5);
+  const yen = Math.max(100, yps() * 0.4) * (0.5 + Math.random()*2.5) * (1 + sumFx('sc'));
   S.money += yen;
-  floatText(x, y - 30, '+' + fmtY(yen), 'money');
+  S.st.sc++; track('sc', 1);
+  UI.floatText(x, y - 30, '+' + fmtY(yen), 'money');
+  UI.coins(x, y, 2);
   Sound.coin();
-  if (Math.random() < 0.35) spawnComment(pick(C_LIVE), 'sc');
+  if (Math.random() < 0.4) spawnComment(pick(C_LIVE), Math.random() < .2 ? 'sc big' : 'sc');
 }
-function yps(){ return vps() * yenPerView(); }
 
 function doDeal(){
   if (S.rank < 3 || S.dealCd > 0) return;
-  const reward = Math.max(5e4, yps() * 60) * (1 + Math.random());
+  const reward = Math.max(1000, incomeEstimate() * 60) * (1 + Math.random()) * (1 + sumFx('deal') + 0.5*perk('network'));
   S.money += reward;
-  S.dealCd = 45;
-  S.st.deals++;
+  S.dealCd = 45; S.st.deals++; track('deals', 1);
   Sound.coin(); setTimeout(()=>Sound.coin(), 120);
+  const r = $('#dealBtn').getBoundingClientRect();
+  UI.coins(r.left + r.width/2, r.top, 8);
   toast(`企業案件を受けた　+${fmtY(reward)}`, 'gold');
   spawnComment('案件きたああ', 'gold');
 }
 function doLive(){
   if (S.rank < 4 || S.liveCd > 0 || S.liveLeft > 0) return;
-  S.liveLeft = 15; S.liveCd = 120; S.st.lives++;
+  S.liveLeft = 15; S.liveCd = 120; S.st.lives++; track('lives', 1);
   Sound.fanfareShort();
+  UI.bigText('生配信', '#e23b2e');
   toast('生配信スタート。15秒間、連打でスパチャを集めよう', 'gold');
 }
 
-/* ----- incidents (flame / copyright) ----- */
-function startIncident(type){
-  inc = { type, need: 25 + S.rank*5, taps:0, left:8 };
+/* ----- incidents ----- */
+function startIncident(type, opt){
+  inc = { type, need: 25 + S.rank*5, taps:0, left:8, opt: opt || {} };
+  if (type === 'flame') S.st.noFlameRun = 0;
   Sound.alert();
-  screenEl.classList.add('shake'); setTimeout(()=>screenEl.classList.remove('shake'), 300);
-  if (type === 'flame'){
-    $('#incTitle').textContent = '炎上';
-    $('#incDesc').textContent = 'やりすぎて燃えた。連打で謝罪動画を出して火を消せ。';
-    $('#incLabel').textContent = '謝罪'; $('#incSub').textContent = '連打';
-  } else {
-    $('#incTitle').textContent = '著作権警告';
-    $('#incDesc').textContent = '権利者から申し立てが来た。連打で処理しないと動画が消される。';
-    $('#incLabel').textContent = '処理'; $('#incSub').textContent = '連打';
-  }
-  $('#incident').classList.remove('hidden');
+  UI.shake();
+  const T = {
+    flame: ['炎上', 'やりすぎて燃えた。連打で謝罪動画を出して火を消せ。', '謝罪'],
+    copy:  ['著作権警告', '権利者から申し立てが来た。連打で処理しないと動画が消される。', '処理'],
+    repel: ['追い返せ', '迷惑系配信者が家の前に来た。連打で追い返せ。', '帰れ'],
+  }[type];
+  $('#incTitle').textContent = T[0]; $('#incDesc').textContent = T[1]; $('#incLabel').textContent = T[2];
+  showOverlay('#incident');
   updateIncident();
-  for (let i=0;i<4;i++) setTimeout(()=>spawnComment(pick(type==='flame'?C_FLAME:C_COPY),'fire'), i*200);
+  if (type !== 'repel') for (let i=0;i<4;i++) setTimeout(()=>spawnComment(pick(type==='flame'?C_FLAME:C_COPY),'fire'), i*200);
 }
 function incTap(){
   inc.taps++;
-  Sound.tap(true);
-  if (inc.taps >= inc.need) endIncident(true);
-  else updateIncident();
+  Sound.tap(0, true);
+  const b = $('#incBtn'); b.classList.add('press'); setTimeout(()=>b.classList.remove('press'), 60);
+  if (inc.taps >= inc.need) endIncident(true); else updateIncident();
 }
 function updateIncident(){
   if (!inc) return;
@@ -797,39 +1184,111 @@ function endIncident(ok){
   const t = inc.type;
   inc = null;
   S.incCd = 25;
-  $('#incident').classList.add('hidden');
+  hideOverlay('#incident');
   if (ok){
-    S.st.cleared++;
+    S.st.cleared++; track('cleared', 1);
     Sound.publish();
     if (t === 'flame'){ const b = S.subs*0.02 + 5; S.subs += b; toast(`鎮火した。謝罪動画が伸びて登録者 +${fmt(b)}`, 'gold'); }
-    else toast('権利処理が間に合った。動画は無事', 'gold');
+    else if (t === 'copy') toast('権利処理が間に合った。動画は無事', 'gold');
+    else { const b = S.subs*0.03 + 10; S.subs += b; toast(`追い返した。その様子がウケて登録者 +${fmt(b)}`, 'gold'); }
   } else {
     S.debuffLeft = 30;
     Sound.fail();
     if (t === 'flame'){ const l = S.subs*0.03; S.subs -= l; toast(`鎮火失敗… 登録者 -${fmt(l)}、30秒間 伸びが落ちる`, 'bad'); }
-    else { S.stock *= 0.95; toast('動画が消された… 放置再生 -5%、30秒間 伸びが落ちる', 'bad'); }
+    else if (t === 'copy'){ S.stock *= 0.95; toast('動画が消された… 放置再生 -5%、30秒間 伸びが落ちる', 'bad'); }
+    else toast('居座られた… 30秒間 伸びが落ちる', 'bad');
   }
 }
 
-function newTrend(){
-  let g; do { g = pick(GENRES).id; } while (g === S.trend);
-  S.trend = g;
-  S.trendLeft = 40;
-  renderSelectors();
-  const G = GENRES.find(x=>x.id===g);
-  toast(`急上昇が「${G.name}」に変わった`);
+/* ----- golden seed ----- */
+let golden = null;
+const GOLD_FX = [
+  { id:'money', w:4,   f(){ const y = Math.max(20, Math.min(Math.max(S.money*0.15, incomeEstimate()*60), incomeEstimate()*600)); S.money += y; return `臨時収入 +${fmtY(y)}`; } },
+  { id:'fever', w:2,   f(){ startFever(7); return '神回確定 ×7'; } },
+  { id:'tap',   w:2,   f(){ addBuff('tap', 7, 12, '連打祭り ×7'); return '連打祭り　12秒間 連打が×7'; } },
+  { id:'subs',  w:1.5, f(){ const b = Math.max(5, S.subs*0.02); S.subs += b; return `登録者 +${fmt(b)}`; } },
+  { id:'ticket',w:1,   r:1, f(){ S.tickets++; return 'コラボ券 +1'; } },
+  { id:'auto',  w:1,   f(){ addBuff('auto', 5, 15, '自動編集 ×5'); S.dealCd = 0; S.liveCd = 0; return '時短　自動編集×5、待ち時間リセット'; } },
+];
+function collectGolden(){
+  if (!golden) return;
+  const pool = GOLD_FX.filter(g => !g.r || S.rank >= g.r);
+  let tot = pool.reduce((a,g)=>a+g.w, 0), r = Math.random()*tot, fx = pool[0];
+  for (const g of pool){ r -= g.w; if (r <= 0){ fx = g; break; } }
+  const msg = fx.f();
+  S.st.golden++; track('golden', 1);
+  Sound.goldGet();
+  UI.goldGot(golden, msg);
+  golden = null;
+  toast('金のタネ　' + msg, 'gold');
 }
 
+/* ----- gacha ----- */
+function gachaCost(){ return BAL.gachaBase * Math.pow(BAL.gachaG, S.pullsRun) * (S.rank >= 1 ? 1 : Infinity); }
+function rollCollab(){
+  const luck = 0.02 * perk('luck');
+  const r = Math.random();
+  const rar = r < RARITY_RATE.SSR + luck*0.2 ? 'SSR' : r < RARITY_RATE.SSR + RARITY_RATE.SR + luck ? 'SR' : r < 0.4 + luck ? 'R' : 'N';
+  const c = pick(COLLABS.filter(x=>x.r===rar));
+  const had = S.collabs[c.id] || 0;
+  let note;
+  if (!had){ S.collabs[c.id] = 1; note = 'はじめてのコラボ'; }
+  else if (had < 5){ S.collabs[c.id] = had + 1; note = `仲良し度 ${had+1}`; }
+  else { const y = incomeEstimate() * 60; S.money += y; note = `もう親友。お礼 ${fmtY(y)}`; }
+  if (rar === 'SSR') S.st.ssr++;
+  S.st.gacha++; track('gacha', 1);
+  return { c, note, isNew: !had };
+}
+function pullGacha(useTicket){
+  if (S.rank < 1) return null;
+  if (useTicket){ if (S.tickets <= 0) return null; S.tickets--; }
+  else { const c = gachaCost(); if (S.money < c) return null; S.money -= c; S.pullsRun++; }
+  return rollCollab();
+}
+
+/* ----- retire ----- */
+function retirePts(){ return S.rank >= 3 ? Math.floor(1 + 3 * Math.pow(Math.log10(S.st.maxSubsRun / 5e4 + 1), 1.5)) : 0; }
+function retire(){
+  const pts = retirePts(); if (pts <= 0) return;
+  S.legend.pts += pts; S.legend.total += pts;
+  S.st.retires++;
+  const keep = { ach:S.ach, seen:S.seen, st:S.st, collabs:S.collabs, tickets:S.tickets, legend:S.legend, settings:S.settings, tutStep:S.tutStep, playTime:S.playTime };
+  S = Object.assign(defaults(), keep);
+  S.st.maxSubsRun = 0; S.st.noFlameRun = 1;
+  S.money = perk('dash') ? 100 * Math.pow(10, perk('dash')) : 0;
+  S.subs = 100 * perk('early') * perk('early');
+  S.tab = 'legend';
+  dirtyFx(); fillMissions(); sceneDirty = true;
+  applyRankTheme(); renderSelectors(); buildShop();
+  UI.bigText('再デビュー', '#2a9d5c');
+  toast(`殿堂ポイント +${pts}。クソガキから再出発`, 'gold');
+  save();
+}
+function buyPerk(p){
+  const L = perk(p.id); if (L >= p.max) return;
+  const c = p.cost * (L + 1);
+  if (S.legend.pts < c) return;
+  S.legend.pts -= c; S.legend.perks[p.id] = L + 1;
+  dirtyFx(); Sound.buy(); buildShop();
+}
+
+/* ----- trend / rank / ach ----- */
+function newTrend(forceId){
+  let g = forceId;
+  if (!g) do { g = pick(GENRES).id; } while (g === S.trend);
+  S.trend = g; S.trendLeft = 40;
+  renderSelectors();
+  toast(`急上昇が「${gName(g)}」に変わった`);
+}
 function checkRank(){
   while (S.rank < RANKS.length-1 && S.subs >= RANKS[S.rank+1].need){
     const old = S.rank;
     S.rank++;
-    // auto-select best new style
-    const best = STYLES.filter(s=>s.rank===S.rank);
+    const best = STYLES.filter(s=>s.rank===S.rank && !s.risk);
     if (best.length) S.style = best[0].id;
     cutinQueue.push([old, S.rank]);
-    applyRankTheme();
-    buildShop(); renderSelectors();
+    applyRankTheme(); sceneDirty = true;
+    buildShop(); renderSelectors(); fillMissions();
   }
   if (cutinQueue.length && !cutinShowing) showCutin();
 }
@@ -837,56 +1296,375 @@ function checkAch(){
   for (const a of ACHS){
     if (!S.ach[a.id] && a.c()){
       S.ach[a.id] = 1;
-      toast(`実績「${a.name}」　全部の伸び +5%`, 'gold');
-      Sound.coin();
+      toast(`実績「<b>${a.name}</b>」　全部の伸び +${(BAL.achBonus*100).toFixed(1)}%`, 'ach', true);
+      Sound.chime();
       if (S.tab === 'ach') buildShop();
     }
   }
 }
 
 /* =========================================================
+   EVENTS (20)
+   ========================================================= */
+const r50 = () => Math.random() < 0.5;
+const EVENTS = [
+  { id:'parent', r:0, big:'親フラ', bg:'#c9471b', title:'親が部屋に入ってきた', text:'撮影中にドアが開いた。カメラは回ったまま。',
+    ch:[ ['そのまま撮り続ける','半々で神回か炎上', ()=> r50() ? (startFever(5), '親子漫才が神回に') : (startIncident('flame'), '怒られてるところが流れた')],
+         ['あわてて止める','何も起きない', ()=>'なんとかごまかした'] ] },
+  { id:'grandma', r:0, big:'映り込み', bg:'#a06a1c', title:'おばあちゃんが映り込んだ', text:'後ろでおばあちゃんがお茶を飲んでいる。コメント欄がざわついている。',
+    ch:[ ['そのまま出す','登録者 +3%', ()=>{ const b=Math.max(3,S.subs*.03); S.subs+=b; return `癒やされた人が登録 +${fmt(b)}`; }],
+         ['カットする','何も起きない', ()=>'いつも通りの動画になった'] ] },
+  { id:'drop', r:0, big:'ガシャン', bg:'#3d5a80', title:'スマホを落とした', text:'画面がバキバキに割れた。',
+    ch:[ ['割れたまま撮る','30秒 連打が×2', ()=>{ addBuff('tap',2,30,'ひび割れ ×2'); return 'ひび割れ画面が逆にウケた'; }],
+         ['修理に出す','お金 -10%、ボロスマホ +3', ()=>{ S.money*=0.9; S.lv.phone=lv('phone')+3; dirtyFx(); return 'ちょっとマシなスマホになった'; }] ] },
+  { id:'snack', r:0, big:'差し入れ', bg:'#2a9d5c', title:'差し入れが来た', text:'家族がおにぎりを持ってきてくれた。',
+    ch:[ ['食べて元気を出す','30秒 編集量×2', ()=>{ addBuff('tap',2,30,'おにぎり ×2'); return '手が速くなった'; }] ] },
+  { id:'cat', r:0, big:'にゃー', bg:'#a06a1c', title:'猫が乱入した', text:'撮影中に猫がキーボードの上に乗ってきた。',
+    ch:[ ['ペット動画にする','急上昇がペットになる', ()=>{ newTrend('pet'); S.genre='pet'; renderSelectors(); return 'ペット回にした'; }],
+         ['そっとどかす','何も起きない', ()=>'猫は不満そうだ'] ] },
+  { id:'allnight', r:0, big:'朝', bg:'#6c4b8a', title:'気づいたら朝だった', text:'徹夜で撮影していた。眠い。',
+    ch:[ ['寝る','5分ぶんの放置再生', ()=>{ const v=vps()*300; gain(v, BAL.passConv, 1); return `寝てる間に +${fmt(v)}再生`; }],
+         ['もう1本撮る','20秒 自動×3 & 連打×1.5、そのあと少し落ちる', ()=>{ addBuff('auto',3,20,'徹夜テンション'); addBuff('tap',1.5,20,'徹夜テンション'); setTimeout(()=>addBuff('slump',0.7,20,'寝不足'), 20000); return '徹夜テンション'; }] ] },
+  { id:'school', r:0, rmax:2, big:'バレた', bg:'#5e2a8f', title:'学校にバレた', text:'先生にチャンネルを見られた。',
+    ch:[ ['開き直る','半々で登録者+5%か炎上', ()=> r50() ? (S.subs+=Math.max(5,S.subs*.05), 'クラス全員が登録した') : (startIncident('flame'), '保護者会で話題に')],
+         ['素直に謝る','何も起きない', ()=>'反省文を書いた'] ] },
+  { id:'meiwaku', r:1, big:'突撃', bg:'#e23b2e', title:'迷惑系がやって来た', text:'迷惑系配信者が家の前で勝手に生配信を始めた。',
+    ch:[ ['追い返す','連打ミニゲーム', ()=>{ setTimeout(()=>startIncident('repel'), 350); return '戦うしかない'; }],
+         ['コラボする','登録者 +8%、ただし40%で炎上', ()=>{ const b=S.subs*.08; S.subs+=b; if (Math.random()<.4) setTimeout(()=>startIncident('flame'),400); return `話題になった +${fmt(b)}`; }] ] },
+  { id:'anti', r:1, big:'低評価', bg:'#3d5a80', title:'アンチが押し寄せた', text:'低評価とコメントが止まらない。',
+    ch:[ ['論破動画を出す','半々で登録者+5%か炎上', ()=> r50() ? (S.subs+=S.subs*.05, 'スカッとしたと好評') : (startIncident('flame'), '火に油だった')],
+         ['スルーする','30秒 伸びが少し落ちる', ()=>{ addBuff('slump',0.7,30,'もやもや'); return 'そのうち収まるはず'; }] ] },
+  { id:'fan', r:1, big:'手紙', bg:'#b0174f', title:'ファンレターが届いた', text:'はじめてのファンレター。「いつも見てます」と書いてある。',
+    ch:[ ['じっくり読む','60秒 登録率×2', ()=>{ addBuff('conv',2,60,'やる気 登録率×2'); return 'やる気が出た'; }] ] },
+  { id:'sale', r:1, big:'SALE', bg:'#e23b2e', title:'機材の決算セール', text:'家電量販店で年に一度の大セール。',
+    ch:[ ['行く','60秒間 強化が半額', ()=>{ addBuff('sale',0.5,60,'セール 半額'); return '60秒以内に買おう'; }] ] },
+  { id:'invest', r:2, big:'もうかる', bg:'#1d6e62', title:'謎の投資話', text:'知らない人から「絶対もうかる」という話が来た。',
+    ch:[ ['乗る','半々で所持金2倍か半分', ()=> r50() ? (S.money*=2, '本当にもうかった') : (S.money*=0.5, '案の定だまされた')],
+         ['断る','何も起きない', ()=>'賢い選択'] ] },
+  { id:'bigshare', r:2, big:'拡散', bg:'#2f6fdb', title:'有名人が紹介してくれた', text:'フォロワー数百万人の有名人が動画を紹介した。',
+    ch:[ ['ありがたく受け取る','登録者 +5%', ()=>{ const b=S.subs*.05; S.subs+=b; return `登録者 +${fmt(b)}`; }] ] },
+  { id:'algo', r:2, big:'変動', bg:'#6c4b8a', title:'アルゴリズムが変わった', text:'おすすめの仕組みが変わったらしい。',
+    ch:[ ['流れに乗る','今のジャンルが急上昇に、40秒 公開時×2', ()=>{ newTrend(S.genre); addBuff('burst',2,40,'波に乗った ×2'); return 'いまのジャンルが来てる'; }] ] },
+  { id:'server', r:2, big:'503', bg:'#3d5a80', title:'動画サイトが落ちた', text:'しばらく誰も動画を見られない。',
+    ch:[ ['復旧を待つ','復旧後に1分ぶんまとめて入る', ()=>{ const v=vps()*60; gain(v, BAL.passConv, 1); return `復旧したら一気に +${fmt(v)}再生`; }] ] },
+  { id:'tv', r:3, big:'TV', bg:'#d99a00', title:'テレビ出演の依頼', text:'夕方の情報番組から出演依頼が来た。',
+    ch:[ ['出る','登録者 +10%、所持金 -20%', ()=>{ const b=S.subs*.1; S.subs+=b; S.money*=0.8; return `お茶の間に知られた +${fmt(b)}`; }],
+         ['断る','何も起きない', ()=>'ネットで勝負する'] ] },
+  { id:'overseas', r:3, big:'海外', bg:'#2a9d5c', title:'海外でバズっている', text:'海外の掲示板で動画が話題になっている。',
+    ch:[ ['字幕をつける','神回 ×5', ()=>{ startFever(5); return '世界が見ている'; }] ] },
+  { id:'invite', r:3, big:'DM', bg:'#7b4bc4', title:'コラボのお誘い', text:'人気配信者からDMが来た。',
+    ch:[ ['受ける','コラボ券 +1', ()=>{ S.tickets++; return 'コラボ券をもらった'; }] ] },
+  { id:'neta', r:1, big:'ネタ切れ', bg:'#8a5a2b', title:'ネタが思いつかない', text:'何を撮ればいいかわからなくなった。',
+    ch:[ ['友達に聞く','ジャンルを急上昇に合わせる', ()=>{ S.genre=S.trend; renderSelectors(); return `「${gName(S.trend)}」で行こう`; }],
+         ['過去動画をリメイク','放置再生 +5%', ()=>{ S.stock*=1.05; return '昔の動画がまた回り始めた'; }] ] },
+  { id:'scandal', r:4, big:'文春', bg:'#1d1a16', title:'週刊誌に撮られた', text:'深夜のコンビニ帰りを撮られた。',
+    ch:[ ['正直に話す','登録者 +3%', ()=>{ const b=S.subs*.03; S.subs+=b; return `誠実さが伝わった +${fmt(b)}`; }],
+         ['ノーコメント','30%で炎上', ()=> Math.random()<.3 ? (startIncident('flame'), '余計に燃えた') : '何事もなく過ぎた'] ] },
+];
+let pendingEvent = null;
+function maybeEvent(){
+  if (pendingEvent || inc || anyOverlay()) return;
+  const pool = EVENTS.filter(e => e.r <= S.rank && (e.rmax === undefined || S.rank <= e.rmax));
+  pendingEvent = { ev: pick(pool), left: 25 };
+  UI.showEventBubble(pendingEvent.ev);
+  Sound.chime();
+}
+function openEvent(){
+  if (!pendingEvent) return;
+  const ev = pendingEvent.ev;
+  pendingEvent = null;
+  UI.hideEventBubble();
+  $('#evArt').style.setProperty('--evbg', ev.bg);
+  $('#evBig').textContent = ev.big;
+  $('#evKind').textContent = 'できごと';
+  $('#evTitle').textContent = ev.title;
+  $('#evText').textContent = ev.text;
+  const box = $('#evChoices'); box.innerHTML = '';
+  ev.ch.forEach(([t, sub, fn], i) => {
+    const b = document.createElement('button');
+    b.className = 'btn' + (i === 0 ? ' primary' : '');
+    b.innerHTML = `${t}<small>${sub}</small>`;
+    b.onclick = () => {
+      hideOverlay('#eventModal');
+      S.st.events++; track('events', 1);
+      const msg = fn();
+      dirtyFx();
+      if (msg) toast(msg, 'gold');
+      Sound.coin();
+    };
+    box.appendChild(b);
+  });
+  showOverlay('#eventModal');
+}
+
+/* =========================================================
    TICK
    ========================================================= */
 function step(dt){
-  S.playTime += dt;
+  S.playTime += dt; S.runTime += dt;
   S.trendLeft -= dt; if (S.trendLeft <= 0) newTrend();
-  if (S.feverLeft > 0){ S.feverLeft -= dt; if (S.feverLeft <= 0){ S.feverLeft = 0; S.feverMult = 1; S.buzzCd = 45; toast('神回バズ終わり'); } }
+  if (S.feverLeft > 0){ S.feverLeft -= dt; if (S.feverLeft <= 0){ S.feverLeft = 0; S.feverMult = 1; S.buzzCd = 45; } }
   if (S.debuffLeft > 0) S.debuffLeft = Math.max(0, S.debuffLeft - dt);
   if (S.dealCd > 0) S.dealCd = Math.max(0, S.dealCd - dt);
   if (S.liveCd > 0) S.liveCd = Math.max(0, S.liveCd - dt);
   if (S.liveLeft > 0){ S.liveLeft -= dt; if (S.liveLeft <= 0){ S.liveLeft = 0; toast('生配信おわり。おつかれ'); } }
   if (S.incCd > 0) S.incCd -= dt;
+  if (S.rerollCd > 0) S.rerollCd -= dt;
   if (S.buzzCd > 0) S.buzzCd -= dt;
+  for (const k in S.buffs){ S.buffs[k].left -= dt; if (S.buffs[k].left <= 0) delete S.buffs[k]; }
   if (inc){ inc.left -= dt; if (inc.left <= 0) endIncident(false); else updateIncident(); }
+  if (combo > 0 && performance.now() - lastTapAt > BAL.comboWin * 1000 + 250) combo = 0;
 
   const ag = autoGauge();
   if (ag > 0 && !inc){ S.gauge += ag * dt; checkPublish(true); }
-
   gain(vps() * dt, BAL.passConv, 1);
   checkRank();
+
+  if (S.tutStep >= 1){
+    S.goldenCd -= dt;
+    if (S.goldenCd <= 0 && !golden){ UI.spawnGolden(); S.goldenCd = (70 + Math.random()*60) / goldFreq(); }
+    S.eventCd -= dt;
+    if (S.eventCd <= 0){ S.eventCd = 80 + Math.random()*70; maybeEvent(); }
+  }
+  if (pendingEvent){ pendingEvent.left -= dt; if (pendingEvent.left <= 0){ pendingEvent = null; UI.hideEventBubble(); } }
 }
 
 /* =========================================================
-   SOUND (Web Audio)
+   DRAWING (SVG)
    ========================================================= */
+const INK = '#1d1a16', SKIN = '#ffd9b8';
+const K = (w) => `stroke="${INK}" stroke-width="${w||2.5}" stroke-linejoin="round" stroke-linecap="round"`;
+
+function charaSVG(r, withId, pinmic){
+  const O = [
+    { shirt:'#ffd23f', hair:'#2b2420', dev:'phone', legs:'#2c3e66' },
+    { shirt:'#3a3a3a', hair:'#2b2420', dev:'phone', legs:'#2c3e66' },
+    { shirt:'#9aa3ad', hair:'#6b4226', dev:'cam',   legs:'#2c3e66' },
+    { shirt:'#2a9d5c', hair:'#2f6fdb', dev:'dslr',  legs:'#3a3a3a' },
+    { shirt:'#fffdf7', hair:'#f2c14e', dev:'mic',   legs:'#e9e4d8' },
+    { shirt:'#6b3fb5', hair:'#f1efe9', dev:'gmic',  legs:'#2b2b40' },
+  ][r];
+  const dev = {
+    phone:`<rect x="243" y="116" width="15" height="25" rx="3" fill="${INK}"/><rect x="245.5" y="119" width="10" height="17" rx="1" fill="#8fd3ff"/><circle cx="250.5" cy="138.5" r="1" fill="#fff"/>`,
+    cam:  `<rect x="236" y="121" width="28" height="18" rx="3" fill="#4a4a4a" ${K(2)}/><circle cx="240" cy="130" r="5.5" fill="#8fd3ff" ${K(2)}/><rect x="256" y="117" width="6" height="5" fill="#e23b2e" class="blinkLed"/>`,
+    dslr: `<rect x="240" y="116" width="9" height="6" fill="#2b2b2b" ${K(1.5)}/><rect x="235" y="120" width="34" height="21" rx="3" fill="#2b2b2b" ${K(2)}/><circle cx="252" cy="130.5" r="8.5" fill="#555" ${K(2)}/><circle cx="252" cy="130.5" r="4.2" fill="#8fd3ff"/>`,
+    mic:  `<rect x="247" y="120" width="7" height="24" rx="3" fill="#333" ${K(2)}/><circle cx="250.5" cy="115" r="8" fill="#9aa3ad" ${K(2)}/><path d="M245 112 h11 M245 116 h11" stroke="${INK}" stroke-width="1.2"/>`,
+    gmic: `<rect x="247" y="120" width="7" height="24" rx="3" fill="#d99a00" ${K(2)}/><circle cx="250.5" cy="115" r="8" fill="#ffd23f" ${K(2)}/><path d="M245 112 h11 M245 116 h11" stroke="${INK}" stroke-width="1.2"/>`,
+  }[O.dev];
+  const hair = [
+    `<path d="M171 113 Q172 88 200 88 Q228 88 229 113 Q218 100 200 103 Q182 100 171 113Z" fill="${O.hair}" ${K()}/>
+     <path d="M173 104 Q176 83 200 83 Q224 83 227 104 Q200 95 173 104Z" fill="#e23b2e" ${K()}/><path d="M226 99 l18 4 l-2 7 l-18 -4z" fill="#e23b2e" ${K()}/>`,
+    `<path d="M167 130 Q164 84 200 82 Q236 84 233 130 Q228 97 200 96 Q172 97 167 130Z" fill="#3a3a3a" ${K()}/>`,
+    `<path d="M170 116 L171 96 L180 101 L183 86 L193 96 L200 81 L207 95 L217 86 L220 101 L229 96 L230 116 Q220 102 200 104 Q180 102 170 116Z" fill="${O.hair}" ${K()}/>`,
+    `<path d="M170 118 Q167 85 205 85 Q236 88 230 112 Q222 98 207 100 Q196 109 177 106 Q172 110 170 118Z" fill="${O.hair}" ${K()}/>`,
+    `<path d="M170 114 Q172 86 200 86 Q228 86 230 114 Q228 100 214 98 Q200 96 186 100 Q174 104 170 114Z" fill="${O.hair}" ${K()}/>
+     <rect x="181" y="92" width="15" height="7" rx="3" fill="${INK}"/><rect x="204" y="92" width="15" height="7" rx="3" fill="${INK}"/><path d="M196 95 h8" ${K(2)}/>`,
+    `<path d="M170 116 Q172 88 200 88 Q228 88 230 116 Q216 104 200 106 Q184 104 170 116Z" fill="${O.hair}" ${K()}/>
+     <path d="M180 92 L182 72 L191 83 L200 68 L209 83 L218 72 L220 92 Z" fill="#ffd23f" ${K()}/><circle cx="200" cy="84" r="3.5" fill="#e23b2e" ${K(1.5)}/>`,
+  ][r];
+  let s = `<g ${withId ? 'id="chara"' : ''} class="chara">`;
+  s += `<ellipse cx="200" cy="236" rx="42" ry="7" fill="rgba(0,0,0,.18)"/><g class="cbody">`;
+  if (r === 5) s += `<path d="M173 160 Q146 205 156 234 L244 234 Q254 205 227 160 Z" fill="#e23b2e" ${K()}/>`;
+  s += `<rect x="185" y="200" width="12" height="30" rx="4" fill="${O.legs}" ${K()}/><rect x="203" y="200" width="12" height="30" rx="4" fill="${O.legs}" ${K()}/>
+        <path d="M179 228 h19 v7 h-21z" fill="${INK}"/><path d="M202 228 h19 l2 7 h-21z" fill="${INK}"/>
+        <path d="M170 206 Q167 160 200 156 Q233 160 230 206 Z" fill="${O.shirt}" ${K()}/>`;
+  if (r === 1) s += `<path d="M186 188 h28 v12 h-28z" fill="#2b2b2b" ${K(2)}/>`;
+  if (r === 2) s += `<path d="M194 162 v14 M206 162 v14" ${K(2)}/>`;
+  if (r === 3) s += `<path d="M200 160 v46" ${K(2)}/>`;
+  if (r === 4) s += `<path d="M200 160 l-5 8 l5 28 l5 -28z" fill="#ffd23f" ${K(2)}/>`;
+  if (r === 5) s += `<path d="M178 160 Q200 172 222 160" fill="none" stroke="#ffd23f" stroke-width="5"/>`;
+  if (pinmic) s += `<circle cx="189" cy="172" r="3" fill="${INK}"/>`;
+  s += `<path d="M175 168 Q160 184 166 200" fill="none" stroke="${INK}" stroke-width="13" stroke-linecap="round"/><path d="M175 168 Q160 184 166 200" fill="none" stroke="${O.shirt}" stroke-width="8" stroke-linecap="round"/><circle cx="166" cy="201" r="6" fill="${SKIN}" ${K(2)}/>`;
+  s += `<g class="arm"><path d="M225 168 Q246 162 250 144" fill="none" stroke="${INK}" stroke-width="13" stroke-linecap="round"/><path d="M225 168 Q246 162 250 144" fill="none" stroke="${O.shirt}" stroke-width="8" stroke-linecap="round"/>${dev}<circle cx="250" cy="143" r="6" fill="${SKIN}" ${K(2)}/></g>`;
+  s += `<g class="head">`;
+  if (r === 1) s += `<circle cx="200" cy="120" r="37" fill="#3a3a3a" ${K()}/>`;
+  if (r === 5) s += `<path d="M167 118 Q165 162 178 170 L222 170 Q235 162 233 118 Z" fill="${O.hair}" ${K()}/>`;
+  if (r === 3) s += `<path d="M169 120 Q168 79 200 79 Q232 79 231 120" fill="none" stroke="${INK}" stroke-width="5"/>`;
+  s += `<circle cx="200" cy="120" r="30" fill="${SKIN}" ${K()}/>${hair}`;
+  s += `<g class="eyes"><ellipse cx="189" cy="122" rx="3.6" ry="5" fill="${INK}"/><ellipse cx="211" cy="122" rx="3.6" ry="5" fill="${INK}"/><circle cx="190.2" cy="120" r="1.3" fill="#fff"/><circle cx="212.2" cy="120" r="1.3" fill="#fff"/></g>`;
+  if (r === 1) s += `<rect x="179" y="115" width="18" height="11" rx="4" fill="${INK}"/><rect x="203" y="115" width="18" height="11" rx="4" fill="${INK}"/><path d="M197 119 h6" ${K()}/>`;
+  if (r === 3) s += `<rect x="163" y="110" width="10" height="19" rx="4" fill="#e23b2e" ${K(2)}/><rect x="227" y="110" width="10" height="19" rx="4" fill="#e23b2e" ${K(2)}/>`;
+  if (r === 2) s += `<path d="M177 148 Q200 162 223 148" fill="none" stroke="#e23b2e" stroke-width="5"/>`;
+  s += `<ellipse cx="182" cy="131" rx="5" ry="3" fill="#ff9e8f" opacity=".75"/><ellipse cx="218" cy="131" rx="5" ry="3" fill="#ff9e8f" opacity=".75"/>
+        <path class="m-norm" d="M193 134 Q200 141 207 134" fill="none" ${K()}/>
+        <ellipse class="m-open" cx="200" cy="137" rx="6" ry="7" fill="#8a2a22" ${K(2)}/>
+        <path class="m-wow" d="M193 139 Q200 132 207 139" fill="none" ${K()}/>
+        <path class="sweat" d="M229 100 q6 9 0 14 q-6 -5 0 -14z" fill="#8fd3ff" ${K(1.5)}/>
+        <path class="sweat" d="M170 104 q4 7 0 11 q-4 -4 0 -11z" fill="#8fd3ff" ${K(1.5)}/>`;
+  s += `</g></g></g>`;
+  return s;
+}
+
+function mini(x, y, sc, hair, shirt, cls, extra){
+  return `<g transform="translate(${x} ${y}) scale(${sc})"><g class="${cls||''}">
+    <path d="M-14 0 Q-15 -26 0 -28 Q15 -26 14 0Z" fill="${shirt}" ${K()}/>
+    <circle cx="0" cy="-40" r="14" fill="${SKIN}" ${K()}/>
+    <path d="M-14 -41 Q-13 -56 0 -56 Q13 -56 14 -41 Q6 -48 0 -47 Q-6 -48 -14 -41Z" fill="${hair}" ${K()}/>
+    <circle cx="-5" cy="-39" r="1.9" fill="${INK}"/><circle cx="5" cy="-39" r="1.9" fill="${INK}"/>
+    <path d="M-3 -33 Q0 -31 3 -33" fill="none" ${K(1.5)}/>${extra||''}</g></g>`;
+}
+
+function roomSVG(r){
+  const floorY = 196;
+  const base = (wall, floor, extraWall, extraFloor) =>
+    `<rect width="400" height="${floorY}" fill="${wall}"/>${extraWall||''}
+     <rect y="${floorY}" width="400" height="64" fill="${floor}"/>${extraFloor||''}
+     <rect x="-4" y="${floorY-4}" width="408" height="7" fill="#fffdf7" ${K(2)}/>`;
+  if (r === 0) return base('#bfe0f2', '#d8a467',
+    `<defs><pattern id="pw0" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="1.6" fill="#a3cde6"/><circle cx="13" cy="13" r="1.6" fill="#a3cde6"/></pattern>
+       <clipPath id="cw0"><rect x="22" y="24" width="92" height="74"/></clipPath></defs>
+     <rect width="400" height="${floorY}" fill="url(#pw0)"/>
+     <rect x="22" y="24" width="92" height="74" fill="#8fd3ff"/>
+     <g clip-path="url(#cw0)"><g class="cloud"><ellipse cx="44" cy="56" rx="15" ry="7" fill="#fff"/><ellipse cx="56" cy="51" rx="11" ry="8" fill="#fff"/><ellipse cx="90" cy="80" rx="12" ry="5" fill="#fff"/></g></g>
+     <rect x="22" y="24" width="92" height="74" fill="none" ${K(4)}/><path d="M68 24 v74 M22 61 h92" ${K(3)}/>
+     <g transform="rotate(4 320 72)"><rect x="292" y="36" width="58" height="74" fill="#ffd23f" ${K()}/><text x="321" y="80" font-family="Dela Gothic One, sans-serif" font-size="16" text-anchor="middle" fill="#e23b2e">勇者</text><circle cx="321" cy="98" r="5" fill="#2f6fdb"/></g>`,
+    `<path d="M0 218 H400 M0 240 H400" stroke="#b9864d" stroke-width="2"/>
+     <rect x="-12" y="150" width="108" height="46" rx="6" fill="#e23b2e" ${K()}/><rect x="-2" y="139" width="36" height="19" rx="6" fill="#fffdf7" ${K()}/><rect x="-12" y="188" width="108" height="14" fill="#8a5a2b" ${K()}/>
+     <circle cx="356" cy="224" r="11" fill="#2f6fdb" ${K()}/><path d="M346 222 Q356 216 366 222" fill="none" stroke="#fff" stroke-width="3"/>`);
+  if (r === 1) return base('#e9dcf3', '#c99a72',
+    `<g transform="rotate(-5 60 60)"><rect x="30" y="30" width="56" height="40" fill="#fffdf7" ${K(2)}/><rect x="36" y="36" width="44" height="22" fill="#2f6fdb"/><rect x="52" y="26" width="14" height="7" fill="#d6dbe8" opacity=".9"/></g>
+     <g transform="rotate(6 120 90)"><rect x="96" y="70" width="50" height="36" fill="#fffdf7" ${K(2)}/><rect x="101" y="75" width="40" height="18" fill="#e23b2e"/><rect x="112" y="66" width="14" height="7" fill="#d6dbe8" opacity=".9"/></g>
+     <g transform="rotate(-3 330 60)"><rect x="300" y="34" width="62" height="44" fill="#fffdf7" ${K(2)}/><rect x="306" y="40" width="50" height="24" fill="#2a9d5c"/><rect x="324" y="30" width="14" height="7" fill="#d6dbe8" opacity=".9"/></g>
+     <g transform="rotate(8 350 120)"><rect x="330" y="100" width="44" height="34" fill="#ffd23f" ${K(2)}/><text x="352" y="122" font-size="9" font-weight="900" text-anchor="middle" fill="${INK}">転載禁止</text></g>`,
+    `<path d="M0 222 H400" stroke="#a87c55" stroke-width="2"/>
+     <ellipse cx="60" cy="214" rx="46" ry="20" fill="#7b4bc4" ${K()}/><ellipse cx="60" cy="206" rx="30" ry="9" fill="#9a6fe0" opacity=".6"/>
+     <rect x="296" y="212" width="64" height="12" fill="#d9a066" ${K(2)}/><rect x="300" y="205" width="64" height="9" fill="#e8b67c" ${K(2)}/>`);
+  if (r === 2) return base('#f2e3c4', '#b98b5e',
+    `<rect y="150" width="400" height="46" fill="#e4cfa6"/><path d="M0 150 H400" ${K(2)}/>
+     <rect x="290" y="30" width="80" height="12" fill="#8a5a2b" ${K(2)}/><rect x="296" y="10" width="9" height="20" fill="#e23b2e" ${K(1.5)}/><rect x="306" y="14" width="9" height="16" fill="#2f6fdb" ${K(1.5)}/><rect x="316" y="8" width="9" height="22" fill="#2a9d5c" ${K(1.5)}/><rect x="330" y="16" width="20" height="14" fill="#ffd23f" ${K(1.5)}/>
+     <g transform="rotate(-3 330 90)"><rect x="300" y="60" width="62" height="58" fill="#fffdf7" ${K(2)}/><text x="331" y="76" font-size="9" font-weight="900" text-anchor="middle" fill="${INK}">毎日投稿</text>
+       <path d="M308 84 l6 6 m0 -6 l-6 6 M322 84 l6 6 m0 -6 l-6 6 M336 84 l6 6 m0 -6 l-6 6 M350 84 l6 6 m0 -6 l-6 6 M308 98 l6 6 m0 -6 l-6 6 M322 98 l6 6 m0 -6 l-6 6" stroke="#e23b2e" stroke-width="2"/></g>`,
+    `<path d="M0 220 H400 M0 242 H400" stroke="#9d7349" stroke-width="2"/>
+     <rect x="0" y="146" width="118" height="10" fill="#8a5a2b" ${K()}/><rect x="8" y="156" width="8" height="40" fill="#8a5a2b" ${K(2)}/><rect x="100" y="156" width="8" height="40" fill="#8a5a2b" ${K(2)}/>
+     <rect x="20" y="96" width="76" height="48" rx="3" fill="#2b2b2b" ${K()}/><rect x="25" y="101" width="66" height="36" fill="#1f3b73"/><rect x="29" y="122" width="22" height="5" fill="#e23b2e"/><rect x="53" y="122" width="30" height="5" fill="#ffd23f"/><rect x="29" y="129" width="40" height="4" fill="#2a9d5c"/><rect x="52" y="144" width="12" height="4" fill="${INK}"/>`);
+  if (r === 3) return base('#3b414d', '#2a2d33',
+    `<defs><pattern id="pf3" width="24" height="24" patternUnits="userSpaceOnUse"><rect width="24" height="24" fill="#353a45"/><path d="M0 24 L12 0 L24 24Z" fill="#2c3039"/></pattern></defs>
+     <rect x="0" y="0" width="400" height="150" fill="url(#pf3)"/><path d="M0 150 H400" stroke="#20232a" stroke-width="3"/>
+     <g class="glow"><rect x="282" y="26" width="98" height="34" rx="6" fill="#2c1010" stroke="#ff5a4e" stroke-width="3"/><text x="331" y="50" font-family="Dela Gothic One, sans-serif" font-size="17" text-anchor="middle" fill="#ff5a4e">ON AIR</text></g>
+     <rect x="20" y="40" width="84" height="12" fill="#5a4636" ${K(2)}/><rect x="30" y="22" width="14" height="18" fill="#ffd23f" ${K(1.5)}/><circle cx="62" cy="31" r="8" fill="#e23b2e" ${K(1.5)}/><rect x="78" y="18" width="16" height="22" fill="#2f6fdb" ${K(1.5)}/>`,
+    `<ellipse cx="200" cy="232" rx="150" ry="20" fill="#7b2020" opacity=".8"/>
+     <rect x="0" y="146" width="122" height="10" fill="#4a4f5c" ${K()}/><rect x="10" y="156" width="8" height="40" fill="#4a4f5c" ${K(2)}/><rect x="104" y="156" width="8" height="40" fill="#4a4f5c" ${K(2)}/>
+     <rect x="8" y="104" width="54" height="40" rx="3" fill="#111" ${K()}/><rect x="12" y="108" width="46" height="30" fill="#2f6fdb"/><rect x="64" y="100" width="56" height="44" rx="3" fill="#111" ${K()}/><rect x="68" y="104" width="48" height="34" fill="#e23b2e"/>
+     <path d="M372 196 q-6 -26 8 -40 q10 16 -2 40z" fill="#2a9d5c" ${K(2)}/><rect x="362" y="190" width="26" height="22" fill="#c9471b" ${K(2)}/>`);
+  if (r === 4) return base('#2a2240', '#4a3b6b',
+    `<rect x="30" y="18" width="104" height="62" rx="4" fill="#111" ${K()}/><rect x="35" y="23" width="94" height="52" fill="#2f6fdb"/><circle cx="82" cy="49" r="12" fill="#ffd23f"/>
+     <rect x="148" y="10" width="104" height="62" rx="4" fill="#111" ${K()}/><rect x="153" y="15" width="94" height="52" fill="#e23b2e"/><path d="M180 52 l20 -22 l20 22z" fill="#fffdf7"/>
+     <rect x="266" y="18" width="104" height="62" rx="4" fill="#111" ${K()}/><rect x="271" y="23" width="94" height="52" fill="#2a9d5c"/><rect x="290" y="38" width="56" height="20" fill="#fffdf7"/>
+     <g class="sway"><path d="M30 0 L-20 196 L60 196Z" fill="rgba(255,226,120,.16)"/></g><g class="sway" style="animation-delay:-1.5s"><path d="M370 0 L340 196 L420 196Z" fill="rgba(255,226,120,.16)"/></g>`,
+    `<path d="M0 206 H400" stroke="#6a578f" stroke-width="2"/>${[30,90,150,210,270,330,390].map(x=>`<circle cx="${x}" cy="250" r="5" fill="#ffd23f" class="glow" style="animation-delay:${x/200}s"/>`).join('')}`);
+  return base('#0d1030', '#59637a',
+    `<defs><pattern id="ps5" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="6" cy="8" r="1.2" fill="#fff"/><circle cx="26" cy="22" r="0.9" fill="#fff"/><circle cx="16" cy="34" r="1.4" fill="#ffd23f"/></pattern>
+       <clipPath id="cw5"><circle cx="300" cy="92" r="70"/></clipPath></defs>
+     <rect width="400" height="196" fill="url(#ps5)"/>
+     <circle cx="300" cy="92" r="70" fill="#050716"/>
+     <g clip-path="url(#cw5)"><circle cx="300" cy="150" r="80" fill="#2f6fdb"/>
+       <g class="earth"><path d="M240 110 q20 -14 40 0 q10 20 -10 30 q-30 4 -30 -30z M300 100 q30 -10 50 10 q-10 20 -30 14 q-20 -4 -20 -24z M360 120 q20 -8 30 6 q-10 14 -30 -6z M400 110 q20 -14 40 0 q10 20 -10 30 q-30 4 -30 -30z" fill="#2a9d5c"/></g></g>
+     <circle cx="300" cy="92" r="70" fill="none" stroke="#9aa3ad" stroke-width="9"/><circle cx="300" cy="92" r="70" fill="none" ${K(2.5)}/><circle cx="300" cy="92" r="75" fill="none" ${K(2.5)}/>`,
+    `<path d="M0 220 H400 M80 196 V260 M180 196 V260 M280 196 V260 M380 196 V260" stroke="#454d61" stroke-width="2"/>
+     <rect x="10" y="150" width="90" height="46" rx="4" fill="#3a4256" ${K()}/><circle cx="30" cy="166" r="4" fill="#2a9d5c" class="blinkLed"/><circle cx="46" cy="166" r="4" fill="#e23b2e" class="blinkLed" style="animation-delay:.3s"/><circle cx="62" cy="166" r="4" fill="#ffd23f" class="blinkLed" style="animation-delay:.6s"/><rect x="24" y="178" width="62" height="8" fill="#2f6fdb"/>`);
+}
+
+function propsSVG(r){
+  let s = '';
+  if (lv('green') > 0) s += `<rect x="138" y="34" width="124" height="160" fill="#39a960" ${K()}/><rect x="132" y="28" width="136" height="8" rx="3" fill="#9aa3ad" ${K(2)}/>`;
+  if (lv('lights') > 0) s += `<g class="glow"><path d="M30 26 L150 196 L250 196Z" fill="rgba(255,240,170,.22)"/><path d="M370 26 L150 196 L250 196Z" fill="rgba(255,240,170,.22)"/></g>
+      <rect x="16" y="14" width="28" height="18" rx="4" fill="#2b2b2b" ${K()}/><rect x="356" y="14" width="28" height="18" rx="4" fill="#2b2b2b" ${K()}/>`;
+  if (r === 5 && lv('sat') > 0) s += `<g class="orbit"><g transform="translate(300 34)"><rect x="-6" y="-5" width="12" height="10" fill="#d6dbe8" ${K(1.5)}/><rect x="-22" y="-3" width="14" height="6" fill="#2f6fdb" ${K(1.5)}/><rect x="8" y="-3" width="14" height="6" fill="#2f6fdb" ${K(1.5)}/></g></g>`;
+  const sh = [[1e5,'#c9ced6'],[1e6,'#ffd23f'],[1e7,'#8fe3ff'],[1e8,'#e23b2e']].filter(([n]) => S.st.maxSubs >= n);
+  sh.forEach(([, c], i) => { const x = 150 + i*33; s += `<g transform="translate(${x} 16)"><rect x="-11" y="0" width="22" height="28" rx="3" fill="${c}" ${K(2)}/><circle cx="0" cy="12" r="5" fill="#fffdf7" ${K(1.5)}/><rect x="-6" y="21" width="12" height="3" fill="${INK}"/></g>`; });
+  if (lv('ring') > 0) s += `<path d="M338 118 V196 M326 196 h24" ${K(3)}/><g class="glow"><circle cx="338" cy="96" r="21" fill="none" stroke="#fffdf7" stroke-width="8"/></g><circle cx="338" cy="96" r="25" fill="none" ${K(2)}/><circle cx="338" cy="96" r="17" fill="none" ${K(2)}/>`;
+  if (lv('pc') > 0) s += `<rect x="6" y="148" width="34" height="50" rx="3" fill="#2b2b2b" ${K()}/><rect x="12" y="156" width="4" height="36" fill="#e23b2e" class="glow"/><rect x="18" y="156" width="4" height="36" fill="#2a9d5c" class="glow" style="animation-delay:.4s"/><rect x="24" y="156" width="4" height="36" fill="#2f6fdb" class="glow" style="animation-delay:.8s"/>`;
+  if (lv('webcam') > 0) s += `<path d="M128 196 L136 176 L144 196 M136 176 V196" ${K(2)}/><rect x="126" y="164" width="20" height="13" rx="5" fill="#2b2b2b" ${K(2)}/><circle cx="136" cy="170.5" r="3.5" fill="#8fd3ff"/>`;
+  if (lv('dslr') > 0) s += `<path d="M298 168 L282 238 M298 168 L314 238 M298 168 V238" ${K(3)}/><rect x="281" y="146" width="36" height="22" rx="3" fill="#2b2b2b" ${K()}/><circle cx="299" cy="157" r="7.5" fill="#555" ${K(2)}/><circle cx="299" cy="157" r="3.5" fill="#8fd3ff"/><circle cx="311" cy="151" r="2.5" fill="#e23b2e" class="blinkLed"/>`;
+  if (lv('drone') > 0) s += `<g class="hover"><g transform="translate(70 54)"><rect x="-12" y="-4" width="24" height="9" rx="3" fill="#3a3a3a" ${K(2)}/><path d="M-12 -2 h-10 M12 -2 h10" ${K(2)}/><ellipse cx="-24" cy="-5" rx="9" ry="2.5" fill="#9aa3ad" ${K(1.5)}/><ellipse cx="24" cy="-5" rx="9" ry="2.5" fill="#9aa3ad" ${K(1.5)}/><circle cx="0" cy="6" r="3" fill="#8fd3ff" ${K(1.5)}/></g></g>`;
+  // staff
+  if (lv('meeting') > 0) s += `<rect x="128" y="96" width="62" height="44" fill="#fffdf7" ${K()}/><path d="M136 108 h30 M136 118 h44 M136 128 h22" stroke="#2f6fdb" stroke-width="2.5"/><circle cx="178" cy="108" r="5" fill="none" stroke="#e23b2e" stroke-width="2"/>`;
+  const back = [];
+  if (lv('designer') > 0) back.push(['#e23b2e','#ffd23f']);
+  if (lv('clip') > 0) back.push(['#2b2420','#2f6fdb'], ['#6b4226','#2a9d5c']);
+  if (lv('manager') > 0) back.push(['#2b2420','#3a3a3a']);
+  if (lv('meeting') > 0) back.push(['#c9a24d','#7b4bc4']);
+  back.slice(0, 5).forEach(([h, c], i) => { s += mini(116 - i*22 + (i%2)*6, 196, 0.62, h, c, i%2 ? 'bob' : 'bob2'); });
+  if (lv('aiarmy') > 0) [260, 286].forEach((x, i) => { s += `<g transform="translate(${x} 232)"><g class="${i?'bob':'bob2'}"><rect x="-11" y="-22" width="22" height="20" rx="5" fill="#d6dbe8" ${K(2)}/><circle cx="-4" cy="-12" r="2.5" fill="#2f6fdb"/><circle cx="4" cy="-12" r="2.5" fill="#2f6fdb"/><path d="M0 -22 v-6" ${K(2)}/><circle cx="0" cy="-29" r="2.5" fill="#e23b2e"/><rect x="-8" y="-2" width="16" height="4" fill="${INK}"/></g></g>`; });
+  if (lv('editor') > 0) s += `<rect x="30" y="226" width="80" height="8" fill="#8a5a2b" ${K(2)}/><path d="M38 234 v20 M102 234 v20" ${K(3)}/>` + mini(54, 226, 0.7, '#2b2420', '#9aa3ad', 'type') + `<path d="M68 226 l6 -16 h22 l-4 16z" fill="#c9ced6" ${K(2)}/>`;
+  if (lv('friend') > 0) s += mini(372, 236, 0.72, '#c9471b', '#2f6fdb', 'bob') + `<g transform="translate(338 168)"><rect x="-4" y="-14" width="58" height="20" rx="6" fill="#fffdf7" ${K(2)}/><text x="25" y="0" font-size="9" font-weight="900" text-anchor="middle" fill="${INK}">それウケる</text></g>`;
+  if (lv('mom') > 0) s += `<g class="peek">${mini(26, 236, 0.95, '#6b4226', '#e8b67c', '', `<rect x="-10" y="-24" width="20" height="22" fill="#fffdf7" ${K(1.5)}/><rect x="10" y="-34" width="8" height="13" rx="2" fill="${INK}"/>`)}</g>`;
+  return s;
+}
+
+function sceneSig(){
+  const keys = ['green','lights','sat','ring','pc','webcam','dslr','drone','meeting','designer','clip','manager','aiarmy','editor','friend','mom','pinmic'];
+  const sh = [1e5,1e6,1e7,1e8].filter(n => S.st.maxSubs >= n).length;
+  return S.rank + ':' + keys.map(k => lv(k) > 0 ? 1 : 0).join('') + ':' + sh;
+}
+let lastSig = '';
+function renderScene(){
+  const sig = sceneSig();
+  if (sig === lastSig) return;
+  lastSig = sig;
+  const svg = $('#scene');
+  svg.innerHTML = roomSVG(S.rank) + propsSVG(S.rank) + charaSVG(S.rank, true, lv('pinmic') > 0);
+  $('#sceneWrap').style.background = ['#bfe0f2','#e9dcf3','#f2e3c4','#3b414d','#2a2240','#0d1030'][S.rank];
+}
+
+/* ---------- collab avatars ---------- */
+function seeded(seed){ let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+function avatarSVG(id){
+  const c = COLLABS[id], rnd = seeded(id * 7919 + 17);
+  const pk = a => a[Math.floor(rnd() * a.length)];
+  const bg = pk(['#bfe0f2','#f2e3c4','#e9dcf3','#cfe8d2','#ffd9cf','#fff1a8','#d6dbe8']);
+  const skin = pk(['#ffd9b8','#f3c59b','#d9a074','#b07a52','#ffe6cf']);
+  const hair = pk(['#2b2420','#6b4226','#c9a24d','#e23b2e','#2f6fdb','#f1efe9','#7b4bc4','#2a9d5c']);
+  const shirt = pk(['#e23b2e','#2f6fdb','#2a9d5c','#ffd23f','#7b4bc4','#3a3a3a','#fffdf7','#c9471b']);
+  const hs = Math.floor(rnd() * 5), acc = Math.floor(rnd() * 5);
+  const hairs = [
+    `<path d="M28 50 Q28 22 50 22 Q72 22 72 50 Q64 36 50 38 Q36 36 28 50Z" fill="${hair}" ${K(2.5)}/>`,
+    `<path d="M26 74 Q22 22 50 20 Q78 22 74 74 L66 74 Q70 40 50 38 Q30 40 34 74Z" fill="${hair}" ${K(2.5)}/>`,
+    `<path d="M28 48 L30 28 L38 34 L42 20 L50 30 L58 18 L62 32 L70 26 L72 48 Q62 38 50 40 Q38 38 28 48Z" fill="${hair}" ${K(2.5)}/>`,
+    `<circle cx="50" cy="18" r="9" fill="${hair}" ${K(2.5)}/><path d="M28 50 Q28 24 50 24 Q72 24 72 50 Q62 38 50 40 Q38 38 28 50Z" fill="${hair}" ${K(2.5)}/>`,
+    `<path d="M24 54 Q20 28 36 24 Q40 14 54 16 Q70 14 74 30 Q84 40 76 56 Q72 38 50 40 Q30 40 24 54Z" fill="${hair}" ${K(2.5)}/>`,
+  ][hs];
+  const accs = [
+    '',
+    `<rect x="34" y="47" width="13" height="9" rx="3" fill="none" ${K(2.5)}/><rect x="53" y="47" width="13" height="9" rx="3" fill="none" ${K(2.5)}/><path d="M47 51 h6" ${K(2)}/>`,
+    `<path d="M28 40 Q30 22 50 22 Q70 22 72 40Z" fill="${shirt}" ${K(2.5)}/><path d="M70 38 h14 v5 h-14z" fill="${shirt}" ${K(2)}/>`,
+    `<path d="M28 38 Q50 30 72 38" fill="none" stroke="#e23b2e" stroke-width="6"/>`,
+    `<path d="M38 60 h24 v9 q-12 6 -24 0z" fill="#fffdf7" ${K(2)}/>`,
+  ][acc];
+  const crown = c.r === 'SSR' ? `<path d="M36 22 L38 6 L45 15 L50 2 L55 15 L62 6 L64 22Z" fill="#ffd23f" ${K(2.5)}/>` : '';
+  const star = c.r === 'SR' ? `<path d="M84 10 l3 7 7 1 -5 5 1 7 -6 -3 -6 3 1 -7 -5 -5 7 -1z" fill="#ffd23f" ${K(1.5)}/>` : '';
+  return `<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="${bg}"/>
+    <path d="M18 100 Q18 72 50 70 Q82 72 82 100Z" fill="${shirt}" ${K(2.5)}/>
+    <circle cx="50" cy="50" r="22" fill="${skin}" ${K(2.5)}/>${hairs}
+    <ellipse cx="42" cy="52" rx="2.6" ry="3.6" fill="${INK}"/><ellipse cx="58" cy="52" rx="2.6" ry="3.6" fill="${INK}"/>
+    <path d="M44 61 Q50 66 56 61" fill="none" ${K(2.2)}/>${accs}${crown}${star}</svg>`;
+}
+
+/* =========================================================
+   SOUND + BGM (Web Audio)
+   ========================================================= */
+const MEL = [76,0,79,0,81,79,76,0, 76,0,74,72,74,0,69,0, 72,0,74,0,77,76,74,0, 74,0,79,0,74,0,71,0,
+             76,0,79,0,84,0,81,79, 81,0,79,76,79,0,76,0, 74,0,77,0,81,79,77,74, 79,0,0,74,79,0,83,0];
+const ROOTS = [48,45,41,43,48,45,38,43];
+const midi = n => 440 * Math.pow(2, (n - 69) / 12);
 const Sound = {
-  ctx:null, master:null, lastTap:0,
+  ctx:null, master:null, bgmGain:null, noise:null, lastTap:0, bgmTimer:0, nextTime:0, stepI:0,
   init(){
     if (this.ctx){ if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
     try{
-      const AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return;
+      const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
       this.ctx = new AC();
-      this.master = this.ctx.createGain();
-      this.master.gain.value = 0.5;
-      this.master.connect(this.ctx.destination);
-      // iOS unlock
-      const b = this.ctx.createBuffer(1,1,22050), s = this.ctx.createBufferSource();
-      s.buffer = b; s.connect(this.master); s.start(0);
+      this.master = this.ctx.createGain(); this.master.gain.value = 0.5; this.master.connect(this.ctx.destination);
+      this.bgmGain = this.ctx.createGain(); this.bgmGain.gain.value = 0.55; this.bgmGain.connect(this.ctx.destination);
+      const len = this.ctx.sampleRate * 0.2, buf = this.ctx.createBuffer(1, len, this.ctx.sampleRate), d = buf.getChannelData(0);
+      for (let i=0;i<len;i++) d[i] = Math.random()*2-1;
+      this.noise = buf;
+      const s = this.ctx.createBufferSource(); s.buffer = this.ctx.createBuffer(1,1,22050); s.connect(this.master); s.start(0);
+      if (S.settings.bgm) this.bgmStart();
     }catch(e){ this.ctx = null; }
   },
-  tone(f, dur, type, vol, when, f2){
-    if (S.muted || !this.ctx) return;
+  tone(f, dur, type, vol, when, f2, dest){
+    if (!this.ctx) return;
     const t = this.ctx.currentTime + (when||0);
     const o = this.ctx.createOscillator(), g = this.ctx.createGain();
     o.type = type || 'square';
@@ -894,25 +1672,58 @@ const Sound = {
     if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
     g.gain.setValueAtTime(vol || 0.08, t);
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    o.connect(g); g.connect(this.master);
+    o.connect(g); g.connect(dest || this.master);
     o.start(t); o.stop(t + dur + 0.02);
   },
-  tap(alt){
-    const n = performance.now(); if (n - this.lastTap < 35) return; this.lastTap = n;
-    alt ? this.tone(300 + Math.random()*120, .06, 'triangle', .12)
-        : this.tone(520 + Math.random()*260, .05, 'square', .045, 0, 900);
+  se(f, dur, type, vol, when, f2){ if (S.settings.se) this.tone(f, dur, type, vol, when, f2); },
+  hit(t, vol, dest){
+    const s = this.ctx.createBufferSource(), g = this.ctx.createGain(), hp = this.ctx.createBiquadFilter();
+    hp.type = 'highpass'; hp.frequency.value = 6000;
+    s.buffer = this.noise; g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
+    s.connect(hp); hp.connect(g); g.connect(dest); s.start(t); s.stop(t + 0.06);
   },
-  coin(){ this.tone(988,.07,'square',.06); this.tone(1319,.22,'square',.06,.07); },
-  buy(){ this.tone(660,.06,'square',.06); this.tone(990,.12,'square',.06,.05); },
-  publish(){ [523,659,784,1047].forEach((f,i)=>this.tone(f,.12,'triangle',.09,i*.05)); },
-  fever(){ for(let i=0;i<10;i++) this.tone(600+i*120,.1,'square',.05,i*.04); this.tone(1800,.5,'triangle',.07,.4); },
-  alert(){ for(let i=0;i<3;i++) this.tone(160,.18,'sawtooth',.08,i*.22,120); },
-  fail(){ this.tone(330,.25,'sawtooth',.08,0,110); this.tone(220,.4,'sawtooth',.08,.25,80); },
-  fanfareShort(){ [784,988,1175].forEach((f,i)=>this.tone(f,.15,'square',.06,i*.08)); },
+  tap(c, alt){
+    const n = performance.now(); if (n - this.lastTap < 35) return; this.lastTap = n;
+    if (alt) return this.se(300 + Math.random()*120, .06, 'triangle', .12);
+    const p = Math.min(c || 0, 120);
+    this.se(500 + p * 6 + Math.random()*60, .05, 'square', .04, 0, 900 + p*6);
+  },
+  coin(){ this.se(988,.07,'square',.05); this.se(1319,.2,'square',.05,.07); },
+  buy(){ this.se(660,.06,'square',.06); this.se(990,.12,'square',.06,.05); },
+  chime(){ this.se(1568,.12,'triangle',.08); this.se(2093,.25,'triangle',.07,.09); },
+  publish(){ [523,659,784,1047].forEach((f,i)=>this.se(f,.12,'triangle',.09,i*.05)); },
+  fever(){ for(let i=0;i<10;i++) this.se(600+i*120,.1,'square',.05,i*.04); this.se(1800,.5,'triangle',.07,.4); },
+  zone(){ for(let i=0;i<6;i++) this.se(400+i*200,.08,'sawtooth',.04,i*.05); },
+  alert(){ for(let i=0;i<3;i++) this.se(160,.18,'sawtooth',.08,i*.22,120); },
+  fail(){ this.se(330,.25,'sawtooth',.08,0,110); this.se(220,.4,'sawtooth',.08,.25,80); },
+  goldGet(){ [1047,1319,1568,2093,2637].forEach((f,i)=>this.se(f,.14,'triangle',.08,i*.06)); },
+  drum(){ for(let i=0;i<14;i++) this.se(120+i*12,.06,'square',.05,i*.06); },
+  reveal(r){ const seq = r==='SSR' ? [523,659,784,1047,1319,1568] : r==='SR' ? [523,659,784,1047] : [659,880]; seq.forEach((f,i)=>this.se(f,.18,'square',.07,i*.08)); },
+  fanfareShort(){ [784,988,1175].forEach((f,i)=>this.se(f,.15,'square',.06,i*.08)); },
   fanfare(){
-    const seq = [[523,0],[523,.12],[523,.24],[659,.36],[784,.6],[659,.84],[784,1.0]];
-    seq.forEach(([f,t])=>this.tone(f,.2,'square',.07,t));
-    [523,659,784,1047].forEach(f=>this.tone(f,1.2,'triangle',.06,1.2));
+    [[523,0],[523,.12],[523,.24],[659,.36],[784,.6],[659,.84],[784,1.0]].forEach(([f,t])=>this.se(f,.2,'square',.07,t));
+    [523,659,784,1047].forEach(f=>this.se(f,1.2,'triangle',.06,1.2));
+  },
+  bgmStart(){
+    if (!this.ctx || this.bgmTimer) return;
+    this.nextTime = this.ctx.currentTime + 0.1;
+    this.bgmTimer = setInterval(() => this.bgmTick(), 60);
+  },
+  bgmStop(){ clearInterval(this.bgmTimer); this.bgmTimer = 0; },
+  bgmTick(){
+    const fast = S.feverLeft > 0 || S.liveLeft > 0 || combo >= 100;
+    const dur = 60 / (fast ? 150 : 124) / 2;
+    while (this.nextTime < this.ctx.currentTime + 0.25){
+      const i = this.stepI, t = this.nextTime - this.ctx.currentTime, root = ROOTS[Math.floor(i / 8)];
+      const bass = i % 2 === 0 ? root : (i % 4 === 1 ? root + 12 : root + 7);
+      this.tone(midi(bass), dur * 0.9, 'triangle', 0.09, t, 0, this.bgmGain);
+      if (MEL[i]) this.tone(midi(MEL[i]), dur * 1.6, 'square', 0.028, t, 0, this.bgmGain);
+      if (fast && i % 2 === 1) this.tone(midi(root + 24 + [0,4,7,12][(i>>1)%4]), dur*0.8, 'square', 0.018, t, 0, this.bgmGain);
+      if (i % 4 === 0) this.tone(150, 0.12, 'sine', 0.16, t, 45, this.bgmGain);
+      if (i % 2 === 1) this.hit(this.nextTime, 0.05, this.bgmGain);
+      this.nextTime += dur;
+      this.stepI = (i + 1) % 64;
+    }
   },
 };
 
@@ -921,101 +1732,213 @@ const Sound = {
    ========================================================= */
 const $ = s => document.querySelector(s);
 const pick = a => a[Math.floor(Math.random()*a.length)];
-const screenEl = $('#screen'), fxEl = $('#fx'), cmtEl = $('#comments');
+const fxEl = $('#fx'), cmtEl = $('#comments'), sceneWrap = $('#sceneWrap');
+const PT_SHAPES = [
+  `<svg viewBox="0 0 24 24"><path d="M12 21 C4 15 2 11 2 8 a5 5 0 0 1 10 -1 a5 5 0 0 1 10 1 c0 3 -2 7 -10 13z" fill="#e23b2e" stroke="#1d1a16" stroke-width="2"/></svg>`,
+  `<svg viewBox="0 0 24 24"><path d="M3 11 h4 v10 h-4z M8 11 l4 -8 q3 0 2 4 l-1 3 h6 q2 0 2 2 l-2 8 q-1 1 -3 1 h-8z" fill="#ffd23f" stroke="#1d1a16" stroke-width="2" stroke-linejoin="round"/></svg>`,
+  `<svg viewBox="0 0 24 24"><path d="M12 2 l3 7 7 .5 -5.5 4.5 2 7 -6.5 -4 -6.5 4 2 -7 -5.5 -4.5 7 -.5z" fill="#2f6fdb" stroke="#1d1a16" stroke-width="2" stroke-linejoin="round"/></svg>`,
+];
+function sceneRect(){ return sceneWrap.getBoundingClientRect(); }
+function charaEl(){ return document.getElementById('chara'); }
+function pulseClass(el, cls, ms){ if (!el) return; el.classList.remove(cls); void el.getBoundingClientRect(); el.classList.add(cls); setTimeout(()=>el.classList.remove(cls), ms); }
 
-function floatText(x, y, txt, cls){
-  if (fxEl.childElementCount > 28) fxEl.firstChild.remove();
+const UI = {
+  floatText(x, y, txt, cls){
+    if (window.__noFx) return;
+    if (fxEl.childElementCount > 60) fxEl.firstChild.remove();
+    const d = document.createElement('div');
+    d.className = 'float ' + (cls||'');
+    d.textContent = txt;
+    d.style.left = (x + (Math.random()*30-15)) + 'px'; d.style.top = y + 'px';
+    fxEl.appendChild(d);
+    setTimeout(()=>d.remove(), 850);
+  },
+  particles(x, y, n){
+    if (window.__noFx) return;
+    for (let i=0;i<n;i++){
+      if (fxEl.childElementCount > 60) return;
+      const p = document.createElement('div');
+      p.className = 'pt';
+      p.innerHTML = pick(PT_SHAPES);
+      p.style.left = x + 'px'; p.style.top = y + 'px';
+      p.style.setProperty('--dx', (Math.random()*140-70) + 'px');
+      p.style.setProperty('--dy', (-60 - Math.random()*90) + 'px');
+      p.style.setProperty('--r', (Math.random()*120-60) + 'deg');
+      fxEl.appendChild(p);
+      setTimeout(()=>p.remove(), 800);
+    }
+  },
+  ring(x, y){
+    const r = document.createElement('div'); r.className = 'ring';
+    r.style.left = x + 'px'; r.style.top = y + 'px';
+    fxEl.appendChild(r); setTimeout(()=>r.remove(), 350);
+  },
+  tapFx(x, y, tv){
+    if (window.__noFx) return;
+    this.ring(x, y);
+    this.floatText(x, y - 26, '+' + fmt(tv, true), combo >= 100 ? 'money' : '');
+    this.particles(x, y, combo >= 100 ? 3 : combo >= 30 ? 2 : 1);
+    const c = charaEl();
+    if (c){ c.classList.add('act'); clearTimeout(this._act); this._act = setTimeout(()=>c.classList.remove('act'), 90); }
+    if (combo >= 3){ const n = $('#comboNum'); n.textContent = combo; pulseClass(n, 'hit', 120); }
+  },
+  coins(x, y, n){
+    if (window.__noFx) return;
+    const t = $('#stMoney .val').getBoundingClientRect();
+    const tx = t.left + 20, ty = t.top + t.height/2;
+    for (let i=0;i<n;i++){
+      if (fxEl.childElementCount > 70) return;
+      const c = document.createElement('div'); c.className = 'coin'; c.textContent = '¥';
+      c.style.left = x + 'px'; c.style.top = y + 'px';
+      fxEl.appendChild(c);
+      const mx = x + (Math.random()*120-60), my = y - 40 - Math.random()*60;
+      const a = c.animate([
+        { transform:'translate(0,0) scale(.5)' },
+        { transform:`translate(${mx-x}px,${my-y}px) scale(1.1)`, offset:.35 },
+        { transform:`translate(${tx-x}px,${ty-y}px) scale(.6)` },
+      ], { duration: 650 + i*60, easing:'cubic-bezier(.3,.1,.4,1)' });
+      a.onfinish = () => { c.remove(); pulseClass($('#stMoney .val'), 'bump', 250); };
+    }
+  },
+  publishFx(genre, st, burst, match){
+    if (window.__noFx) return;
+    const G = GENRES.find(g=>g.id===genre) || GENRES[0];
+    const [word, title] = pick(G.titles);
+    const card = $('#thumbCard');
+    card.style.setProperty('--tbg', G.bg);
+    $('#thumbTag').textContent = st.tag;
+    $('#thumbWord').textContent = word;
+    $('#thumbWord').style.transform = `rotate(${(Math.random()*6-5).toFixed(1)}deg)`;
+    $('#thumbViews').textContent = (st.id === 'short' ? title + ' #shorts' : `【${st.tag}】${title}`) + `　${fmt(burst)}回再生`;
+    pulseClass(card, 'pop', 900);
+    const r = card.getBoundingClientRect();
+    this.floatText(r.left + r.width/2, r.top + r.height*0.7, '+' + fmt(burst) + '再生', match ? 'huge' : 'big');
+    this.coins(r.left + r.width/2, r.top + r.height/2, 3 + Math.min(5, Math.floor(Math.log10(1 + burst))));
+    pulseClass(charaEl(), 'jump', 500);
+    pulseClass($('#flash'), 'on', 200);
+    if (match && Math.random() < 0.5) spawnComment('流行りに乗ったな', 'gold');
+  },
+  bigText(txt, color){
+    const d = document.createElement('div');
+    d.className = 'bigStamp'; d.textContent = txt; d.style.setProperty('--c', color);
+    sceneWrap.appendChild(d); setTimeout(()=>d.remove(), 1300);
+  },
+  shake(){ pulseClass(sceneWrap, 'shake', 260); },
+  spawnGolden(){
+    const el = document.createElement('div');
+    el.id = 'golden';
+    el.innerHTML = `<svg viewBox="0 0 60 60"><path d="M30 46 C14 36 14 20 30 10 C46 20 46 36 30 46Z" fill="#ffd23f" stroke="#1d1a16" stroke-width="3.5" stroke-linejoin="round"/>
+      <path d="M30 11 Q29 2 38 1 Q39 9 30 11Z" fill="#2a9d5c" stroke="#1d1a16" stroke-width="2.5" stroke-linejoin="round"/>
+      <ellipse cx="25" cy="24" rx="3.5" ry="6" fill="#fff6c2"/>
+      <path d="M8 14 l4 4 M52 14 l-4 4 M6 40 l5 -2 M54 40 l-5 -2 M30 58 v-5" stroke="#1d1a16" stroke-width="3" stroke-linecap="round" class="glow"/></svg>`;
+    sceneWrap.appendChild(el);
+    const R = sceneRect(), W = R.width, H = R.height;
+    const fromLeft = Math.random() < 0.5, y0 = H * (0.2 + Math.random()*0.4);
+    const pts = []; for (let i=0;i<=8;i++){ const t = i/8; pts.push({ transform:`translate(${(fromLeft ? -40 + (W+80)*t : W + 40 - (W+80)*t)}px, ${y0 + Math.sin(t*Math.PI*3)*H*0.12}px)` }); }
+    const anim = el.animate(pts, { duration: 10000, easing:'linear' });
+    golden = el; el._anim = anim;
+    el.addEventListener('pointerdown', e => { e.stopPropagation(); e.preventDefault(); if (golden === el) collectGolden(); });
+    anim.onfinish = () => { if (golden === el) golden = null; el.remove(); };
+  },
+  goldGot(el, msg){
+    const r = el.getBoundingClientRect();
+    const x = r.left + r.width/2, y = r.top + r.height/2;
+    if (el._anim) el._anim.pause();
+    el.classList.add('got');
+    this.floatText(x, y - 30, msg.split('　')[0], 'big');
+    this.coins(x, y, 8); this.particles(x, y, 6);
+    setTimeout(()=>el.remove(), 400);
+  },
+  showEventBubble(ev){
+    this.hideEventBubble();
+    const b = document.createElement('div');
+    b.id = 'eventBubble'; b.innerHTML = `<b>！</b>${ev.title}`;
+    b.addEventListener('pointerdown', e => { e.stopPropagation(); e.preventDefault(); Sound.init(); openEvent(); });
+    sceneWrap.appendChild(b);
+  },
+  hideEventBubble(){ const b = document.getElementById('eventBubble'); if (b) b.remove(); },
+};
+
+function toast(msg, cls, html){
+  if (window.__noFx) return;
+  const box = $('#toasts');
+  while (box.childElementCount >= 3) box.firstChild.remove();
   const d = document.createElement('div');
-  d.className = 'float ' + (cls||'');
-  d.textContent = txt;
-  d.style.left = (x + (Math.random()*30-15)) + 'px';
-  d.style.top = y + 'px';
-  fxEl.appendChild(d);
-  setTimeout(()=>d.remove(), 900);
+  d.className = 'toast ' + (cls||'');
+  if (html) d.innerHTML = msg; else d.textContent = msg;
+  box.appendChild(d);
+  setTimeout(()=>d.remove(), 3300);
 }
 function placeToasts(){
   const hb = document.querySelector('header').getBoundingClientRect().bottom;
   document.documentElement.style.setProperty('--toastTop', (hb + 6) + 'px');
 }
-window.addEventListener('resize', placeToasts);
-function toast(msg, cls){
-  const box = $('#toasts');
-  while (box.childElementCount >= 3) box.firstChild.remove();
-  const d = document.createElement('div');
-  d.className = 'toast ' + (cls||'');
-  d.textContent = msg;
-  box.appendChild(d);
-  setTimeout(()=>d.remove(), 3300);
-}
-const LANES = 7, laneUsed = new Array(LANES).fill(0);
+window.addEventListener('resize', () => { placeToasts(); lastSig = ''; });
+
+const LANES = 6, laneUsed = new Array(LANES).fill(0);
 function spawnComment(text, cls){
-  if (cmtEl.childElementCount > 16) return;
+  if (window.__noFx) return;
+  if (cmtEl.childElementCount > 14) return;
   if (!text){
-    if (S.liveLeft > 0 && Math.random() < .5){ text = pick(C_LIVE); cls = 'sc'; }
+    if (S.liveLeft > 0 && Math.random() < .6){ text = pick(C_LIVE); cls = Math.random() < .2 ? 'sc big' : 'sc'; }
     else if (S.feverLeft > 0 && Math.random() < .5){ text = pick(C_FEVER); cls = 'gold'; }
     else if (S.debuffLeft > 0 && Math.random() < .5){ text = pick(C_FLAME); cls = 'fire'; }
-    else {
-      const r = Math.max(0, S.rank - (Math.random() < .3 ? 1 : 0));
-      text = pick(COMMENTS[r]);
-    }
+    else text = pick(COMMENTS[Math.max(0, S.rank - (Math.random() < .3 ? 1 : 0))]);
   }
-  const w = screenEl.clientWidth;
-  const now = performance.now();
-  const off = Math.floor(Math.random() * LANES);
+  const now = performance.now(), off = Math.floor(Math.random() * LANES);
   let lane = off;
   for (let j = 1; j < LANES; j++){ const i = (off + j) % LANES; if (laneUsed[i] < laneUsed[lane]) lane = i; }
-  if (now - laneUsed[lane] < 1400) return;   // every lane busy: skip
+  if (now - laneUsed[lane] < 1300) return;
   laneUsed[lane] = now;
   const d = document.createElement('div');
   d.className = 'cmt ' + (cls||'');
   d.textContent = text;
-  d.style.top = (4 + lane * (78 / (LANES - 1))) + '%';
-  d.style.setProperty('--w', w + 'px');
-  d.style.animationDuration = '5s';
+  d.style.top = (4 + lane * (82 / (LANES - 1))) + '%';
+  d.style.setProperty('--w', sceneWrap.clientWidth + 'px');
   cmtEl.appendChild(d);
   d.addEventListener('animationend', ()=>d.remove());
 }
-function setThumb(genreId, st){
-  const G = GENRES.find(g=>g.id===genreId) || GENRES[0];
-  const [word, title] = pick(G.titles);
-  $('#thumb').style.setProperty('--tbg', G.bg);
-  $('#thumbTag').textContent = st.tag;
-  $('#thumbWord').textContent = word;
-  $('#thumbWord').style.transform = `rotate(${(Math.random()*6-5).toFixed(1)}deg)`;
-  $('#thumbTitle').textContent = st.id === 'short' ? title + ' #shorts' : `【${st.tag}】${title}`;
+
+function showOverlay(sel){ const o = $(sel); o.classList.remove('hidden'); o.classList.remove('show'); void o.offsetWidth; o.classList.add('show'); }
+function hideOverlay(sel){ $(sel).classList.add('hidden'); }
+function anyOverlay(){
+  return [...document.querySelectorAll('.overlay')].some(o => !o.classList.contains('hidden'))
+    || !$('#cutin').classList.contains('hidden') || !$('#title').classList.contains('hidden');
+}
+function confetti(n){
+  const cols = ['#e23b2e','#ffd23f','#2a9d5c','#2f6fdb','#fffdf7','#7b4bc4'];
+  for (let i=0;i<n;i++){
+    const c = document.createElement('div'); c.className = 'confetti';
+    c.style.left = Math.random()*100 + 'vw'; c.style.background = pick(cols);
+    c.style.animationDuration = (1.8 + Math.random()*2) + 's'; c.style.animationDelay = (Math.random()*0.6) + 's';
+    document.body.appendChild(c); setTimeout(()=>c.remove(), 4600);
+  }
 }
 
 /* ----- cut-in ----- */
 const cutinQueue = []; let cutinShowing = false, cutinTimer = 0;
 function showCutin(){
+  if (!cutinQueue.length || cutinShowing) return;
   const [o, n] = cutinQueue.shift();
   cutinShowing = true;
-  const R = RANKS[n];
-  const el = $('#cutin');
+  const R = RANKS[n], el = $('#cutin');
   el.style.setProperty('--accent', RANK_COLORS[n]);
   el.innerHTML = `<div class="band"></div>
     <div class="step">称号 ${n+1} / ${RANKS.length}</div>
+    <svg class="cchara" viewBox="140 64 120 176">${charaSVG(n, false, false)}</svg>
     <div class="up">昇格</div>
     <div class="change"><span class="old">${RANKS[o].name}</span>　→　${R.name}</div>
     ${R.sub ? `<div class="sub">${R.sub}</div>` : ''}
     <ul class="unl">${R.unl.map(u=>'<li>'+u+'</li>').join('')}<li>再生倍率 ×${R.mult}</li></ul>
     <div class="tapclose">タップで閉じる</div>`;
-  const cols = ['#e23b2e','#ffd23f','#2a9d5c','#2f6fdb','#fffdf7'];
-  for (let i=0;i<50;i++){
-    const c = document.createElement('div');
-    c.className = 'confetti';
-    c.style.left = Math.random()*100 + '%';
-    c.style.background = pick(cols);
-    c.style.animationDuration = (1.8 + Math.random()*2) + 's';
-    c.style.animationDelay = (Math.random()*0.8) + 's';
-    el.appendChild(c);
-  }
   el.classList.remove('hidden');
+  confetti(60);
   Sound.fanfare();
   clearTimeout(cutinTimer);
-  cutinTimer = setTimeout(closeCutin, 5000);
+  cutinTimer = setTimeout(closeCutin, 5500);
 }
 function closeCutin(){
+  if (!cutinShowing) return;
   clearTimeout(cutinTimer);
   $('#cutin').classList.add('hidden');
   cutinShowing = false;
@@ -1024,22 +1947,23 @@ function closeCutin(){
 function applyRankTheme(){ document.body.dataset.rank = S.rank; }
 
 /* =========================================================
-   RENDER
+   HUD
    ========================================================= */
 const els = {
   badgeNum:$('#badgeNum'), badgeName:$('#badgeName'), progText:$('#progText'), progFill:$('#progFill'),
   subs:$('#stSubs .val'), subsR:$('#stSubs .rate'), views:$('#stViews .val'), viewsR:$('#stViews .rate'),
   money:$('#stMoney .val'), moneyR:$('#stMoney .rate'),
-  trendName:$('#trendName'), trendTime:$('#trendTime'),
-  feverChip:$('#feverChip'), feverText:$('#feverText'), debuffChip:$('#debuffChip'), debuffText:$('#debuffText'),
-  liveChip:$('#liveChip'), liveText:$('#liveText'),
-  rec:$('#recTag'), vcount:$('#videoCount'), editFill:$('#editFill'), mainWrap:$('#mainWrap'),
-  mainBtn:$('#mainBtn'), mainLabel:$('#mainLabel'), mainSub:$('#mainSub'),
+  trendName:$('#trendName'), trendTime:$('#trendTime'), buffs:$('#buffs'),
+  gauge:$('#gauge'), gaugeFill:$('#gaugeFill'), gaugeL:$('#gaugeL'), gaugeR:$('#gaugeR'), vcount:$('#videoCount'),
+  comboBox:$('#comboBox'), comboNum:$('#comboNum'), comboLab:$('#comboLab'),
   dealBtn:$('#dealBtn'), dealSub:$('#dealSub'), dealCd:$('#dealCd'), liveBtn:$('#liveBtn'), liveSub:$('#liveSub'), liveCd:$('#liveCd'),
+  gachaBtn:$('#gachaBtn'), gachaSub:$('#gachaSub'), missionBtn:$('#missionBtn'), missionSub:$('#missionSub'),
 };
 function setText(el, t){ if (el.textContent !== t) el.textContent = t; }
+function setHTML(el, t){ if (el.innerHTML !== t) el.innerHTML = t; }
 
 const rate = { subs:0, views:0, money:0, ps:0, pv:0, pm:0, t:0 };
+const disp = { subs:0, views:0, money:0 };
 function updateRates(dt){
   rate.t += dt;
   if (rate.t < 1) return;
@@ -1048,8 +1972,15 @@ function updateRates(dt){
   rate.subs = rate.subs*(1-k) + ds*k; rate.views = rate.views*(1-k) + dv*k; rate.money = rate.money*(1-k) + Math.max(dm, yps())*k;
   rate.ps = S.subs; rate.pv = S.views; rate.pm = S.money; rate.t = 0;
 }
-
-function renderHUD(){
+function smooth(key, dt){
+  const t = S[key];
+  if (t < disp[key] || disp[key] <= 0) disp[key] = t;
+  else disp[key] += (t - disp[key]) * Math.min(1, dt * 9);
+  if (Math.abs(t - disp[key]) < Math.max(0.5, t * 1e-4)) disp[key] = t;
+  return disp[key];
+}
+let lastSubsShown = 0;
+function renderHUD(dt){
   const R = RANKS[S.rank];
   setText(els.badgeNum, String(S.rank + 1));
   setText(els.badgeName, R.name);
@@ -1062,120 +1993,214 @@ function renderHUD(){
     p = Math.log(Math.max(1,S.subs)/R.need) / Math.log(HUMANITY/R.need);
     txt = S.subs >= HUMANITY ? '<b>全人類が登録した</b>' : `おまけの目標 <b>全人類登録</b> ${fmt(S.subs)} / ${fmt(HUMANITY)}人`;
   }
-  if (els.progText.innerHTML !== txt) els.progText.innerHTML = txt;
+  setHTML(els.progText, txt);
   els.progFill.style.width = (Math.max(0, Math.min(1, p)) * 100).toFixed(1) + '%';
 
-  setText(els.subs, fmt(S.subs)); setText(els.subsR, (rate.subs<0?'':'+') + fmt(rate.subs, true) + '/秒');
-  setText(els.views, fmt(S.views)); setText(els.viewsR, '+' + fmt(rate.views, true) + '/秒');
-  setText(els.money, fmtY(S.money)); setText(els.moneyR, '+' + fmtY(rate.money) + '/秒');
+  const sv = smooth('subs', dt);
+  setText(els.subs, fmt(sv));
+  if (Math.floor(sv) > lastSubsShown + Math.max(1, lastSubsShown * 0.02)){ lastSubsShown = Math.floor(sv); pulseClass(els.subs, 'bump', 250); }
+  setText(els.subsR, (rate.subs<0?'':'+') + fmt(rate.subs, true) + '/秒');
+  setText(els.views, fmt(smooth('views', dt))); setText(els.viewsR, '+' + fmt(rate.views, true) + '/秒');
+  setText(els.money, fmtY(smooth('money', dt))); setText(els.moneyR, '+' + fmtY(rate.money) + '/秒');
 
-  const G = GENRES.find(g=>g.id===S.trend);
-  setText(els.trendName, G.name + ' ×' + trendMult().toFixed(1));
+  setText(els.trendName, gName(S.trend) + ' ×' + trendMult().toFixed(1));
   setText(els.trendTime, 'あと' + Math.ceil(S.trendLeft) + '秒');
-  els.feverChip.classList.toggle('hidden', !(S.feverLeft > 0));
-  if (S.feverLeft > 0) setText(els.feverText, `×${S.feverMult}　あと${Math.ceil(S.feverLeft)}秒`);
-  screenEl.classList.toggle('fever', S.feverLeft > 0);
-  els.debuffChip.classList.toggle('hidden', !(S.debuffLeft > 0));
-  if (S.debuffLeft > 0) setText(els.debuffText, `伸びが落ちてる ×0.3　あと${Math.ceil(S.debuffLeft)}秒`);
-  els.liveChip.classList.toggle('hidden', !(S.liveLeft > 0));
-  if (S.liveLeft > 0) setText(els.liveText, 'あと' + Math.ceil(S.liveLeft) + '秒');
 
+  // buffs
+  const bl = [];
+  if (S.feverLeft > 0) bl.push(['y', `神回 ×${S.feverMult}　${Math.ceil(S.feverLeft)}秒`]);
+  if (combo >= 100) bl.push(['r', 'ゾーン 連打×' + BAL.zone]);
+  if (S.liveLeft > 0) bl.push(['r', `生配信中　${Math.ceil(S.liveLeft)}秒`]);
+  if (S.debuffLeft > 0) bl.push(['k', `伸びが落ちてる　${Math.ceil(S.debuffLeft)}秒`]);
+  for (const k in S.buffs){ const b = S.buffs[k]; bl.push([b.m < 1 && k !== 'sale' ? 'k' : 'y', `${b.label}　${Math.ceil(b.left)}秒`]); }
+  setHTML(els.buffs, bl.map(([c,t]) => `<div class="buff ${c}">${t}</div>`).join(''));
+  sceneWrap.classList.toggle('fever', S.feverLeft > 0);
+  sceneWrap.classList.toggle('zone', combo >= 100);
+
+  // gauge
   const st = curStyle();
   const pct = Math.min(100, S.gauge / st.need * 100);
-  els.mainWrap.style.setProperty('--p', pct.toFixed(1));
-  els.editFill.style.width = pct.toFixed(1) + '%';
-  setText(els.rec, `● 編集 ${Math.floor(pct)}%`);
-  setText(els.vcount, `動画 ${fmt(S.st.videos)}本`);
-
+  els.gaugeFill.style.width = pct.toFixed(1) + '%';
+  els.gauge.classList.toggle('full', pct > 85);
   const live = S.liveLeft > 0;
-  els.mainBtn.classList.toggle('live', live);
-  setText(els.mainLabel, live ? '投げ銭' : '撮影');
+  setText(els.gaugeL, live ? '生配信中　連打でスパチャ' : `編集ゲージ（${st.name}）`);
   const ag = autoGauge();
-  setText(els.mainSub, live ? '連打で投げ銭' : ag > 0 ? `自動 +${fmt(ag)}/秒` : '連打で編集');
+  setText(els.gaugeR, live ? '' : ag > 0 ? `自動 +${fmt(ag)}/秒` : `あと${Math.max(1, Math.ceil((st.need - S.gauge) / tapGauge()))}タップ`);
+  setText(els.vcount, `動画${fmt(S.st.videos)}本`);
 
-  // side buttons
-  if (S.rank < 3){ setText(els.dealSub, '中堅から'); els.dealBtn.className = 'side locked'; els.dealCd.style.width = '0'; }
-  else if (S.dealCd > 0){ setText(els.dealSub, 'あと' + Math.ceil(S.dealCd) + '秒'); els.dealBtn.className = 'side'; els.dealCd.style.width = (100 - S.dealCd/45*100) + '%'; }
-  else { setText(els.dealSub, '受けられる'); els.dealBtn.className = 'side ready'; els.dealCd.style.width = '0'; }
-  if (S.rank < 4){ setText(els.liveSub, 'トップから'); els.liveBtn.className = 'side locked'; els.liveCd.style.width = '0'; }
-  else if (S.liveLeft > 0){ setText(els.liveSub, '配信中'); els.liveBtn.className = 'side ready'; els.liveCd.style.width = '0'; }
-  else if (S.liveCd > 0){ setText(els.liveSub, 'あと' + Math.ceil(S.liveCd) + '秒'); els.liveBtn.className = 'side'; els.liveCd.style.width = (100 - S.liveCd/120*100) + '%'; }
-  else { setText(els.liveSub, '始められる'); els.liveBtn.className = 'side ready'; els.liveCd.style.width = '0'; }
+  // combo
+  els.comboBox.classList.toggle('on', combo >= 3);
+  els.comboBox.classList.toggle('lv2', combo >= 30 && combo < 100);
+  els.comboBox.classList.toggle('lv3', combo >= 100);
+  setText(els.comboLab, combo >= 100 ? 'ゾーン' : `コンボ ×${comboMult().toFixed(2)}`);
+
+  // chara state
+  const c = charaEl();
+  if (c){ c.classList.toggle('panic', !!inc); c.classList.toggle('dance', !inc && (S.feverLeft > 0 || combo >= 100 || live)); }
+
+  // actions
+  if (S.rank < 3){ setText(els.dealSub, '中堅から'); els.dealBtn.className = 'act locked'; els.dealCd.style.width = '0'; }
+  else if (S.dealCd > 0){ setText(els.dealSub, 'あと' + Math.ceil(S.dealCd) + '秒'); els.dealBtn.className = 'act'; els.dealCd.style.width = (100 - S.dealCd/45*100) + '%'; }
+  else { setText(els.dealSub, '受けられる'); els.dealBtn.className = 'act ready'; els.dealCd.style.width = '0'; }
+  if (S.rank < 4){ setText(els.liveSub, 'トップから'); els.liveBtn.className = 'act locked'; els.liveCd.style.width = '0'; }
+  else if (S.liveLeft > 0){ setText(els.liveSub, '配信中'); els.liveBtn.className = 'act ready'; els.liveCd.style.width = '0'; }
+  else if (S.liveCd > 0){ setText(els.liveSub, 'あと' + Math.ceil(S.liveCd) + '秒'); els.liveBtn.className = 'act'; els.liveCd.style.width = (100 - S.liveCd/120*100) + '%'; }
+  else { setText(els.liveSub, '始められる'); els.liveBtn.className = 'act ready'; els.liveCd.style.width = '0'; }
+  if (S.rank < 1){ setText(els.gachaSub, '無断転載から'); els.gachaBtn.className = 'act locked'; }
+  else if (S.tickets > 0){ setText(els.gachaSub, `券 ${S.tickets}枚`); els.gachaBtn.className = 'act ready'; }
+  else { setText(els.gachaSub, fmtY(gachaCost())); els.gachaBtn.className = 'act' + (S.money >= gachaCost() ? ' ready' : ''); }
+  const done = S.missions.filter(m => m.p >= m.n).length;
+  setText(els.missionSub, done ? `達成 ${done}件` : `${S.missions.length}件 進行中`);
+  els.missionBtn.className = 'act' + (done ? ' ready' : '');
 }
 
 /* ----- selectors ----- */
 function renderSelectors(){
   const gr = $('#genreRow');
-  gr.innerHTML = '';
+  gr.innerHTML = '<span class="rowLab">ジャンル</span>';
   for (const g of GENRES){
     const b = document.createElement('button');
     b.className = 'sel' + (S.genre===g.id ? ' on' : '');
     b.innerHTML = `${g.name}${S.trend===g.id ? '<span class="hot">急上昇</span>' : ''}`;
-    b.onclick = () => { S.genre = g.id; Sound.init(); Sound.tap(); renderSelectors(); };
+    b.onclick = () => { S.genre = g.id; Sound.init(); Sound.tap(0); renderSelectors(); if (S.tutStep === 2 && g.id === S.trend) setTut(3); };
     gr.appendChild(b);
   }
   const sr = $('#styleRow');
-  sr.innerHTML = '';
+  sr.innerHTML = '<span class="rowLab">スタイル</span>';
   for (const s of STYLES){
     const b = document.createElement('button');
     const locked = s.rank > S.rank;
     b.className = 'sel' + (S.style===s.id ? ' on' : '') + (locked ? ' locked' : '');
-    const risk = s.risk ? `<span class="risk">${s.risk.type==='copy'?'著作権':'炎上'}${Math.round(s.risk.p*100)}%</span>` : '';
+    const risk = s.risk ? `<span class="risk">${s.risk.type==='copy'?'著作権':'炎上'}${Math.round(s.risk.p*riskMult()*100)}%</span>` : '';
     b.innerHTML = locked ? `${s.name}（未解放）` : `${s.name}<span class="mul">×${s.view}</span>${risk}`;
     b.onclick = () => {
       Sound.init();
       if (locked){ toast(`「${s.name}」は【${RANKS[s.rank].name}】になってから`); return; }
-      S.style = s.id; Sound.tap(); renderSelectors();
+      S.style = s.id; Sound.tap(0); renderSelectors();
     };
     sr.appendChild(b);
   }
 }
 
-/* ----- shop ----- */
+/* =========================================================
+   SHOP / TABS
+   ========================================================= */
 let rows = [];
+function tabBadges(){
+  const counts = { equip:0, skill:0, staff:0 };
+  for (const it of ALL_ITEMS){
+    if (it.rank > S.rank || (it.max && lv(it.id) >= it.max)) continue;
+    if (costFor(it, 1) <= S.money) counts[it.tab]++;
+  }
+  const mission = S.missions.filter(m=>m.p>=m.n).length;
+  const collab = S.rank >= 1 && (S.tickets > 0 || S.money >= gachaCost()) ? 1 : 0;
+  const legend = (retirePts() > 0 ? 1 : 0) + (PERKS.some(p => perk(p.id) < p.max && S.legend.pts >= p.cost*(perk(p.id)+1)) ? 1 : 0);
+  const m = { equip:counts.equip, skill:counts.skill, staff:counts.staff, collab, mission, ach:0, legend };
+  document.querySelectorAll('.tab').forEach(t => {
+    const n = m[t.dataset.tab] || 0;
+    let d = t.querySelector('.dot');
+    if (n > 0 && t.dataset.tab !== S.tab){ if (!d){ d = document.createElement('span'); d.className = 'dot'; t.appendChild(d); } d.textContent = n > 9 ? '9+' : n; }
+    else if (d) d.remove();
+  });
+}
 function buildShop(){
   const list = $('#list');
   const top = list.scrollTop;
   list.innerHTML = '';
   rows = [];
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t.dataset.tab===S.tab));
-  $('#buyN').classList.toggle('hidden', S.tab==='ach');
+  $('#buyN').classList.toggle('hidden', !['equip','skill','staff'].includes(S.tab));
+  const head = h => { const d = document.createElement('div'); d.className = 'listHead'; d.innerHTML = h; list.appendChild(d); return d; };
+
   if (S.tab === 'ach'){
-    const h = document.createElement('div');
-    h.className = 'listHead';
-    h.innerHTML = `達成 <b>${achCount()}</b> / ${ACHS.length}　1つごとに全部の伸び +5%（いま ×${achMult().toFixed(2)}）`;
-    list.appendChild(h);
+    head(`達成 <b>${achCount()}</b> / ${ACHS.length}　1つごとに全部の伸び +${(BAL.achBonus*100).toFixed(1)}%（いま ×${achMult().toFixed(2)}）`);
     for (const a of ACHS){
       const d = document.createElement('div');
       d.className = 'item ach' + (S.ach[a.id] ? ' got' : '');
       d.innerHTML = `<div class="stamp">済</div><div class="info"><div class="nm">${S.ach[a.id]?a.name:'？？？'}</div><div class="ds">${a.d}</div></div>`;
       list.appendChild(d);
     }
-    list.scrollTop = top;
-    return;
-  }
-  if (S.tab === 'staff'){
-    const h = document.createElement('div');
-    h.className = 'listHead';
-    const hired = ITEMS.staff.filter(s=>s.id!=='solo' && lv(s.id)>0).length;
-    h.innerHTML = hired ? `体制：<b>チームで運営中</b>（自動編集 +${fmt(autoGauge())}/秒）`
-      : S.rank >= 3 ? `体制：<b>自分ひとり</b>（人を雇うと勝手に投稿してくれる）`
-      : `体制：<b>自分ひとり</b>（中堅クリエイターになると雇用できる）`;
-    list.appendChild(h);
-  }
-  for (const it of ITEMS[S.tab]){
-    const d = document.createElement('div');
-    const locked = it.rank > S.rank;
-    d.className = 'item' + (locked ? ' locked' : '');
-    d.innerHTML = `<div class="lvbox"><small>Lv</small><b class="lv"></b></div>
-      <div class="info"><div class="nm">${it.name}</div>
-      <div class="ds">${it.d}</div>
-      ${locked ? `<div class="lockNote">【${RANKS[it.rank].name}】になったら買える</div>` : `<div class="ef"></div>`}</div>
-      <button class="buy" ${locked?'disabled':''}></button>`;
-    const btn = d.querySelector('.buy');
-    btn.addEventListener('click', () => { if (buy(it)) updateShop(); });
-    list.appendChild(d);
-    rows.push({ it, d, locked, lv:d.querySelector('.lv'), ef:d.querySelector('.ef'), btn });
+  } else if (S.tab === 'collab'){
+    head(`集めたコラボ相手 <b>${collabCount()}</b> / ${COLLABS.length}　全部の伸び <b>×${collabMult().toFixed(2)}</b><br>同じ相手と何度もコラボすると仲良し度が上がる（最大5）`);
+    const can = S.rank >= 1;
+    const b1 = document.createElement('button'); b1.className = 'bigBtn';
+    b1.innerHTML = can ? `コラボを依頼する<small>${fmtY(gachaCost())}</small>` : `コラボ依頼<small>【無断転載】になったらできる</small>`;
+    b1.disabled = !can || S.money < gachaCost();
+    b1.onclick = () => openGacha(false);
+    list.appendChild(b1);
+    if (S.tickets > 0){
+      const b2 = document.createElement('button'); b2.className = 'bigBtn'; b2.style.background = 'var(--green)'; b2.style.color = '#fff';
+      b2.innerHTML = `コラボ券を使う<small>残り ${S.tickets}枚</small>`;
+      b2.onclick = () => openGacha(true);
+      list.appendChild(b2);
+    }
+    head('出やすさ　N 60%・R 30%・SR 8.5%・SSR 1.5%');
+    const grid = document.createElement('div'); grid.className = 'cardGrid';
+    for (const c of COLLABS){
+      const L = S.collabs[c.id] || 0;
+      const d = document.createElement('div');
+      d.className = `ccard ${c.r}` + (L ? '' : ' no');
+      d.innerHTML = `<span class="rar">${c.r}</span>${L ? `<span class="clv">${L}</span>` : ''}${avatarSVG(c.id)}<div class="cn">${L ? c.name : '？？？'}</div><div class="cb">${L ? '全体 +' + Math.round(c.bonus*(1+0.5*(L-1))*100) + '%' : ''}</div>`;
+      grid.appendChild(d);
+    }
+    list.appendChild(grid);
+  } else if (S.tab === 'mission'){
+    head(`3つのミッションが並んでいる。クリアすると報酬をもらえて、次のミッションが出てくる。<br>気に入らないミッションは入れ替えられる${S.rerollCd > 0 ? `（あと${Math.ceil(S.rerollCd)}秒）` : ''}。`);
+    S.missions.forEach((m, i) => {
+      const t = MT.find(x=>x.id===m.id); if (!t) return;
+      const done = m.p >= m.n, rew = missionReward(m);
+      const d = document.createElement('div'); d.className = 'item mission' + (done ? ' can' : '');
+      d.innerHTML = `<div class="mtop"><div class="info"><div class="nm">${t.t(m.n, m.x)}</div><div class="rew">報酬 ${rew.text}</div>
+        <div class="pbar"><i style="width:${Math.min(100, m.p/m.n*100)}%"></i></div><div class="ds">${fmt(Math.min(m.p, m.n))} / ${fmt(m.n)}</div></div>
+        <div style="display:flex;flex-direction:column;gap:5px"><button class="buy${done?' green':''}" ${done?'':'disabled'}>${done?'受け取る':'進行中'}</button>
+        ${done ? '' : `<button class="buy reroll" style="background:var(--card);font-size:11px;font-family:var(--font);font-weight:800" ${S.rerollCd > 0 ? 'disabled' : ''}>入れ替える</button>`}</div></div>`;
+      d.querySelector('.buy').onclick = () => claimMission(i);
+      const rr = d.querySelector('.reroll'); if (rr) rr.onclick = () => rerollMission(i);
+      list.appendChild(d);
+    });
+  } else if (S.tab === 'legend'){
+    const pts = retirePts();
+    head(`殿堂ポイント <b>${S.legend.pts}</b>（これまでに ${S.legend.total}）　1ポイントごとに全部の伸び +${Math.round(BAL.legendBonus*100)}%（いま ×${legendMult().toFixed(2)}）`);
+    const b = document.createElement('button'); b.className = 'bigBtn';
+    b.innerHTML = S.rank >= 3 ? `引退して再デビュー<small>+${pts} ポイント。登録者・お金・強化はリセット、実績・コラボ・殿堂は残る</small>` : `引退<small>【中堅クリエイター】になったらできる</small>`;
+    b.disabled = pts <= 0;
+    b.onclick = () => confirmBox('引退しますか？', `殿堂ポイントを ${pts} もらって、クソガキから再デビューします。実績・コラボ図鑑・殿堂ポイントは残ります。`, '引退する', retire);
+    list.appendChild(b);
+    for (const p of PERKS){
+      const L = perk(p.id), maxed = L >= p.max, c = p.cost * (L + 1);
+      const d = document.createElement('div'); d.className = 'item';
+      d.innerHTML = `<div class="lvbox"><small>Lv</small><b>${L}</b></div><div class="info"><div class="nm">${p.name}</div><div class="ds">${p.d(Math.max(1, L))}${L ? '' : '（Lv1のとき）'}</div><div class="ef">${maxed ? '最大' : '次: ' + p.d(L+1)}</div></div>
+        <button class="buy" ${maxed || S.legend.pts < c ? 'disabled' : ''}>${maxed ? '最大' : c + 'pt'}</button>`;
+      d.querySelector('.buy').onclick = () => buyPerk(p);
+      list.appendChild(d);
+    }
+  } else {
+    if (S.tab === 'staff'){
+      const hired = ITEMS.staff.filter(s => s.id !== 'solo' && lv(s.id) > 0).length;
+      head(hired ? `体制：<b>${hired}種類のスタッフと運営中</b>（自動編集 +${fmt(autoGauge())}/秒）` : '体制：<b>自分ひとり</b>　人を雇うと勝手に編集・投稿してくれる');
+    }
+    if (S.tab === 'equip') head(`動画品質 <b>${fmt(1 + sumFx('eq'), true)}</b>　買った機材は部屋に増えていく`);
+    for (const it of ITEMS[S.tab]){
+      const d = document.createElement('div');
+      const locked = it.rank > S.rank;
+      const isNew = !locked && !S.seen[it.id];
+      d.className = 'item' + (locked ? ' locked' : '');
+      d.innerHTML = `<div class="lvbox"><small>Lv</small><b class="lv"></b></div>
+        <div class="info"><div class="nm">${it.name}${isNew ? '<span class="new">NEW</span>' : ''}</div><div class="ds">${it.d}</div>
+        ${locked ? `<div class="lockNote">【${RANKS[it.rank].name}】になったら買える</div>` : `<div class="ef"></div>`}</div>
+        <button class="buy" ${locked?'disabled':''}></button>`;
+      const btn = d.querySelector('.buy');
+      btn.addEventListener('click', () => {
+        if (buy(it)){
+          pulseClass(d.querySelector('.lvbox'), 'up', 400);
+          const r = btn.getBoundingClientRect(); UI.particles(r.left + r.width/2, r.top, 3);
+          updateShop();
+        }
+      });
+      list.appendChild(d);
+      rows.push({ it, d, locked, lv:d.querySelector('.lv'), ef:d.querySelector('.ef'), btn });
+      if (!locked) S.seen[it.id] = 1;
+    }
   }
   list.scrollTop = top;
   updateShop();
@@ -1184,150 +2209,209 @@ function updateShop(){
   for (const r of rows){
     const it = r.it, L = lv(it.id);
     setText(r.lv, String(L));
-    if (r.locked){ r.btn.innerHTML = '未解放'; continue; }
+    if (r.locked){ setText(r.btn, '未解放'); continue; }
     const maxed = it.max && L >= it.max;
-    const n = buyCount(it);
-    const c = costFor(it, n);
-    if (r.ef){
-      const t = maxed ? effText(it, L) + '（最大）' : effText(it, L) + ' → ' + effText(it, L + n).replace(/^[^×+]*/, '');
-      setText(r.ef, t);
-    }
-    const html = maxed ? '最大' : `${fmtY(c)}<small>${n}レベル分</small>`;
-    if (r.btn.innerHTML !== html) r.btn.innerHTML = html;
+    const n = buyCount(it), c = costFor(it, n);
+    if (r.ef) setText(r.ef, maxed ? effText(it, L) + '（最大）' : effText(it, L + n) + (L ? `　（いま ${effText(it, L)}）` : ''));
+    setHTML(r.btn, maxed ? '最大' : `${fmtY(c)}<small>${n}レベル${buff('sale') < 1 ? '　半額' : ''}</small>`);
     r.btn.disabled = maxed || c > S.money;
+    r.d.classList.toggle('can', !maxed && c <= S.money);
   }
+  tabBadges();
+}
+
+/* ----- gacha modal ----- */
+function openGacha(useTicket){
+  Sound.init();
+  if (S.rank < 1){ toast('コラボ依頼は【無断転載】になってから'); return; }
+  const res = pullGacha(useTicket || (S.tickets > 0 && S.money < gachaCost()));
+  if (!res){ toast('お金が足りない'); return; }
+  const { c, note, isNew } = res;
+  const card = $('#gachaCard'), back = card.querySelector('.gback'), front = $('#gachaFront'), ok = $('#gachaOk'), rays = $('#gachaRays');
+  card.classList.remove('flip'); rays.classList.remove('on');
+  front.className = 'gface gfront ' + c.r;
+  front.innerHTML = `${avatarSVG(c.id)}<div class="gr">${c.r}</div><div class="gn">${c.name}</div><div class="gb">${isNew ? 'NEW　' : ''}${note}</div><div class="gb">全部の伸び +${Math.round(c.bonus*100)}%</div>`;
+  $('#gachaTitle').textContent = 'コラボ依頼中…';
+  ok.disabled = true; ok.textContent = 'タップでめくる';
+  back.classList.add('shake');
+  showOverlay('#gacha');
+  Sound.drum();
+  let flipped = false;
+  const flip = () => {
+    if (flipped) return; flipped = true;
+    back.classList.remove('shake');
+    card.classList.add('flip');
+    $('#gachaTitle').textContent = c.r === 'SSR' ? '大当たり' : c.r === 'SR' ? 'すごい人が来た' : 'コラボ成立';
+    Sound.reveal(c.r);
+    if (c.r === 'SR' || c.r === 'SSR') rays.classList.add('on');
+    if (c.r === 'SSR') confetti(70);
+    ok.disabled = false; ok.textContent = '閉じる';
+    ok.onclick = () => { hideOverlay('#gacha'); buildShop(); };
+  };
+  setTimeout(() => { ok.disabled = false; ok.onclick = flip; card.onclick = flip; }, 700);
+  setTimeout(flip, 1600);
+}
+
+function confirmBox(title, text, yes, fn){
+  $('#cfTitle').textContent = title; $('#cfText').textContent = text; $('#cfYes').textContent = yes;
+  $('#cfYes').onclick = () => { hideOverlay('#confirm'); fn(); };
+  showOverlay('#confirm');
+}
+
+/* =========================================================
+   TUTORIAL
+   ========================================================= */
+function setTut(n){ S.tutStep = n; tutT = 0; }
+let tutT = 0;
+function renderTut(dt){
+  const tut = $('#tut'), hint = $('#tapHint');
+  hint.classList.toggle('hidden', !(S.tutStep === 0 && S.st.taps < 25));
+  let target = null, msg = '';
+  if (S.tutStep === 1 && S.money >= 10){
+    if (S.tab !== 'equip'){ S.tab = 'equip'; buildShop(); }
+    target = document.querySelector('#list .item .buy'); msg = 'お金がたまった。<br>機材を買うと動画が伸びる<small>ボタンを押して買ってみよう</small>';
+  } else if (S.tutStep === 2){
+    tutT += dt;
+    if (tutT > 12 || S.genre === S.trend) setTut(3);
+    target = document.querySelector('#genreRow .sel .hot'); target = target && target.parentElement;
+    msg = '赤い「急上昇」のジャンルで撮ると<br>再生数が2倍以上になる';
+  }
+  if (!target || anyOverlay()){ tut.classList.add('hidden'); return; }
+  tut.classList.remove('hidden');
+  if (tut.innerHTML !== msg) tut.innerHTML = msg;
+  const r = target.getBoundingClientRect(), tw = tut.offsetWidth, th = tut.offsetHeight;
+  let x = Math.min(innerWidth - tw - 8, Math.max(8, r.left + r.width/2 - tw/2));
+  let y = r.top - th - 14, below = false;
+  if (y < 8){ y = r.bottom + 14; below = true; }
+  tut.classList.toggle('below', below);
+  tut.style.left = x + 'px'; tut.style.top = y + 'px';
+  tut.style.setProperty('--ax', Math.max(10, Math.min(tw - 24, r.left + r.width/2 - x - 7)) + 'px');
 }
 
 /* =========================================================
    INPUT
    ========================================================= */
-const mainBtn = $('#mainBtn');
-mainBtn.addEventListener('pointerdown', e => {
+sceneWrap.addEventListener('pointerdown', e => {
+  if (e.target.closest('#golden, #eventBubble')) return;
   e.preventDefault();
-  mainBtn.classList.add('press');
-  setTimeout(()=>mainBtn.classList.remove('press'), 70);
   tap(e.clientX, e.clientY);
 });
 $('#incBtn').addEventListener('pointerdown', e => { e.preventDefault(); if (inc) incTap(); });
 $('#dealBtn').addEventListener('click', () => { Sound.init(); if (S.rank < 3) toast('企業案件は【中堅クリエイター】になってから'); else doDeal(); });
 $('#liveBtn').addEventListener('click', () => { Sound.init(); if (S.rank < 4) toast('生配信は【トップYouTuber】になってから'); else doLive(); });
-document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => { S.tab = t.dataset.tab; Sound.init(); Sound.tap(); buildShop(); }));
+$('#gachaBtn').addEventListener('click', () => openGacha(S.tickets > 0));
+$('#missionBtn').addEventListener('click', () => { S.tab = 'mission'; Sound.init(); Sound.tap(0); buildShop(); });
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => { S.tab = t.dataset.tab; Sound.init(); Sound.tap(0); buildShop(); $('#list').scrollTop = 0; }));
 $('#buyN').addEventListener('click', () => {
   S.buyN = S.buyN === 1 ? 10 : S.buyN === 10 ? 'max' : 1;
   $('#buyN').textContent = S.buyN === 'max' ? 'MAX' : '×' + S.buyN;
-  Sound.tap(); updateShop();
+  Sound.tap(0); updateShop();
 });
 $('#cutin').addEventListener('click', closeCutin);
 document.addEventListener('keydown', e => {
   if ((e.code === 'Space' || e.code === 'Enter') && !e.repeat && document.activeElement === document.body){
     e.preventDefault();
-    const r = mainBtn.getBoundingClientRect();
-    tap(r.left + r.width/2, r.top + r.height/2);
+    const r = sceneRect(); tap(r.left + r.width/2, r.top + r.height*0.6);
   }
 });
-// block pinch zoom / double-tap zoom on iOS
 document.addEventListener('gesturestart', e => e.preventDefault());
 document.addEventListener('dblclick', e => e.preventDefault(), { passive:false });
-document.addEventListener('touchmove', e => {
-  if (!e.target.closest('#list, .selRow, .modal')) e.preventDefault();
-}, { passive:false });
+document.addEventListener('touchmove', e => { if (!e.target.closest('#list, .selRow, #tabs, .modal')) e.preventDefault(); }, { passive:false });
 
-function updateMuteUI(){
-  $('#muteBtn').textContent = S.muted ? '音 OFF' : '音 ON';
-  $('#muteBtn2').textContent = S.muted ? '音 OFF' : '音 ON';
+function updateSettingsUI(){
+  $('#bgmBtn').textContent = S.settings.bgm ? 'BGM ON' : 'BGM OFF';
+  $('#seBtn').textContent = S.settings.se ? '効果音 ON' : '効果音 OFF';
 }
-function toggleMute(){ S.muted = !S.muted; Sound.init(); updateMuteUI(); if (!S.muted) Sound.coin(); save(); }
-$('#muteBtn').addEventListener('click', toggleMute);
-$('#muteBtn2').addEventListener('click', toggleMute);
+$('#bgmBtn').addEventListener('click', () => { S.settings.bgm = !S.settings.bgm; Sound.init(); S.settings.bgm ? Sound.bgmStart() : Sound.bgmStop(); updateSettingsUI(); save(); });
+$('#seBtn').addEventListener('click', () => { S.settings.se = !S.settings.se; Sound.init(); updateSettingsUI(); Sound.coin(); save(); });
 $('#menuBtn').addEventListener('click', () => {
   const h = Math.floor(S.playTime/3600), m = Math.floor(S.playTime%3600/60);
   $('#statList').innerHTML = [
-    ['プレイ時間', `${h}時間${m}分`], ['公開した動画', fmt(S.st.videos)+'本'], ['タップ数', fmt(S.st.taps)+'回'],
-    ['最高登録者', fmt(S.st.maxSubs)+'人'], ['神回バズ', S.st.buzz+'回'], ['鎮火した炎上', S.st.cleared+'回'],
-    ['放置再生', fmt(vps(),true)+'/秒'], ['実績', achCount()+' / '+ACHS.length],
+    ['プレイ時間', `${h}時間${m}分`], ['公開した動画', fmt(S.st.videos)+'本'], ['タップ数', fmt(S.st.taps)+'回'], ['最高コンボ', fmt(S.st.maxCombo)],
+    ['最高登録者', fmt(S.st.maxSubs)+'人'], ['累計再生', fmt(S.st.totalViews)+'回'], ['神回バズ', S.st.buzz+'回'], ['金のタネ', S.st.golden+'個'],
+    ['コラボ図鑑', collabCount()+' / '+COLLABS.length], ['実績', achCount()+' / '+ACHS.length], ['引退', S.st.retires+'回'],
   ].map(([a,b])=>`<div>${a}<span>${b}</span></div>`).join('');
-  $('#menu').classList.remove('hidden');
+  updateSettingsUI();
+  showOverlay('#menu');
 });
-$('#closeMenu').addEventListener('click', () => $('#menu').classList.add('hidden'));
-$('#howBtn').addEventListener('click', () => { $('#menu').classList.add('hidden'); $('#how').classList.remove('hidden'); });
-$('#closeHow').addEventListener('click', () => $('#how').classList.add('hidden'));
-$('#resetBtn').addEventListener('click', () => { $('#menu').classList.add('hidden'); $('#confirm').classList.remove('hidden'); });
-$('#cfNo').addEventListener('click', () => $('#confirm').classList.add('hidden'));
-$('#cfYes').addEventListener('click', () => {
-  try{ localStorage.removeItem(SAVE_KEY); }catch(e){}
-  const muted = S.muted;
-  S = defaults(); S.muted = muted; inc = null;
-  $('#confirm').classList.add('hidden'); $('#incident').classList.add('hidden');
-  applyRankTheme(); renderSelectors(); buildShop(); setThumb(S.genre, curStyle());
+$('#closeMenu').addEventListener('click', () => hideOverlay('#menu'));
+$('#howBtn').addEventListener('click', () => { hideOverlay('#menu'); showOverlay('#how'); });
+$('#closeHow').addEventListener('click', () => hideOverlay('#how'));
+$('#resetBtn').addEventListener('click', () => { hideOverlay('#menu'); confirmBox('本当に消しますか？', '登録者もお金も実績も全部なくなって、最初からやり直しになります。', '消す', () => {
+  try{ localStorage.removeItem(SAVE_KEY); localStorage.removeItem(OLD_KEY); }catch(e){}
+  const settings = S.settings;
+  S = defaults(); S.settings = settings; inc = null; combo = 0; dirtyFx(); fillMissions(); lastSig = '';
+  hideOverlay('#incident');
+  applyRankTheme(); renderSelectors(); buildShop();
   $('#buyN').textContent = '×1';
   toast('データを消した。クソガキからやり直し');
   save();
-});
+}); });
+$('#cfNo').addEventListener('click', () => hideOverlay('#confirm'));
 
 /* =========================================================
-   OFFLINE PROGRESS
+   OFFLINE
    ========================================================= */
 let pendingOffline = null;
 function computeOffline(sec){
   if (sec < 30) return null;
-  sec = Math.min(sec, 8*3600);
+  sec = Math.min(sec, offlineCapH() * 3600);
   const v = S.stock * BAL.stockRate * vpsMult() * (unit() / eventMult()) * sec * offlineRate();
   if (!(v > 0)) return null;
   return { sec, views:v, money:v*yenPerView(), subs:v*BAL.passConv*convMult()/subsDiv() };
 }
 function applyOffline(o){
-  S.views += o.views; S.money += o.money; S.subs += o.subs;
+  S.views += o.views; S.st.totalViews += o.views; S.money += o.money; S.subs += o.subs;
   if (S.subs > S.st.maxSubs) S.st.maxSubs = S.subs;
+  if (S.subs > S.st.maxSubsRun) S.st.maxSubsRun = S.subs;
 }
 function showOffline(o){
   const h = Math.floor(o.sec/3600), m = Math.floor(o.sec%3600/60);
   $('#wbText').innerHTML = `いなかった${h?h+'時間':''}${m}分のあいだも動画は回っていた。
     <div class="gainList"><span>再生</span>+${fmt(o.views)}<br><span>登録者</span>+${fmt(o.subs)}人<br><span>お金</span>+${fmtY(o.money)}</div>
     <small>放置中の効率 ${Math.round(offlineRate()*100)}%</small>`;
-  $('#welcome').classList.remove('hidden');
+  showOverlay('#welcome');
 }
-$('#wbOk').addEventListener('click', () => { $('#welcome').classList.add('hidden'); Sound.coin(); });
+$('#wbOk').addEventListener('click', () => {
+  hideOverlay('#welcome'); Sound.coin();
+  const r = $('#wbOk').getBoundingClientRect(); UI.coins(r.left + r.width/2, r.top, 10);
+});
 
 /* =========================================================
    BOOT
    ========================================================= */
 placeToasts();
 const hadSave = load();
+dirtyFx(); fillMissions();
 applyRankTheme();
-updateMuteUI();
 $('#buyN').textContent = S.buyN === 'max' ? 'MAX' : '×' + S.buyN;
-renderSelectors();
-buildShop();
-setThumb(S.genre, curStyle());
+renderSelectors(); buildShop(); renderScene();
+$('#titleChara').innerHTML = charaSVG(Math.min(S.rank, 5), false, false);
+disp.subs = S.subs; disp.views = S.views; disp.money = S.money; lastSubsShown = S.subs;
 rate.ps = S.subs; rate.pv = S.views; rate.pm = S.money;
 if (hadSave){
   const o = computeOffline((Date.now() - S.lastSave) / 1000);
   if (o){ applyOffline(o); pendingOffline = o; }
 }
-
 $('#title').addEventListener('click', () => {
-  Sound.init();
-  Sound.publish();
+  Sound.init(); Sound.publish();
   $('#title').classList.add('hidden');
   if (pendingOffline) showOffline(pendingOffline);
-  else if (!hadSave) $('#how').classList.remove('hidden');
+  else if (!hadSave) showOverlay('#how');
 });
 
 let last = performance.now(), shopT = 0, cmtT = 0, saveT = 0, achT = 0;
 function frame(now){
   let dt = (now - last) / 1000;
   last = now;
-  if (dt > 10){
-    // tab was suspended: treat as offline
-    const o = computeOffline(dt);
-    if (o){ applyOffline(o); showOffline(o); }
-    dt = 0;
-  }
+  if (dt > 10){ const o = computeOffline(dt); if (o){ applyOffline(o); showOffline(o); } dt = 0; }
   dt = Math.min(dt, 1);
   if (dt > 0) step(dt);
+  if (lastSig !== sceneSig()) renderScene();
   updateRates(dt);
-  renderHUD();
-  shopT += dt; if (shopT > 0.25){ shopT = 0; updateShop(); }
+  renderHUD(dt);
+  renderTut(dt);
+  shopT += dt; if (shopT > 0.25){ shopT = 0; if (['equip','skill','staff'].includes(S.tab)) updateShop(); else tabBadges(); }
   achT += dt; if (achT > 1){ achT = 0; checkAch(); }
   cmtT += dt;
   const interval = S.liveLeft > 0 ? 0.25 : S.feverLeft > 0 ? 0.35 : Math.max(0.6, 3.2 - Math.log10(1 + vps()) * 0.35);
@@ -1339,9 +2423,10 @@ requestAnimationFrame(frame);
 document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
 window.addEventListener('pagehide', save);
 
-// debug hook for testing
-window.__game = { BAL, RANKS, equipMult, allMult, vpsMult, subsDiv, subsFactor, achMult, eventMult, get S(){ return S; }, step, tap, buy, ITEMS, STYLES, costFor, vps, unit, checkAch,
-  endIncident:(ok)=>{ if(inc) endIncident(ok); }, get inc(){ return inc; }, closeCutin };
+window.__game = { BAL, RANKS, STYLES, ALL_ITEMS, ITEMS, get S(){ return S; }, step, tap, buy, costFor, vps, unit, checkAch, sumFx,
+  endIncident:(ok)=>{ if (inc) endIncident(ok); }, get inc(){ return inc; }, closeCutin, collectGolden, get golden(){ return golden; },
+  dbg:()=>({eq:1+sumFx('eq'), coll:collabMult(), ach:achMult(), all:allMult(), vpsM:vpsMult(), stock:S.stock, auto:autoGauge(), tapG:tapGauge(), conv:convMult(), div:subsDiv(), burst:burstMult(), ev:eventMult(), unit:unit(), vps:vps(), combo:comboMult()}),
+  pullGacha, gachaCost, retire, retirePts, claimMission, openEvent, get pendingEvent(){ return pendingEvent; }, buyPerk, PERKS, dirtyFx };
 })();
 </script>
 </body>
