@@ -357,7 +357,7 @@ header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);posit
 .overlay{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(29,26,22,.55);padding:18px}
 .overlay.show .modal{animation:modalIn .32s cubic-bezier(.2,1.4,.4,1)}
 @keyframes modalIn{from{transform:translateY(30px) scale(.94);opacity:0}}
-.modal{width:min(440px,100%);max-height:92%;overflow-y:auto;touch-action:pan-y;background:var(--card);border:3px solid var(--ink);border-radius:8px;padding:18px;text-align:center;box-shadow:7px 7px 0 var(--ink);position:relative}
+.modal{width:min(440px,100%);max-height:92%;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;background:var(--card);border:3px solid var(--ink);border-radius:8px;padding:18px;text-align:center;box-shadow:7px 7px 0 var(--ink);position:relative}
 .modal h2{font-family:var(--display);font-weight:400;font-size:22px;margin-bottom:10px}
 .modal p{font-size:14px;color:var(--dim);line-height:1.7;margin-bottom:10px}
 .modal .row{display:flex;gap:8px;margin-top:10px}
@@ -380,6 +380,19 @@ header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);posit
 .evArt b{font-family:var(--display);font-size:38px;color:#fff;text-shadow:3px 3px 0 var(--ink);transform:rotate(-3deg)}
 .evArt small{position:absolute;left:8px;top:6px;font-size:11px;font-weight:900;background:var(--ink);color:#fff;padding:1px 6px}
 #eventModal .row{flex-direction:column}
+
+/* cloud save */
+.saveBox{border:2.5px solid var(--ink);border-radius:8px;padding:10px 12px 12px;margin-bottom:10px;background:var(--paper)}
+.clab{font-size:12px;font-weight:900;color:var(--dim)}
+#codeBig{font-family:var(--display);font-size:44px;letter-spacing:.18em;line-height:1.15;user-select:text;-webkit-user-select:text}
+#cloudInfo{font-size:12px;color:var(--dim);font-weight:700}
+.loadRow{align-items:stretch;flex-wrap:wrap}
+.saveBox .row .btn{min-width:0}
+#codeInput{flex:1 1 7em;min-width:0;width:7em;border:2px solid var(--ink);border-radius:5px;padding:8px;font-family:var(--display);font-size:20px;letter-spacing:.12em;text-align:center;background:var(--card);color:var(--ink);
+  -webkit-user-select:text;user-select:text;touch-action:manipulation}
+#codeInput:focus{outline:3px dashed var(--blue);outline-offset:1px}
+.loadRow .btn{font-size:13px;flex:1 1 11em}
+#codeInput::placeholder{font-family:var(--font);font-size:14px;letter-spacing:0;color:var(--dim)}
 
 /* title */
 #title{position:fixed;inset:0;z-index:80;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;overflow:hidden;
@@ -679,6 +692,13 @@ header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);posit
 <div id="menu" class="overlay hidden">
   <div class="modal">
     <h2>メニュー</h2>
+    <div class="saveBox">
+      <div class="clab">セーブコード</div>
+      <div id="codeBig">-----</div>
+      <div id="cloudInfo">5分ごとに自動で保存</div>
+      <div class="row"><button class="btn primary" id="cloudSaveBtn">今すぐ保存</button></div>
+      <div class="row loadRow"><input id="codeInput" inputmode="numeric" pattern="[0-9]*" maxlength="5" placeholder="5桁のコード" autocomplete="off"><button class="btn" id="cloudLoadBtn">このコードで続きから</button></div>
+    </div>
     <div class="toggles"><button class="btn" id="bgmBtn">BGM ON</button><button class="btn" id="seBtn">効果音 ON</button></div>
     <div class="statList" id="statList"></div>
     <div class="row"><button class="btn" id="howBtn">遊び方</button><button class="btn danger" id="resetBtn">データを消す</button></div>
@@ -2739,7 +2759,7 @@ $('#menuBtn').addEventListener('click', () => {
     ['最高登録者', fmt(S.st.maxSubs)+'人'], ['累計再生', fmt(S.st.totalViews)+'回'], ['神回バズ', S.st.buzz+'回'], ['金のタネ', S.st.golden+'個'],
     ['コラボ図鑑', collabCount()+' / '+COLLABS.length], ['実績', achCount()+' / '+ACHS.length], ['引退', S.st.retires+'回'],
   ].map(([a,b])=>`<div>${a}<span>${b}</span></div>`).join('');
-  updateSettingsUI();
+  updateSettingsUI(); updateCloudUI();
   showOverlay('#menu');
 });
 $('#closeMenu').addEventListener('click', () => hideOverlay('#menu'));
@@ -2747,6 +2767,7 @@ $('#howBtn').addEventListener('click', () => { hideOverlay('#menu'); showOverlay
 $('#closeHow').addEventListener('click', () => hideOverlay('#how'));
 $('#resetBtn').addEventListener('click', () => { hideOverlay('#menu'); confirmBox('本当に消しますか？', '登録者もお金も実績も全部なくなって、最初からやり直しになります。', '消す', () => {
   try{ localStorage.removeItem(SAVE_KEY); localStorage.removeItem(OLD_KEY); }catch(e){}
+  cloudT = 300;
   const settings = S.settings;
   S = defaults(); S.settings = settings; inc = null; combo = 0; dirtyFx(); fillMissions(); lastSig = '';
   hideOverlay('#incident');
@@ -2891,6 +2912,80 @@ function recipeTab(list, head){
 }
 
 /* =========================================================
+   CLOUD SAVE (5桁コード / GAS)
+   ========================================================= */
+const CODE_KEY = 'nariagari_douga_do_code';
+const hasGAS = () => typeof google !== 'undefined' && google.script && google.script.run;
+let cloudCode = null, cloudBusy = false, cloudT = 0, cloudLast = 0, cloudErr = '';
+try { cloudCode = localStorage.getItem(CODE_KEY); } catch(e){}
+function gasCall(fn, ...args){
+  return new Promise((res, rej) => google.script.run.withSuccessHandler(res).withFailureHandler(e => rej((e && e.message) || String(e)))[fn](...args));
+}
+async function ensureCode(){
+  if (cloudCode || !hasGAS()) return cloudCode;
+  const c = await gasCall('issueCode');
+  cloudCode = c;
+  try{ localStorage.setItem(CODE_KEY, c); }catch(e){}
+  toast(`セーブコード ${c} を発行した。メニューでいつでも見られる`, 'gold');
+  updateCloudUI();
+  return c;
+}
+async function cloudSave(manual){
+  if (!hasGAS()){ if (manual) toast('コード保存はGASで公開したときだけ使える', 'bad'); return; }
+  if (cloudBusy) return;
+  cloudBusy = true; updateCloudUI();
+  try {
+    await ensureCode();
+    save();
+    await gasCall('saveGame', cloudCode, JSON.stringify(S));
+    cloudLast = Date.now(); cloudErr = '';
+    if (manual) toast(`保存した（コード ${cloudCode}）`, 'gold');
+  } catch(e){
+    cloudErr = String(e);
+    if (manual) toast('保存できなかった：' + e, 'bad');
+  } finally { cloudBusy = false; updateCloudUI(); }
+}
+async function cloudLoad(code){
+  if (!/^\d{5}$/.test(code)){ toast('コードは5桁の数字', 'bad'); return; }
+  if (!hasGAS()){ toast('コード読み込みはGASで公開したときだけ使える', 'bad'); return; }
+  try {
+    const data = await gasCall('loadGame', code);
+    if (!data){ toast('そのコードにはまだデータがない', 'bad'); return; }
+    JSON.parse(data);
+    localStorage.setItem(SAVE_KEY, data);
+    localStorage.setItem(CODE_KEY, code);
+    cloudCode = code;
+    load(); inc = null; combo = 0; cutinQueue.length = 0; golden = null; pendingEvent = null;
+    hideOverlay('#incident'); hideOverlay('#menu');
+    dirtyFx(); fillMissions(); lastSig = '';
+    applyRankTheme(); renderSelectors(); buildShop();
+    $('#buyN').textContent = S.buyN === 'max' ? 'MAX' : '×' + S.buyN;
+    disp.subs = S.subs; disp.views = S.views; disp.money = S.money; lastSubsShown = S.subs;
+    rate.ps = S.subs; rate.pv = S.views; rate.pm = S.money;
+    cloudT = 0; cloudLast = Date.now();
+    toast(`コード ${code} のデータで続きから（${RANKS[S.rank].name}）`, 'gold');
+    updateCloudUI();
+  } catch(e){ toast('読み込めなかった：' + e, 'bad'); }
+}
+function updateCloudUI(){
+  $('#codeBig').textContent = cloudCode || '-----';
+  const two = n => String(n).padStart(2, '0');
+  const d = new Date(cloudLast);
+  $('#cloudInfo').textContent = !hasGAS() ? 'GASで公開したときに使える（いまはこの端末にだけ保存中）'
+    : cloudBusy ? '保存中…'
+    : cloudErr ? '保存できなかった：' + cloudErr
+    : cloudLast ? `最後の保存 ${two(d.getHours())}:${two(d.getMinutes())}　5分ごとに自動で保存`
+    : cloudCode ? '5分ごとに自動で保存' : 'はじめての保存でコードが発行される';
+}
+$('#cloudSaveBtn').addEventListener('click', () => cloudSave(true));
+$('#codeInput').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 5); });
+$('#cloudLoadBtn').addEventListener('click', () => {
+  const code = $('#codeInput').value.trim();
+  if (!/^\d{5}$/.test(code)){ toast('コードは5桁の数字', 'bad'); return; }
+  confirmBox('このコードで続きから？', `いまの進み具合は、コード ${code} のデータに置きかわります。`, '読み込む', () => cloudLoad(code));
+});
+
+/* =========================================================
    OFFLINE
    ========================================================= */
 let pendingOffline = null;
@@ -2937,6 +3032,7 @@ if (hadSave){
 $('#title').addEventListener('click', () => {
   Sound.init(); Sound.publish();
   $('#title').classList.add('hidden');
+  if (hasGAS() && !cloudCode) cloudSave(false);
   if (pendingOffline) showOffline(pendingOffline);
   else if (!hadSave) showOverlay('#how');
 });
@@ -2959,6 +3055,7 @@ function frame(now){
   const interval = S.liveLeft > 0 ? 0.25 : S.feverLeft > 0 ? 0.35 : Math.max(0.6, 3.2 - Math.log10(1 + vps()) * 0.35);
   if (cmtT > interval){ cmtT = 0; if ($('#title').classList.contains('hidden')) spawnComment(); }
   saveT += dt; if (saveT > 5){ saveT = 0; save(); }
+  cloudT += dt; if (cloudT >= 300){ cloudT = 0; cloudSave(false); }
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
