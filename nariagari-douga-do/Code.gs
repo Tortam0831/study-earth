@@ -4,6 +4,7 @@
  * - issueCode / saveGame / loadGame: 5桁のセーブコードでクラウド保存
  *   セーブデータはスクリプトが自動で作るスプレッドシート「成り上がり動画道 セーブデータ」に入る
  * 最初に一度だけ、エディタで setup を実行して権限を許可しておく。
+ * セーブコードを忘れたときは、エディタで listSaves を実行すると、保存されている全コードが称号つきで表示される。
  */
 function doGet() {
   return HtmlService.createHtmlOutputFromFile('index')
@@ -92,4 +93,31 @@ function loadGame(code) {
   const row = findRow_(sh, code);
   if (!row) throw new Error('そのコードは見つかりません');
   return String(sh.getRange(row, 2).getValue() || '');
+}
+
+const RANK_NAMES_ = ['クソガキ','親のスマホ泥棒','無断転載','パクリ常習犯','底辺YouTuber','再生数1桁の職人','収益化の亡者','サムネ詐欺師',
+  '中堅クリエイター','切り抜かれ芸人','銀盾YouTuber','炎上請負人','トップYouTuber','金盾ホルダー','案件の帝王','国民的YouTuber',
+  'ダイヤ盾の住人','テレビより有名','社会現象','アジアの覇者','世界一のYouTuber','地球代表','人類の推し','全人類登録',
+  '宇宙人にも人気','銀河配信王','動画の神'];
+
+/** セーブコードを忘れたとき用：エディタで実行すると、全コードを進み具合の大きい順に表示する */
+function listSaves() {
+  const sh = getSheet_();
+  const rows = sh.getDataRange().getValues().slice(1);
+  const list = rows.map(r => {
+    let d = null;
+    try { d = r[1] ? JSON.parse(r[1]) : null; } catch (e) { d = null; }
+    const st = (d && d.st) || {};
+    return {
+      code: String(r[0]),
+      updated: r[2] ? Utilities.formatDate(new Date(r[2]), 'Asia/Tokyo', 'yyyy/MM/dd HH:mm') : '',
+      rank: d ? (RANK_NAMES_[d.rank] || '?') : '（データなし）',
+      best: Math.max(st.maxSubs || 0, (d && d.subs) || 0),
+      retires: st.retires || 0,
+      hours: d ? Math.round((d.playTime || 0) / 360) / 10 : 0,
+    };
+  }).sort((a, b) => b.best - a.best);
+  const lines = list.map(x => `${x.code}　${x.rank}　最高登録者 ${Math.floor(x.best).toLocaleString()}人　引退${x.retires}回　プレイ${x.hours}時間　最終保存 ${x.updated}`);
+  Logger.log('セーブコード一覧（進み具合の大きい順）\n' + lines.join('\n'));
+  return lines;
 }

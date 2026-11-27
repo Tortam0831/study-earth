@@ -79,8 +79,9 @@ header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);posit
 #flash.on{animation:flash .18s ease-out}
 @keyframes flash{0%{opacity:.55}100%{opacity:0}}
 #zoneFx{position:absolute;inset:-20%;pointer-events:none;opacity:0;transition:opacity .3s;
-  background:repeating-conic-gradient(from 0deg at 50% 60%,rgba(255,255,255,.0) 0deg 7deg,rgba(255,255,255,.35) 7deg 9deg);animation:spin 6s linear infinite}
-#sceneWrap.zone #zoneFx{opacity:1}
+  background:repeating-conic-gradient(from 0deg at 50% 60%,rgba(255,255,255,.0) 0deg 7deg,rgba(255,255,255,.35) 7deg 9deg)}
+#sceneWrap.zone #zoneFx{opacity:1;animation:zonePulse .5s steps(2) infinite}
+@keyframes zonePulse{50%{opacity:.55}}
 #sceneWrap.fever{animation:feverBorder .4s steps(2) infinite}
 @keyframes feverBorder{50%{border-color:var(--yellow)}}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -158,7 +159,7 @@ header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);posit
 .cmt.fire{color:#ff8b80}
 @keyframes flow{to{transform:translateX(calc(-1 * var(--w) - 100%))}}
 #golden{position:absolute;left:0;top:0;width:66px;height:66px;margin:-33px 0 0 -33px;z-index:3;cursor:pointer;touch-action:none}
-#golden svg{width:100%;height:100%;animation:goldSpin 2.2s ease-in-out infinite;filter:drop-shadow(3px 3px 0 rgba(29,26,22,.9))}
+#golden svg{width:100%;height:100%;animation:goldSpin 2.2s ease-in-out infinite}
 @keyframes goldSpin{0%,100%{transform:rotate(-12deg) scale(1)}50%{transform:rotate(12deg) scale(1.12)}}
 #golden.got{pointer-events:none}
 #golden.got svg{animation:goldGot .35s ease-out forwards}
@@ -198,11 +199,12 @@ header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);posit
 .act.shake{animation:shake .3s}
 #xpBar{height:6px;background:#4a443c;border-radius:2px;overflow:hidden}
 #xpFill{display:block;height:100%;width:0;background:var(--yellow);transition:width .2s}
-#sceneWrap.rainbow #scene{animation:hue 1.1s linear infinite}
+#sceneWrap.rainbow::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:3;background:linear-gradient(90deg,rgba(226,59,46,.2),rgba(255,210,63,.2),rgba(42,157,92,.2),rgba(47,111,219,.2),rgba(123,75,196,.2));animation:rainbowTint 1.2s steps(4) infinite}
+@keyframes rainbowTint{50%{opacity:.4}}
 #sceneWrap.rainbow{animation:rainbowBorder .5s steps(4) infinite}
 @keyframes hue{to{filter:hue-rotate(360deg) saturate(1.4)}}
 @keyframes rainbowBorder{0%{border-color:#e23b2e}25%{border-color:#ffd23f}50%{border-color:#2a9d5c}75%{border-color:#2f6fdb}}
-#sceneWrap.galaxy #scene{filter:hue-rotate(40deg) saturate(1.25)}
+#sceneWrap.galaxy::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;background:rgba(94,42,143,.22)}
 .critStamp{position:absolute;font-family:var(--display);font-size:34px;color:var(--yellow);transform:translate(-50%,-50%) rotate(-8deg);pointer-events:none;white-space:nowrap;
   text-shadow:3px 0 0 var(--ink),-3px 0 0 var(--ink),0 3px 0 var(--ink),0 -3px 0 var(--ink),5px 5px 0 var(--red);animation:critA .7s ease-out forwards}
 @keyframes critA{0%{transform:translate(-50%,-50%) scale(2.4) rotate(-8deg);opacity:0}20%{transform:translate(-50%,-50%) scale(1) rotate(-8deg);opacity:1}100%{transform:translate(-50%,-140%) scale(1) rotate(-8deg);opacity:0}}
@@ -382,6 +384,12 @@ header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);posit
 #eventModal .row{flex-direction:column}
 
 /* cloud save */
+#codeChip{flex-shrink:0;height:34px;padding:0 8px;border:2px dashed var(--ink);border-radius:5px;background:var(--card);font-size:11px;font-weight:800;line-height:1.1;display:flex;flex-direction:column;justify-content:center;text-align:center}
+#codeChip b{font-family:var(--display);font-weight:400;font-size:14px;letter-spacing:.06em}
+#startModal .bigCode,#codeModal .bigCode{font-family:var(--display);font-size:56px;letter-spacing:.2em;margin:6px 0;user-select:text;-webkit-user-select:text}
+#startModal input{width:100%;margin:6px 0 2px;border:2px solid var(--ink);border-radius:5px;padding:10px;font-family:var(--display);font-size:24px;letter-spacing:.2em;text-align:center;background:var(--card);color:var(--ink);-webkit-user-select:text;user-select:text;touch-action:manipulation}
+#startModal .or{font-size:12px;color:var(--dim);font-weight:800;margin:14px 0 4px}
+@media (max-width:420px){ #codeChip{display:none} }
 .saveBox{border:2.5px solid var(--ink);border-radius:8px;padding:10px 12px 12px;margin-bottom:10px;background:var(--paper)}
 .clab{font-size:12px;font-weight:900;color:var(--dim)}
 #codeBig{font-family:var(--display);font-size:44px;letter-spacing:.18em;line-height:1.15;user-select:text;-webkit-user-select:text}
@@ -486,7 +494,7 @@ header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);posit
 .float.big{font-size:26px;color:var(--yellow)}
 .float.huge{font-size:34px;color:var(--yellow)}
 @keyframes floatUp{to{transform:translate(-50%,-170%);opacity:0}}
-.pt{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;animation:ptFly .8s cubic-bezier(.2,.7,.4,1) forwards}
+.pt{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;background:center/contain no-repeat;animation:ptFly .8s cubic-bezier(.2,.7,.4,1) forwards}
 @keyframes ptFly{0%{transform:translate(0,0) scale(.4) rotate(0)}30%{transform:translate(calc(var(--dx)*.5),calc(var(--dy)*.6)) scale(1.1) rotate(calc(var(--r)*.5))}100%{transform:translate(var(--dx),var(--dy)) scale(.7) rotate(var(--r));opacity:0}}
 .coin{position:absolute;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:var(--yellow);border:2px solid var(--ink);font-family:var(--display);font-size:10px;display:grid;place-items:center;line-height:1}
 .ring{position:absolute;width:40px;height:40px;margin:-20px 0 0 -20px;border:3px solid var(--ink);border-radius:50%;animation:ring .35s ease-out forwards}
@@ -535,6 +543,7 @@ header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);posit
         <div id="progText">次の称号</div>
         <div class="bar"><div id="progFill"></div></div>
       </div>
+      <div id="codeChip" class="hidden"></div>
       <button class="txtBtn" id="menuBtn">メニュー</button>
     </div>
     <div id="stats">
@@ -646,6 +655,26 @@ header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);posit
     <h2 id="gachaTitle" style="position:relative">コラボ依頼中…</h2>
     <div id="gachaStage"><div id="gachaCard"><div class="gface gback"><b>コラボ?</b></div><div class="gface gfront" id="gachaFront"></div></div></div>
     <div class="row" style="position:relative"><button class="btn primary" id="gachaOk" disabled>タップでめくる</button></div>
+  </div>
+</div>
+
+<div id="startModal" class="overlay hidden">
+  <div class="modal">
+    <h2>セーブコード</h2>
+    <p>前に遊んだことがあるなら、5桁のセーブコードで続きから遊べる。</p>
+    <input id="startInput" inputmode="numeric" pattern="[0-9]*" maxlength="5" placeholder="5桁のコード" autocomplete="off">
+    <div class="row"><button class="btn primary" id="startLoad">このコードで続きから</button></div>
+    <div class="or">はじめて遊ぶ</div>
+    <div class="row"><button class="btn" id="startNew">はじめから（新しいコードをもらう）</button></div>
+  </div>
+</div>
+
+<div id="codeModal" class="overlay hidden">
+  <div class="modal">
+    <h2>あなたのセーブコード</h2>
+    <div class="bigCode">-----</div>
+    <p>このコードは<b>ずっと変わらない</b>。5分ごとと昇格したときに自動で保存される。<br>ゲームが落ちても、別の端末でも、このコードで続きから遊べる。<b>メモかスクショしておこう。</b><br>（メニューと画面の右上でいつでも見られる）</p>
+    <div class="row"><button class="btn primary" id="codeOk">メモした</button></div>
   </div>
 </div>
 
@@ -941,12 +970,35 @@ function defaults(){
 }
 let S = defaults();
 
-function load(){
+/* save slots: main (every 5s), backup (every 30s), best (highest progress ever) */
+const BACKUP_KEY = SAVE_KEY + '_backup', BEST_KEY = SAVE_KEY + '_best';
+function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+function lsSet(k, v){ try { localStorage.setItem(k, v); return true; } catch(e){ return false; } }
+function progressOf(d){
+  if (!d) return -1;
+  const st = d.st || {}, lg = d.legend || {};
+  return (lg.total || 0) * 1e13 + Math.max(st.maxSubs || 0, d.subs || 0) + (d.rank || 0) * 1e-3;
+}
+function parseSave(raw){ try { const d = JSON.parse(raw); return d && typeof d === 'object' ? d : null; } catch(e){ return null; } }
+function pickBestRaw(){
+  let best = null, bestP = -1;
+  for (const k of [SAVE_KEY, BACKUP_KEY, BEST_KEY]){
+    const raw = lsGet(k), d = raw && parseSave(raw);
+    if (d && progressOf(d) > bestP){ best = raw; bestP = progressOf(d); }
+  }
+  return best;
+}
+function load(rawOverride){
   try{
-    let raw = localStorage.getItem(SAVE_KEY), old = false;
-    if (!raw){ raw = localStorage.getItem(OLD_KEY); old = !!raw; }
-    if (!raw) return false;
-    const d = JSON.parse(raw), base = defaults();
+    let raw = rawOverride || lsGet(SAVE_KEY), old = false;
+    let d0 = raw && parseSave(raw);
+    if (!rawOverride){
+      const bestRaw = pickBestRaw();
+      if (bestRaw && (!d0 || progressOf(parseSave(bestRaw)) > progressOf(d0))){ raw = bestRaw; d0 = parseSave(bestRaw); }
+    }
+    if (!d0){ raw = lsGet(OLD_KEY); old = !!raw; d0 = raw && parseSave(raw); }
+    if (!d0) return false;
+    const d = d0, base = defaults();
     S = Object.assign(base, d);
     if (!d.v || d.v < 3) S.rank = [0,2,4,8,12,20][d.rank || 0] || 0;
     S.v = 3;
@@ -973,10 +1025,17 @@ function load(){
     return true;
   }catch(e){ return false; }
 }
+let backupT = 0;
 function save(){
   S.lastSave = Date.now();
-  try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){}
+  let raw;
+  try { raw = JSON.stringify(S); } catch(e){ return; }
+  lsSet(SAVE_KEY, raw);
+  if (Date.now() - backupT > 30000){ backupT = Date.now(); lsSet(BACKUP_KEY, raw); }
+  const bestRaw = lsGet(BEST_KEY);
+  if (!bestRaw || progressOf(S) >= progressOf(parseSave(bestRaw))) lsSet(BEST_KEY, raw);
 }
+function wipeSaves(){ for (const k of [SAVE_KEY, BACKUP_KEY, BEST_KEY, OLD_KEY]) { try { localStorage.removeItem(k); } catch(e){} } }
 
 /* =========================================================
    FORMULAS
@@ -1512,6 +1571,7 @@ function checkRank(){
     if (T() !== oldT){ const best = STYLES.filter(s=>s.rank===T() && !s.risk); if (best.length) S.style = best[0].id; }
     S.chests.push(Math.random() < 0.3 ? 2 : 1);
     cutinQueue.push([old, S.rank]);
+    if (typeof cloudSaveSoon === 'function') cloudSaveSoon();
     applyRankTheme(); sceneDirty = true;
     buildShop(); renderSelectors(); fillMissions();
   }
@@ -2048,7 +2108,7 @@ const Sound = {
     s.connect(hp); hp.connect(g); g.connect(dest); s.start(t); s.stop(t + 0.06);
   },
   tap(c, alt){
-    const n = performance.now(); if (n - this.lastTap < 35) return; this.lastTap = n;
+    const n = performance.now(); if (n - this.lastTap < 60) return; this.lastTap = n;
     if (alt) return this.se(300 + Math.random()*120, .06, 'triangle', .12);
     const p = Math.min(c || 0, 120);
     this.se(500 + p * 6 + Math.random()*60, .05, 'square', .04, 0, 900 + p*6);
@@ -2108,6 +2168,14 @@ const PT_SHAPES = [
   `<svg viewBox="0 0 24 24"><path d="M3 11 h4 v10 h-4z M8 11 l4 -8 q3 0 2 4 l-1 3 h6 q2 0 2 2 l-2 8 q-1 1 -3 1 h-8z" fill="#ffd23f" stroke="#1d1a16" stroke-width="2" stroke-linejoin="round"/></svg>`,
   `<svg viewBox="0 0 24 24"><path d="M12 2 l3 7 7 .5 -5.5 4.5 2 7 -6.5 -4 -6.5 4 2 -7 -5.5 -4.5 7 -.5z" fill="#2f6fdb" stroke="#1d1a16" stroke-width="2" stroke-linejoin="round"/></svg>`,
 ];
+const PT_URLS = PT_SHAPES.map(s => 'url("data:image/svg+xml,' + encodeURIComponent(s.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ')) + '")');
+let fxBudget = 40, fxBudgetT = performance.now();
+function fxTake(n){
+  const now = performance.now();
+  fxBudget = Math.min(40, fxBudget + (now - fxBudgetT) / 1000 * 35); fxBudgetT = now;
+  if (fxBudget < n || fxEl.childElementCount > 45) return false;
+  fxBudget -= n; return true;
+}
 function sceneRect(){ return sceneWrap.getBoundingClientRect(); }
 function charaEl(){ return document.getElementById('chara'); }
 function pulseClass(el, cls, ms){ if (!el) return; el.classList.remove(cls); void el.getBoundingClientRect(); el.classList.add(cls); setTimeout(()=>el.classList.remove(cls), ms); }
@@ -2115,7 +2183,8 @@ function pulseClass(el, cls, ms){ if (!el) return; el.classList.remove(cls); voi
 const UI = {
   floatText(x, y, txt, cls){
     if (window.__noFx) return;
-    if (fxEl.childElementCount > 60) fxEl.firstChild.remove();
+    if (!fxTake(1) && cls !== 'big' && cls !== 'huge') return;
+    if (fxEl.childElementCount > 50) fxEl.firstChild.remove();
     const d = document.createElement('div');
     d.className = 'float ' + (cls||'');
     d.textContent = txt;
@@ -2126,10 +2195,10 @@ const UI = {
   particles(x, y, n){
     if (window.__noFx) return;
     for (let i=0;i<n;i++){
-      if (fxEl.childElementCount > 60) return;
+      if (!fxTake(1)) return;
       const p = document.createElement('div');
       p.className = 'pt';
-      p.innerHTML = pick(PT_SHAPES);
+      p.style.backgroundImage = pick(PT_URLS);
       p.style.left = x + 'px'; p.style.top = y + 'px';
       p.style.setProperty('--dx', (Math.random()*140-70) + 'px');
       p.style.setProperty('--dy', (-60 - Math.random()*90) + 'px');
@@ -2139,6 +2208,7 @@ const UI = {
     }
   },
   ring(x, y){
+    if (!fxTake(1)) return;
     const r = document.createElement('div'); r.className = 'ring';
     r.style.left = x + 'px'; r.style.top = y + 'px';
     fxEl.appendChild(r); setTimeout(()=>r.remove(), 350);
@@ -2162,7 +2232,7 @@ const UI = {
     const t = $('#stMoney .val').getBoundingClientRect();
     const tx = t.left + 20, ty = t.top + t.height/2;
     for (let i=0;i<n;i++){
-      if (fxEl.childElementCount > 70) return;
+      if (!fxTake(1) || document.querySelectorAll('#fx .coin').length > 24) return;
       const c = document.createElement('div'); c.className = 'coin'; c.textContent = '¥';
       c.style.left = x + 'px'; c.style.top = y + 'px';
       fxEl.appendChild(c);
@@ -2766,7 +2836,7 @@ $('#closeMenu').addEventListener('click', () => hideOverlay('#menu'));
 $('#howBtn').addEventListener('click', () => { hideOverlay('#menu'); showOverlay('#how'); });
 $('#closeHow').addEventListener('click', () => hideOverlay('#how'));
 $('#resetBtn').addEventListener('click', () => { hideOverlay('#menu'); confirmBox('本当に消しますか？', '登録者もお金も実績も全部なくなって、最初からやり直しになります。', '消す', () => {
-  try{ localStorage.removeItem(SAVE_KEY); localStorage.removeItem(OLD_KEY); }catch(e){}
+  wipeSaves();
   cloudT = 300;
   const settings = S.settings;
   S = defaults(); S.settings = settings; inc = null; combo = 0; dirtyFx(); fillMissions(); lastSig = '';
@@ -2926,7 +2996,8 @@ async function ensureCode(){
   const c = await gasCall('issueCode');
   cloudCode = c;
   try{ localStorage.setItem(CODE_KEY, c); }catch(e){}
-  toast(`セーブコード ${c} を発行した。メニューでいつでも見られる`, 'gold');
+  $('#codeModal .bigCode').textContent = c;
+  showOverlay('#codeModal');
   updateCloudUI();
   return c;
 }
@@ -2951,12 +3022,12 @@ async function cloudLoad(code){
   try {
     const data = await gasCall('loadGame', code);
     if (!data){ toast('そのコードにはまだデータがない', 'bad'); return; }
-    JSON.parse(data);
-    localStorage.setItem(SAVE_KEY, data);
-    localStorage.setItem(CODE_KEY, code);
+    if (!parseSave(data)){ toast('データが壊れていて読み込めない', 'bad'); return; }
+    wipeSaves();
+    lsSet(SAVE_KEY, data); lsSet(BEST_KEY, data); lsSet(CODE_KEY, code);
     cloudCode = code;
-    load(); inc = null; combo = 0; cutinQueue.length = 0; golden = null; pendingEvent = null;
-    hideOverlay('#incident'); hideOverlay('#menu');
+    load(data); inc = null; combo = 0; cutinQueue.length = 0; golden = null; pendingEvent = null;
+    hideOverlay('#incident'); hideOverlay('#menu'); hideOverlay('#startModal'); hideOverlay('#how');
     dirtyFx(); fillMissions(); lastSig = '';
     applyRankTheme(); renderSelectors(); buildShop();
     $('#buyN').textContent = S.buyN === 'max' ? 'MAX' : '×' + S.buyN;
@@ -2967,8 +3038,18 @@ async function cloudLoad(code){
     updateCloudUI();
   } catch(e){ toast('読み込めなかった：' + e, 'bad'); }
 }
+let cloudSoonT = 0;
+function cloudSaveSoon(){
+  if (!hasGAS() || !cloudCode) return;
+  if (Date.now() - cloudSoonT < 60000) return;
+  cloudSoonT = Date.now();
+  setTimeout(() => cloudSave(false), 1500);
+}
 function updateCloudUI(){
   $('#codeBig').textContent = cloudCode || '-----';
+  const chip = $('#codeChip');
+  chip.classList.toggle('hidden', !cloudCode);
+  chip.innerHTML = `セーブコード<b>${cloudCode || ''}</b>`;
   const two = n => String(n).padStart(2, '0');
   const d = new Date(cloudLast);
   $('#cloudInfo').textContent = !hasGAS() ? 'GASで公開したときに使える（いまはこの端末にだけ保存中）'
@@ -3032,13 +3113,33 @@ if (hadSave){
 $('#title').addEventListener('click', () => {
   Sound.init(); Sound.publish();
   $('#title').classList.add('hidden');
+  if (hasGAS() && !hadSave){
+    if (cloudCode){ toast(`セーブコード ${cloudCode} のデータを読み込み中…`); cloudLoad(cloudCode).then(() => { if (!S.st.taps) showOverlay('#startModal'); }); }
+    else showOverlay('#startModal');
+    return;
+  }
   if (hasGAS() && !cloudCode) cloudSave(false);
   if (pendingOffline) showOffline(pendingOffline);
   else if (!hadSave) showOverlay('#how');
 });
+let howAfterCode = false;
+$('#startNew').addEventListener('click', () => { hideOverlay('#startModal'); howAfterCode = true; cloudSave(false); });
+$('#startInput').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 5); });
+$('#startLoad').addEventListener('click', () => {
+  const code = $('#startInput').value.trim();
+  if (!/^\d{5}$/.test(code)){ toast('コードは5桁の数字', 'bad'); return; }
+  cloudLoad(code);
+});
+$('#codeOk').addEventListener('click', () => { hideOverlay('#codeModal'); if (howAfterCode){ howAfterCode = false; showOverlay('#how'); } });
+updateCloudUI();
 
 let last = performance.now(), shopT = 0, cmtT = 0, saveT = 0, achT = 0;
+let frameErr = 0;
 function frame(now){
+  requestAnimationFrame(frame);
+  try { frameBody(now); } catch(e){ if (frameErr++ < 5) console.error(e); }
+}
+function frameBody(now){
   let dt = (now - last) / 1000;
   last = now;
   if (dt > 10){ const o = computeOffline(dt); if (o){ applyOffline(o); showOffline(o); } dt = 0; }
@@ -3056,10 +3157,14 @@ function frame(now){
   if (cmtT > interval){ cmtT = 0; if ($('#title').classList.contains('hidden')) spawnComment(); }
   saveT += dt; if (saveT > 5){ saveT = 0; save(); }
   cloudT += dt; if (cloudT >= 300){ cloudT = 0; cloudSave(false); }
-  requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
-document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
+let hideSaveT = 0;
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) return;
+  save();
+  if (hasGAS() && cloudCode && Date.now() - hideSaveT > 30000){ hideSaveT = Date.now(); cloudSave(false); }
+});
 window.addEventListener('pagehide', save);
 
 window.__game = { BAL, RANKS, STYLES, ALL_ITEMS, ITEMS, get S(){ return S; }, step, tap, buy, costFor, vps, unit, checkAch, sumFx,
