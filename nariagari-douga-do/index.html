@@ -531,6 +531,29 @@ header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);posit
 </style>
 </head>
 <body data-rank="0">
+<script>
+/* 起動チェック：本体のプログラムが最後まで読めなかったときに理由を画面に出す */
+(function(){
+  var shown = false;
+  function banner(msg){
+    if (shown) return; shown = true;
+    var d = document.createElement('div');
+    d.id = 'bootErr';
+    d.style.cssText = 'position:fixed;left:10px;right:10px;bottom:10px;z-index:999;background:#e23b2e;color:#fff;font:700 14px/1.6 sans-serif;padding:12px 14px;border:3px solid #1d1a16;border-radius:8px';
+    d.textContent = msg;
+    (document.body || document.documentElement).appendChild(d);
+  }
+  window.addEventListener('error', function(e){
+    if (!window.__nddReady) banner('読み込みエラー：' + (e.message || '不明') + '（' + (e.lineno || '?') + '行目）。GAS の index のコードが途中で切れていないか確認して、最後の </html> まで全部貼り直してください。');
+  });
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      if (window.__nddReady) return;
+      banner('ゲームのプログラムが最後まで読み込めていません。GAS の index に、コードを最後の </html> まで全部貼り直して、新バージョンでデプロイしてください。');
+    }, 1500);
+  });
+})();
+</script>
 
 <div id="app">
   <header>
@@ -625,7 +648,7 @@ header{padding:7px 10px 7px;background:var(--card);border-bottom:var(--bd);posit
   <div class="logo"><span>成</span><span style="animation-delay:.08s">り</span><span style="animation-delay:.16s">上</span><span style="animation-delay:.24s">が</span><span style="animation-delay:.32s">り</span><br><span style="animation-delay:.45s">動</span><span style="animation-delay:.53s">画</span><span style="animation-delay:.61s">道</span></div>
   <div class="ranks"><span>クソガキ ／</span> <span>親のスマホ泥棒 ／</span> <span>無断転載 ／</span> <span>パクリ常習犯 ／</span> <span>底辺YouTuber ／</span> <span>…</span> <span>世界一のYouTuber ／</span> <span>…</span> <span>動画の神</span><br><span>全27称号</span></div>
   <div class="start">はじめる</div>
-  <div class="foot">画面のどこかをタップ</div>
+  <div class="foot">画面のどこかをタップ　ver 2026.11.27</div>
 </div>
 
 <div id="cutin" class="hidden"></div>
@@ -2989,7 +3012,11 @@ const hasGAS = () => typeof google !== 'undefined' && google.script && google.sc
 let cloudCode = null, cloudBusy = false, cloudT = 0, cloudLast = 0, cloudErr = '';
 try { cloudCode = localStorage.getItem(CODE_KEY); } catch(e){}
 function gasCall(fn, ...args){
-  return new Promise((res, rej) => google.script.run.withSuccessHandler(res).withFailureHandler(e => rej((e && e.message) || String(e)))[fn](...args));
+  return new Promise((res, rej) => {
+    const t = setTimeout(() => rej('GAS から返事がない（電波か、デプロイを確認）'), 20000);
+    google.script.run.withSuccessHandler(v => { clearTimeout(t); res(v); })
+      .withFailureHandler(e => { clearTimeout(t); rej((e && e.message) || String(e)); })[fn](...args);
+  });
 }
 async function ensureCode(){
   if (cloudCode || !hasGAS()) return cloudCode;
@@ -3014,6 +3041,7 @@ async function cloudSave(manual){
   } catch(e){
     cloudErr = String(e);
     if (manual) toast('保存できなかった：' + e, 'bad');
+    else if (!cloudCode) toast('セーブコードを発行できなかった：' + e + '　Code.gs を新しくして setup を実行してください', 'bad');
   } finally { cloudBusy = false; updateCloudUI(); }
 }
 async function cloudLoad(code){
@@ -3171,6 +3199,7 @@ window.__game = { BAL, RANKS, STYLES, ALL_ITEMS, ITEMS, get S(){ return S; }, st
   endIncident:(ok)=>{ if (inc) endIncident(ok); }, get inc(){ return inc; }, closeCutin, collectGolden, get golden(){ return golden; },
   dbg:()=>({eq:1+sumFx('eq'), coll:collabMult(), ach:achMult(), all:allMult(), vpsM:vpsMult(), stock:S.stock, auto:autoGauge(), tapG:tapGauge(), conv:convMult(), div:subsDiv(), burst:burstMult(), ev:eventMult(), unit:unit(), vps:vps(), combo:comboMult()}),
   autoPlan, openChestReward, pullGacha, gachaCost, retire, retirePts, claimMission, openEvent, get pendingEvent(){ return pendingEvent; }, buyPerk, PERKS, dirtyFx };
+window.__nddReady = true;
 })();
 </script>
 </body>
