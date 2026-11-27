@@ -1,13 +1,28 @@
 /**
  * 成り上がり動画道 — Google Apps Script Web アプリ
- * - doGet: ゲーム画面（HTML ファイル「index」）を返す
+ * - doGet: ゲーム本体を GitHub から読み込んで表示する（index を貼る必要はない。更新も自動）
  * - issueCode / saveGame / loadGame: 5桁のセーブコードでクラウド保存
  *   セーブデータはスクリプトが自動で作るスプレッドシート「成り上がり動画道 セーブデータ」に入る
  * 最初に一度だけ、エディタで setup を実行して権限を許可しておく。
  * セーブコードを忘れたときは、エディタで listSaves を実行すると、保存されている全コードが称号つきで表示される。
  */
+const GAME_URL = 'https://raw.githubusercontent.com/Tortam0831/study-earth/ccr-832f93f4-2sx0qd/nariagari-douga-do/index.html';
+
 function doGet() {
-  return HtmlService.createHtmlOutputFromFile('index')
+  let html = null;
+  try {
+    const res = UrlFetchApp.fetch(GAME_URL + '?t=' + Math.floor(Date.now() / 300000), { muteHttpExceptions: true });
+    if (res.getResponseCode() === 200) html = res.getContentText('UTF-8');
+  } catch (e) {
+    html = null;
+  }
+  let out;
+  if (html) out = HtmlService.createHtmlOutput(html);
+  else {
+    try { out = HtmlService.createHtmlOutputFromFile('index'); }
+    catch (e) { out = HtmlService.createHtmlOutput('<p style="font:16px sans-serif;padding:20px">ゲームを読み込めませんでした。少し待ってから開き直してください。</p>'); }
+  }
+  return out
     .setTitle('成り上がり動画道')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
@@ -17,6 +32,8 @@ function doGet() {
 function setup() {
   const sh = getSheet_();
   Logger.log('セーブ用シート: ' + sh.getParent().getUrl());
+  const res = UrlFetchApp.fetch(GAME_URL, { muteHttpExceptions: true });
+  Logger.log('ゲーム本体の読み込み: ' + (res.getResponseCode() === 200 ? 'OK（' + res.getContentText().length + '文字）' : 'NG ' + res.getResponseCode()));
 }
 
 function getSheet_() {
