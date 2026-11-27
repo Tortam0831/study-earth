@@ -1,6 +1,6 @@
 /**
  * 成り上がり動画道 — Google Apps Script Web アプリ
- * - doGet: ゲーム本体を GitHub から読み込んで表示する（index を貼る必要はない。更新も自動）
+ * - doGet: 読み込み画面を返し、ゲーム本体はブラウザが GitHub から読み込む（index を貼る必要はない。更新も自動）
  * - issueCode / saveGame / loadGame: 5桁のセーブコードでクラウド保存
  *   セーブデータはスクリプトが自動で作るスプレッドシート「成り上がり動画道 セーブデータ」に入る
  * 最初に一度だけ、エディタで setup を実行して権限を許可しておく。
@@ -9,31 +9,59 @@
 const GAME_URL = 'https://raw.githubusercontent.com/Tortam0831/study-earth/ccr-832f93f4-2sx0qd/nariagari-douga-do/index.html';
 
 function doGet() {
-  let html = null;
-  try {
-    const res = UrlFetchApp.fetch(GAME_URL + '?t=' + Math.floor(Date.now() / 300000), { muteHttpExceptions: true });
-    if (res.getResponseCode() === 200) html = res.getContentText('UTF-8');
-  } catch (e) {
-    html = null;
-  }
-  let out;
-  if (html) out = HtmlService.createHtmlOutput(html);
-  else {
-    try { out = HtmlService.createHtmlOutputFromFile('index'); }
-    catch (e) { out = HtmlService.createHtmlOutput('<p style="font:16px sans-serif;padding:20px">ゲームを読み込めませんでした。少し待ってから開き直してください。</p>'); }
-  }
-  return out
+  // GAS は大きな HTML を約100KBで切ってしまうので、小さな読み込み画面だけを返し、
+  // ゲーム本体はブラウザが GitHub から直接読み込む
+  return HtmlService.createHtmlOutput(LOADER_HTML_.replace('GAME_URL_HERE', GAME_URL))
     .setTitle('成り上がり動画道')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
+const LOADER_HTML_ = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<body style="margin:0;background:#f3ede1;color:#1d1a16;font-family:sans-serif">
+<div id="ld" style="padding:60px 20px;text-align:center;font-weight:700;font-size:18px">成り上がり動画道 を読み込み中…</div>
+<script>
+(function(){
+  var url = 'GAME_URL_HERE' + '?t=' + Date.now();
+  function fail(msg){
+    document.getElementById('ld').innerHTML = 'ゲームを読み込めませんでした（' + msg + '）<br><br><button onclick="location.reload()" style="font-size:18px;padding:10px 24px">もう一度</button>';
+  }
+  function mount(html){
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+    document.title = doc.title || '成り上がり動画道';
+    Array.prototype.forEach.call(doc.head.children, function(n){
+      if (n.tagName === 'SCRIPT') return;
+      document.head.appendChild(document.importNode(n, true));
+    });
+    document.body.innerHTML = '';
+    document.body.removeAttribute('style');
+    Array.prototype.forEach.call(doc.body.attributes, function(a){ document.body.setAttribute(a.name, a.value); });
+    Array.prototype.forEach.call(doc.body.childNodes, function(n){
+      if (n.nodeType === 1 && n.tagName === 'SCRIPT'){
+        var s = document.createElement('script');
+        s.text = n.textContent;
+        document.body.appendChild(s);
+      } else {
+        document.body.appendChild(document.importNode(n, true));
+      }
+    });
+  }
+  fetch(url, { cache: 'no-store' })
+    .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+    .then(function(html){
+      if (html.indexOf('window.__nddReady') < 0) throw new Error('ゲームのデータが不完全');
+      mount(html);
+      if (!window.__nddReady) fail('起動できなかった');
+    })
+    .catch(function(e){ fail(e && e.message ? e.message : e); });
+})();
+</script></body></html>`;
+
 /** 最初に一度だけエディタから実行する（スプレッドシートの作成と権限の許可） */
 function setup() {
   const sh = getSheet_();
   Logger.log('セーブ用シート: ' + sh.getParent().getUrl());
-  const res = UrlFetchApp.fetch(GAME_URL, { muteHttpExceptions: true });
-  Logger.log('ゲーム本体の読み込み: ' + (res.getResponseCode() === 200 ? 'OK（' + res.getContentText().length + '文字）' : 'NG ' + res.getResponseCode()));
+  Logger.log('準備OK');
 }
 
 function getSheet_() {
