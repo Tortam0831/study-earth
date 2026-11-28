@@ -7,11 +7,23 @@
  * セーブコードを忘れたときは、エディタで listSaves を実行すると、保存されている全コードが称号つきで表示される。
  */
 const GAME_URL = 'https://raw.githubusercontent.com/Tortam0831/study-earth/ccr-832f93f4-2sx0qd/nariagari-douga-do/index.html';
+const GAME_URL_CDN = 'https://cdn.jsdelivr.net/gh/Tortam0831/study-earth@ccr-832f93f4-2sx0qd/nariagari-douga-do/index.html';
+
+/** ブラウザから直接読めないときの予備：GAS がゲーム本体を取ってきて渡す */
+function getGameHtml() {
+  for (const url of [GAME_URL + '?t=' + Date.now(), GAME_URL_CDN]) {
+    try {
+      const res = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+      if (res.getResponseCode() === 200) return res.getContentText('UTF-8');
+    } catch (e) {}
+  }
+  throw new Error('GitHub からゲームを取ってこれませんでした');
+}
 
 function doGet() {
-  // GAS は大きな HTML を約100KBで切ってしまうので、小さな読み込み画面だけを返し、
-  // ゲーム本体はブラウザが GitHub から直接読み込む
-  return HtmlService.createHtmlOutput(LOADER_HTML_.replace('GAME_URL_HERE', GAME_URL))
+  // GAS は大きな HTML を約100KBで切ってしまうので、小さな読み込み画面だけを返す。
+  // ゲーム本体は ① GitHub ② jsDelivr ③ getGameHtml（GAS 経由）の順に読み込む
+  return HtmlService.createHtmlOutput(LOADER_HTML_)
     .setTitle('成り上がり動画道')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
@@ -19,13 +31,41 @@ function doGet() {
 
 const LOADER_HTML_ = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
 <body style="margin:0;background:#f3ede1;color:#1d1a16;font-family:sans-serif">
-<div id="ld" style="padding:60px 20px;text-align:center;font-weight:700;font-size:18px">成り上がり動画道 を読み込み中…</div>
+<div id="ld" style="padding:60px 20px;text-align:center;font-weight:700;font-size:18px;line-height:1.7">成り上がり動画道 を準備中…<br><small id="ldStep" style="font-size:13px;color:#7a7164">1/3</small></div>
 <script>
 (function(){
-  var url = 'GAME_URL_HERE' + '?t=' + Date.now();
-  function fail(msg){
-    document.getElementById('ld').innerHTML = 'ゲームを読み込めませんでした（' + msg + '）<br><br><button onclick="location.reload()" style="font-size:18px;padding:10px 24px">もう一度</button>';
+  var BRANCH = 'ccr-832f93f4-2sx0qd';
+  var RAW = 'https://raw.githubusercontent.com/Tortam0831/study-earth/' + BRANCH + '/nariagari-douga-do/index.html';
+  var CDN = 'https://cdn.jsdelivr.net/gh/Tortam0831/study-earth@' + BRANCH + '/nariagari-douga-do/index.html';
+  var errors = [];
+  function step(t){ var e = document.getElementById('ldStep'); if (e) e.textContent = t; }
+  function withTimeout(p, ms){
+    return new Promise(function(res, rej){
+      var t = setTimeout(function(){ rej(new Error('時間切れ')); }, ms);
+      p.then(function(v){ clearTimeout(t); res(v); }, function(e){ clearTimeout(t); rej(e); });
+    });
   }
+  function viaFetch(url){
+    if (!window.fetch) return Promise.reject(new Error('このブラウザは fetch が使えない'));
+    return withTimeout(fetch(url, { cache: 'no-store' }).then(function(r){
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    }), 12000);
+  }
+  function viaGAS(){
+    return withTimeout(new Promise(function(res, rej){
+      if (!(window.google && google.script && google.script.run)) return rej(new Error('GAS の接続がない'));
+      google.script.run
+        .withSuccessHandler(res)
+        .withFailureHandler(function(e){ rej(new Error((e && e.message) || String(e))); })
+        .getGameHtml();
+    }), 30000);
+  }
+  var tries = [
+    { name: 'GitHub', run: function(){ return viaFetch(RAW + '?t=' + Date.now()); } },
+    { name: 'jsDelivr', run: function(){ return viaFetch(CDN); } },
+    { name: 'GAS経由', run: viaGAS },
+  ];
   function mount(html){
     var doc = new DOMParser().parseFromString(html, 'text/html');
     document.title = doc.title || '成り上がり動画道';
@@ -46,14 +86,25 @@ const LOADER_HTML_ = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta nam
       }
     });
   }
-  fetch(url, { cache: 'no-store' })
-    .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
-    .then(function(html){
-      if (html.indexOf('window.__nddReady') < 0) throw new Error('ゲームのデータが不完全');
+  function fail(){
+    document.body.innerHTML = '<div style="padding:40px 20px;text-align:center;font-family:sans-serif;line-height:1.7">' +
+      '<b style="font-size:18px">ゲームを読み込めませんでした</b><br>' +
+      '<div style="font-size:13px;color:#7a7164;margin:10px 0;text-align:left;display:inline-block">' + errors.join('<br>') + '</div><br>' +
+      '<button onclick="location.reload()" style="font-size:18px;padding:10px 24px">もう一度</button></div>';
+  }
+  function next(i){
+    if (i >= tries.length) return fail();
+    step((i + 1) + '/3　' + tries[i].name + ' から読み込み中');
+    tries[i].run().then(function(html){
+      if (!html || html.indexOf('window.__nddReady') < 0) throw new Error('データが不完全（' + (html ? html.length : 0) + '文字）');
       mount(html);
-      if (!window.__nddReady) fail('起動できなかった');
-    })
-    .catch(function(e){ fail(e && e.message ? e.message : e); });
+      if (!window.__nddReady) throw new Error('起動できなかった');
+    }).catch(function(e){
+      errors.push(tries[i].name + '：' + (e && e.message ? e.message : e));
+      if (!window.__nddReady) next(i + 1);
+    });
+  }
+  next(0);
 })();
 </script></body></html>`;
 
@@ -61,6 +112,8 @@ const LOADER_HTML_ = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta nam
 function setup() {
   const sh = getSheet_();
   Logger.log('セーブ用シート: ' + sh.getParent().getUrl());
+  const html = getGameHtml();
+  Logger.log('ゲーム本体の確認: OK（' + html.length + '文字）');
   Logger.log('準備OK');
 }
 
